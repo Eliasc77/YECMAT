@@ -10,7 +10,7 @@
 5. Finalizar las tres áreas: BPM pasa a revisión, no BPM crea un único outbox.
 6. Rechazar CONT: solo CONT vuelve a `R`; AR/LOG permanecen `V`.
 7. Aprobar BPM: se genera un único evento aun repitiendo la petición.
-8. Simular error BAPI: solicitud `ERROR`, mensaje persistido y sin commit parcial.
+8. Simular error HTTP: solicitud `ERROR`, mensaje persistido y sin cambio parcial.
 9. Reprocesar: mismo evento, una sola creación física.
 10. Verificar auditoría con usuario, instante, área y valores anterior/nuevo.
 

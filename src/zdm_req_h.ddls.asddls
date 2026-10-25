@@ -8,9 +8,9 @@ define table zdm_req_h {
   key request_uuid      : sysuuid_x16 not null;
   request_no            : abap.char(20);
   operation             : abap.char(1);
-  plant                 : werks_d;
-  material_type         : mtart;
-  material              : matnr;
+  plant                 : abap.char(4);
+  material_type         : abap.char(4);
+  material              : abap.char(40);
   flow_type             : abap.char(1);
   status                : abap.char(12);
   parallel_started_at   : abap.utclong;
@@ -18,6 +18,6 @@ define table zdm_req_h {
   error_text            : abap.char(255);
   created_by            : abp_creation_user;
   created_at            : abp_creation_tstmpl;
-  last_changed_by       : abp_lastchange_user;
-  last_changed_at       : abp_lastchange_tstmpl;
+  last_changed_by       : abp_locinst_lastchange_user;
+  last_changed_at       : abp_locinst_lastchange_tstmpl;
 }

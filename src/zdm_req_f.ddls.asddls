@@ -9,8 +9,8 @@ define table zdm_req_f {
   request_uuid          : sysuuid_x16;
   area                  : abap.char(5);
   field_name            : abap.char(40);
-  field_value           : abap.string(0);
-  value_unit            : msehi;
-  last_changed_by       : abp_lastchange_user;
-  last_changed_at       : abp_lastchange_tstmpl;
+  field_value           : abap.char(500);
+  value_unit            : abap.unit(3);
+  last_changed_by       : abp_locinst_lastchange_user;
+  last_changed_at       : abp_locinst_lastchange_tstmpl;
 }

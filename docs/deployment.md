@@ -1,26 +1,25 @@
-# Despliegue en S/4HANA 2022
+# Despliegue en SAP BTP ABAP Environment Trial
 
 ## Prerrequisitos
 
-- ABAP Platform 2022 (base de la imagen proporcionada).
-- ADT actualizado y abapGit.
-- Gateway/OData V4 y SAP Fiori habilitados.
-- Autorización para crear objetos Z y publicar service bindings.
+- SAP BTP ABAP Environment Trial y Eclipse/ADT actualizado.
+- Plugin abapGit para ADT.
+- Paquete `YECMAT` y autorización para publicar service bindings.
 
 ## Orden
 
-1. Crear el paquete en ADT y crear los objetos con las fuentes de `src/`. Si se
-   desea importación abapGit directa, serializar una primera vez desde el release
-   destino para incorporar sus XML de metadata (no se inventan porque varían por
-   versión de serializador).
+1. Vincular el paquete `YECMAT` a `https://github.com/Eliasc77/YECMAT`, rama
+   `main`, y ejecutar Pull. `.abapgit.xml` y metadata están incluidos.
 2. Activar las definiciones de tabla `zdm_*.ddls.asddls`.
 3. Activar CDS de interfaz y consumo.
 4. Activar behavior definitions y clases behavior pool.
 5. Activar service definition y service binding OData V4 UI.
 6. Cargar `ZDM_FIELD_C` con la matriz aprobada del Excel.
 7. Crear los roles PFCG y asignar autorizaciones por centro, tipo y área.
-8. Adaptar/probar `ZCL_DM_MATERIAL_PORT` en mandante de calidad.
-9. Programar el consumidor outbox y el job horario de alertas.
+8. Ejecutar `ZCL_DM_TRIAL_ACTIVATION` como ABAP Application (Console) para probar
+   el modo MOCK.
+9. Para integración real, crear el Service Consumption Model y Communication
+   Arrangement de la API pública del S/4 externo.
 
 ## Bloqueos antes de productivo
 
@@ -28,9 +27,8 @@
   operaciones para facilitar la activación inicial. Sustituirlos por
   `AUTHORITY-CHECK` contra los objetos PFCG creados; la UI nunca es control de
   seguridad suficiente.
-- Verificar los componentes exactos de `BAPI_MARA`, `BAPI_MARC` y `BAPI_MBEW`
-  disponibles en el sistema y completar textos, clasificación, unidades y
-  extensiones mediante `EXTENSIONIN` cuando corresponda.
+- Sustituir el mock por una API HTTP liberada; BAPIs, commits clásicos y acceso a
+  MARA/MARC no son válidos en BTP ABAP Environment.
 - Generar y publicar un service binding OData V4 UI llamado, por ejemplo,
   `ZUI_DM_O4` desde la service definition incluida.
 

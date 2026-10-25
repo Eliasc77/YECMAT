@@ -1,7 +1,7 @@
 # YECMAT – Gestión de datos maestros de materiales
 
 Implementación base con **ABAP RESTful Application Programming Model (RAP)** para
-SAP S/4HANA 2022 / ABAP Platform 2022.
+SAP BTP ABAP Environment Trial, usando exclusivamente fuentes ABAP Cloud.
 
 La solución recibe solicitudes de creación, modificación e inactivación de
 materiales, permite que las áreas trabajen en paralelo y recién actualiza el
@@ -18,8 +18,8 @@ MARA/MARC durante la captura.
   finalizar, reabrir, rechazar y aprobar.
 - Validación de obligatoriedad contra `ZDM_FIELD_C` al finalizar un área.
 - Auditoría de cambios y patrón outbox para procesamiento asíncrono.
-- Contrato para encapsular `BAPI_MATERIAL_SAVEDATA`; la adaptación exacta de
-  campos Z queda localizada en una sola clase.
+- Activación `MOCK` ejecutable dentro del trial y patrón outbox preparado para
+  sustituirse por una API HTTP pública de Product Master de un S/4 externo.
 
 ## Estructura
 
@@ -31,18 +31,17 @@ MARA/MARC durante la captura.
 
 ## Uso
 
-Crear los objetos desde ADT con las fuentes versionadas en `src/` (o añadir la
-metadata XML del serializador abapGit del sistema destino), activar en el orden
-indicado en `docs/deployment.md` y publicar el binding OData V4. No se requiere
-Node.js ni servicios locales: el runtime es el servidor ABAP.
+Vincular el paquete ADT con este repositorio mediante abapGit y ejecutar Pull
+sobre `main`. El repositorio incluye `.abapgit.xml` y metadata de sus objetos.
+Después se crea y publica el binding OData V4 en ADT. No se requiere Node.js ni
+servicios locales: el runtime es SAP BTP ABAP Environment.
 
-> Las tablas estándar solo se modifican desde el consumidor de outbox. Nunca se
-> llama la BAPI mientras un usuario está editando una solicitud.
+> BTP Trial no contiene MARA/MARC ni permite BAPIs clásicas. La activación real
+> debe llamar por HTTPS una API liberada del sistema S/4 destino.
 
 ## Estado de la entrega
 
-Este repositorio contiene el núcleo backend y el contrato OData. La activación
-en un sistema SAP real sigue siendo obligatoria porque tipos DDIC, campos Z,
-objetos de autorización y la firma/configuración efectiva de la BAPI dependen
-del mandante. No se debe transportar a productivo sin ejecutar el plan de
-pruebas y reemplazar la autorización provisional de los behavior pools.
+Este repositorio contiene el núcleo backend, el contrato OData y una activación
+simulada para probar el flujo íntegro en el trial. No se debe transportar a
+productivo sin conectar la API pública de Product Master y reemplazar la
+autorización provisional de los behavior pools.

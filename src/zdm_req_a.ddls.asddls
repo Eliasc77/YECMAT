@@ -13,7 +13,7 @@ define table zdm_req_a {
   started_at            : abap.utclong;
   finished_at           : abap.utclong;
   due_at                : abap.utclong;
-  responsible_user      : syuname;
-  last_changed_by       : abp_lastchange_user;
-  last_changed_at       : abp_lastchange_tstmpl;
+  responsible_user      : abap.char(12);
+  last_changed_by       : abp_locinst_lastchange_user;
+  last_changed_at       : abp_locinst_lastchange_tstmpl;
 }

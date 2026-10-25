@@ -10,8 +10,8 @@ define table zdm_audit {
   area                  : abap.char(5);
   event_type            : abap.char(12);
   field_name            : abap.char(40);
-  old_value             : abap.string(0);
-  new_value             : abap.string(0);
-  changed_by            : syuname;
+  old_value             : abap.char(500);
+  new_value             : abap.char(500);
+  changed_by            : abap.char(12);
   changed_at            : abap.utclong;
 }

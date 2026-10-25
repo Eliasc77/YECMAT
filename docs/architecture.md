@@ -33,14 +33,14 @@ no BPM y `approveAndActivate` escriben una fila outbox de forma idempotente.
 
 ## Creación del material
 
-`ZCL_DM_MATERIAL_PORT` es la frontera con SAP. El consumidor bloquea la fila
-outbox, reconstruye las estructuras BAPI desde el staging/customizing, ejecuta
-`BAPI_MATERIAL_SAVEDATA` y confirma o revierte. El `request_uuid` es la clave de
-idempotencia; un evento exitoso no vuelve a procesarse.
+`ZCL_DM_TRIAL_ACTIVATION` consume una fila outbox y simula la activación para que
+el flujo pueda validarse sin un S/4. En productivo se sustituye por un cliente
+HTTP generado mediante Service Consumption Model para la API pública de Product
+Master del S/4 destino. `request_uuid` es la clave de idempotencia.
 
-Los campos de clasificación/textos/unidades y ampliaciones Z requieren adaptar
-el mapper a la configuración real del mandante. Esa adaptación no afecta al BO
-RAP ni a la UI.
+El cliente HTTP productivo requerirá Communication Scenario, Communication
+System y Communication Arrangement. Credenciales y URLs nunca se almacenan en
+Git; la adaptación no afecta al BO RAP ni a la UI.
 
 ## Alertas y KPI
 

@@ -5,7 +5,7 @@
 @AbapCatalog.dataMaintenance : #ALLOWED
 define table zdm_field_c {
   key client            : abap.clnt not null;
-  key material_type     : mtart not null;
+  key material_type     : abap.char(4) not null;
   key operation         : abap.char(1) not null;
   key area              : abap.char(5) not null;
   key field_name        : abap.char(40) not null;
