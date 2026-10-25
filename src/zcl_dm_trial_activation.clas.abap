@@ -8,6 +8,7 @@ ENDCLASS.
 
 CLASS zcl_dm_trial_activation IMPLEMENTATION.
   METHOD process_next.
+    GET TIME STAMP FIELD DATA(now).
     SELECT SINGLE FROM zdm_outbox
       FIELDS event_uuid, request_uuid
       WHERE status = 'N'
@@ -22,11 +23,11 @@ CLASS zcl_dm_trial_activation IMPLEMENTATION.
     UPDATE zdm_outbox
       SET status = 'S',
           message_text = 'Simulación BTP Trial completada',
-          processed_at = @utclong_current( )
+          processed_at = @now
       WHERE event_uuid = @event-event_uuid AND status = 'N'.
     IF sy-dbcnt = 1.
       UPDATE zdm_req_h
-        SET status = 'ACTIVE', material_created_at = @utclong_current( ),
+        SET status = 'ACTIVE', material_created_at = @now,
             error_text = ''
         WHERE request_uuid = @event-request_uuid.
       message = 'Solicitud activada en modo MOCK'.

@@ -10,7 +10,8 @@
 
 1. Vincular el paquete `YECMAT` a `https://github.com/Eliasc77/YECMAT`, rama
    `main`, y ejecutar Pull. `.abapgit.xml` y metadata están incluidos.
-2. Activar las definiciones de tabla `zdm_*.ddls.asddls`.
+2. Verificar que las tablas Dictionary `ZDM_REQ_H`, `ZDM_REQ_A`, `ZDM_REQ_F`,
+   `ZDM_FIELD_C`, `ZDM_AUDIT` y `ZDM_OUTBOX` estén activas.
 3. Activar CDS de interfaz y consumo.
 4. Activar behavior definitions y clases behavior pool.
 5. Activar service definition y service binding OData V4 UI.

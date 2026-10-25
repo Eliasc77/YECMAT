@@ -54,6 +54,7 @@ CLASS lhc_Request IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD classify.
+    GET TIME STAMP FIELD DATA(now).
     READ ENTITIES OF zi_dm_request IN LOCAL MODE
       ENTITY Request ALL FIELDS WITH CORRESPONDING #( keys ) RESULT DATA(requests).
 
@@ -88,7 +89,7 @@ CLASS lhc_Request IMPLEMENTATION.
           RequestUUID = <request>-RequestUUID
           Area = <area>-area
           TrafficLight = 'R'
-          EnabledAt = utclong_current( ) ) TO task_rows.
+          EnabledAt = now ) TO task_rows.
       ENDLOOP.
       IF task_rows IS NOT INITIAL.
         MODIFY ENTITIES OF zi_dm_areatask
@@ -101,7 +102,7 @@ CLASS lhc_Request IMPLEMENTATION.
         ENTITY Request UPDATE FIELDS ( FlowType Status ParallelStartedAt )
         WITH VALUE #( ( %tky = <request>-%tky FlowType = flow
                         Status = 'PARALLEL'
-                        ParallelStartedAt = utclong_current( ) ) ).
+                        ParallelStartedAt = now ) ).
     ENDLOOP.
 
     READ ENTITIES OF zi_dm_request IN LOCAL MODE
@@ -110,6 +111,7 @@ CLASS lhc_Request IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD rejectArea.
+    GET TIME STAMP FIELD DATA(now).
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<key>).
       SELECT SINGLE request_uuid FROM zdm_req_h
         WHERE request_uuid = @<key>-RequestUUID AND status = 'QA_REVIEW'
@@ -124,7 +126,7 @@ CLASS lhc_Request IMPLEMENTATION.
         audit_uuid = cl_system_uuid=>create_uuid_x16_static( )
         request_uuid = request_uuid area = <key>-%param-Area
         event_type = 'REJECT' new_value = <key>-%param-Reason
-        changed_by = sy-uname changed_at = utclong_current( ) ) ).
+        changed_by = sy-uname changed_at = now ) ).
       MODIFY ENTITIES OF zi_dm_request IN LOCAL MODE ENTITY Request
         UPDATE FIELDS ( Status ) WITH VALUE #( ( %tky = <key>-%tky Status = 'PARALLEL' ) ).
     ENDLOOP.
@@ -134,6 +136,7 @@ CLASS lhc_Request IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD approveAndActivate.
+    GET TIME STAMP FIELD DATA(now).
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<key>).
       SELECT SINGLE status, flow_type FROM zdm_req_h
         WHERE request_uuid = @<key>-RequestUUID INTO @DATA(header).
@@ -148,7 +151,7 @@ CLASS lhc_Request IMPLEMENTATION.
         INSERT zdm_outbox FROM @( VALUE #(
           event_uuid = cl_system_uuid=>create_uuid_x16_static( )
           request_uuid = <key>-RequestUUID event_type = 'MATERIAL'
-          status = 'N' created_at = utclong_current( ) ) ).
+          status = 'N' created_at = now ) ).
       ENDIF.
       MODIFY ENTITIES OF zi_dm_request IN LOCAL MODE ENTITY Request
         UPDATE FIELDS ( Status ) WITH VALUE #( ( %tky = <key>-%tky Status = 'QUEUED' ) ).
