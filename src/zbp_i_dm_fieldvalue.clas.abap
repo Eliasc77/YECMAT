@@ -1,0 +1,4 @@
+CLASS zbp_i_dm_fieldvalue DEFINITION
+  PUBLIC ABSTRACT FINAL
+  FOR BEHAVIOR OF zi_dm_fieldvalue.
+ENDCLASS.

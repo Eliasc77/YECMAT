@@ -1,0 +1,6 @@
+@EndUserText.label: 'DM Material RAP Service'
+define service ZUI_DM_O4 {
+  expose ZC_DM_Request    as Requests;
+  expose ZC_DM_AreaTask   as AreaTasks;
+  expose ZC_DM_FieldValue as FieldValues;
+}

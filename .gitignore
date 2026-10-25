@@ -1,0 +1,6 @@
+# Artefactos locales de ADT/abapGit
+.project
+.settings/
+.adt/
+*.saplogon
+*.bak

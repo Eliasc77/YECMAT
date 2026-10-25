@@ -1,0 +1,43 @@
+managed implementation in class zbp_i_dm_request unique;
+strict ( 2 );
+
+define behavior for ZI_DM_Request alias Request
+persistent table zdm_req_h
+lock master
+authorization master ( instance )
+etag master LastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) RequestUUID, RequestNo, Status, FlowType,
+                     ParallelStartedAt, MaterialCreatedAt, ErrorText,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
+
+  action classify parameter ZDM_ClassifyP result [1] $self;
+  action rejectArea parameter ZDM_RejectP result [1] $self;
+  action approveAndActivate result [1] $self;
+
+  determination setInitialStatus on modify { create; }
+  validation validateOperation on save { create; update; field Operation; }
+
+  mapping for zdm_req_h
+  {
+    RequestUUID       = request_uuid;
+    RequestNo         = request_no;
+    Operation         = operation;
+    Plant             = plant;
+    MaterialType      = material_type;
+    Material          = material;
+    FlowType          = flow_type;
+    Status            = status;
+    ParallelStartedAt = parallel_started_at;
+    MaterialCreatedAt = material_created_at;
+    ErrorText         = error_text;
+    CreatedBy         = created_by;
+    CreatedAt         = created_at;
+    LastChangedBy     = last_changed_by;
+    LastChangedAt     = last_changed_at;
+  }
+}

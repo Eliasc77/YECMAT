@@ -1,0 +1,13 @@
+material_type,operation,area,field_name,field_status,sequence,label,default_value
+ZFER,C,PCP,MAKT-MAKTX,M,10,Texto breve,
+ZFER,C,PCP,MARA-MEINS,M,20,Unidad de medida base,
+ZFER,C,PCP,MARA-MATKL,M,30,Grupo de artículos,
+ZFER,C,AR,ZDM-INSPECTION_TEXT,M,10,Texto de inspección,
+ZFER,C,AR,ZDM-HEALTH_REG,O,20,Registro sanitario,
+ZFER,C,CONT,MARA-ZZCUBSO,M,10,Código SUNAT/ONU,
+ZFER,C,CONT,MBEW-STPRS,M,20,Precio estándar,
+ZFER,C,LOG,MARC-EKGRP,M,10,Grupo de compras,
+ZFER,C,CC,ZDM-TECH_STD,O,10,Norma técnica principal,
+ZSUM,C,SOLIC,MAKT-MAKTX,M,10,Texto breve,
+ZSUM,C,CONT,MARA-ZZCUBSO,O,10,Código SUNAT/ONU,
+ZSUM,C,LOG,MARC-EKGRP,M,10,Grupo de compras,

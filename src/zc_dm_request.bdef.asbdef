@@ -1,0 +1,12 @@
+projection;
+strict ( 2 );
+
+define behavior for ZC_DM_Request alias Request
+{
+  use create;
+  use update;
+  use delete;
+  use action classify;
+  use action rejectArea;
+  use action approveAndActivate;
+}

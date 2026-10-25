@@ -1,0 +1,4 @@
+CLASS zbp_i_dm_request DEFINITION
+  PUBLIC ABSTRACT FINAL
+  FOR BEHAVIOR OF zi_dm_request.
+ENDCLASS.
