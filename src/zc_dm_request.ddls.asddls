@@ -20,6 +20,7 @@ define root view entity ZC_DM_Request
       CreatedAt,
       LastChangedBy,
       LastChangedAt,
+      LocalLastChangedAt,
       _AreaTasks : redirected to ZC_DM_AreaTask,
       _FieldValues : redirected to ZC_DM_FieldValue
 }

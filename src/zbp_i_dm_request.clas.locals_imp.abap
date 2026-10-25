@@ -1,5 +1,7 @@
 CLASS lhc_Request DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
+    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
+      IMPORTING REQUEST requested_authorizations FOR Request RESULT result.
     METHODS get_instance_authorizations FOR INSTANCE AUTHORIZATION
       IMPORTING keys REQUEST requested_authorizations FOR Request RESULT result.
     METHODS setInitialStatus FOR DETERMINE ON MODIFY
@@ -15,6 +17,10 @@ CLASS lhc_Request DEFINITION INHERITING FROM cl_abap_behavior_handler.
 ENDCLASS.
 
 CLASS lhc_Request IMPLEMENTATION.
+  METHOD get_global_authorizations.
+    result-%create = if_abap_behv=>auth-allowed.
+  ENDMETHOD.
+
   METHOD get_instance_authorizations.
     "La comprobación PFCG concreta debe mapear los seis objetos Z_DM_ACCESO_*.
     result = VALUE #( FOR key IN keys

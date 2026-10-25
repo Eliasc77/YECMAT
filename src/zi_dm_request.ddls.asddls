@@ -22,6 +22,7 @@ define root view entity ZI_DM_Request
       created_at            as CreatedAt,
       last_changed_by       as LastChangedBy,
       last_changed_at       as LastChangedAt,
+      local_last_changed_at as LocalLastChangedAt,
       _AreaTasks,
       _FieldValues
 }
