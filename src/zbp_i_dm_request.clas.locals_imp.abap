@@ -81,20 +81,15 @@ CLASS lhc_Request IMPLEMENTATION.
           AND field_status <> 'I'
         INTO TABLE @DATA(areas).
 
-      DATA task_rows TYPE TABLE FOR CREATE zi_dm_areatask.
-      LOOP AT areas ASSIGNING FIELD-SYMBOL(<area>).
-        APPEND VALUE #(
-          %cid = |AREA{ sy-tabix }|
-          RequestUUID = <request>-RequestUUID
-          Area = <area>-area
-          TrafficLight = 'R'
-          EnabledAt = now ) TO task_rows.
-      ENDLOOP.
-      IF task_rows IS NOT INITIAL.
+      IF areas IS NOT INITIAL.
         MODIFY ENTITIES OF zi_dm_areatask
-          ENTITY AreaTask CREATE FIELDS
+          ENTITY AreaTask CREATE AUTO FILL CID FIELDS
             ( RequestUUID Area TrafficLight EnabledAt )
-          WITH task_rows.
+          WITH VALUE #( FOR area_row IN areas
+            ( RequestUUID = <request>-RequestUUID
+              Area = area_row-area
+              TrafficLight = 'R'
+              EnabledAt = now ) ).
       ENDIF.
 
       MODIFY ENTITIES OF zi_dm_request IN LOCAL MODE
