@@ -11,7 +11,8 @@ etag master LastChangedAt
   update;
   delete;
 
-  field ( readonly ) AreaTaskUUID, RequestUUID, FinishedAt,
+  field ( numbering : managed, readonly ) AreaTaskUUID;
+  field ( readonly ) RequestUUID, FinishedAt,
                      LastChangedBy, LastChangedAt;
   field ( readonly : update ) Area;
 

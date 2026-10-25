@@ -11,7 +11,8 @@ etag master LastChangedAt
   update;
   delete;
 
-  field ( readonly ) RequestUUID, RequestNo, Status, FlowType,
+  field ( numbering : managed, readonly ) RequestUUID;
+  field ( readonly ) RequestNo, Status, FlowType,
                      ParallelStartedAt, MaterialCreatedAt, ErrorText,
                      CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
 

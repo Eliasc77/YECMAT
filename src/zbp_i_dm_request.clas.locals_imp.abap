@@ -85,7 +85,6 @@ CLASS lhc_Request IMPLEMENTATION.
       LOOP AT areas ASSIGNING FIELD-SYMBOL(<area>).
         APPEND VALUE #(
           %cid = |AREA{ sy-tabix }|
-          AreaTaskUUID = cl_system_uuid=>create_uuid_x16_static( )
           RequestUUID = <request>-RequestUUID
           Area = <area>-area
           TrafficLight = 'R'
@@ -94,7 +93,7 @@ CLASS lhc_Request IMPLEMENTATION.
       IF task_rows IS NOT INITIAL.
         MODIFY ENTITIES OF zi_dm_areatask
           ENTITY AreaTask CREATE FIELDS
-            ( AreaTaskUUID RequestUUID Area TrafficLight EnabledAt )
+            ( RequestUUID Area TrafficLight EnabledAt )
           WITH task_rows.
       ENDIF.
 
@@ -112,6 +111,7 @@ CLASS lhc_Request IMPLEMENTATION.
 
   METHOD rejectArea.
     GET TIME STAMP FIELD DATA(now).
+    DATA initial_finished_at TYPE zdm_req_a-finished_at.
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<key>).
       SELECT SINGLE request_uuid FROM zdm_req_h
         WHERE request_uuid = @<key>-RequestUUID AND status = 'QA_REVIEW'
@@ -120,7 +120,7 @@ CLASS lhc_Request IMPLEMENTATION.
         APPEND VALUE #( %tky = <key>-%tky ) TO failed-request.
         CONTINUE.
       ENDIF.
-      UPDATE zdm_req_a SET traffic_light = 'R', finished_at = @CONV utclong( 0 )
+      UPDATE zdm_req_a SET traffic_light = 'R', finished_at = @initial_finished_at
         WHERE request_uuid = @request_uuid AND area = @<key>-%param-Area.
       INSERT zdm_audit FROM @( VALUE #(
         audit_uuid = cl_system_uuid=>create_uuid_x16_static( )
