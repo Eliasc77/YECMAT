@@ -1,4 +1,4 @@
-material_type,operation,area,field_name,field_status,sequence,label,default_value
+material_type,operation,area,field_name,field_status,sequence,field_label,default_value
 ZFER,C,PCP,MAKT-MAKTX,M,10,Texto breve,
 ZFER,C,PCP,MARA-MEINS,M,20,Unidad de medida base,
 ZFER,C,PCP,MARA-MATKL,M,30,Grupo de artículos,
