@@ -1,3 +1,4 @@
+// YECMAT RAP - proyección UI de solicitudes
 @AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'DM Solicitudes - consumo'
 @Metadata.allowExtensions: true

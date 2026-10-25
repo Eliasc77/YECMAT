@@ -1,3 +1,4 @@
+// YECMAT RAP - interfaz de solicitudes
 @AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'DM Solicitud'
 define root view entity ZI_DM_Request

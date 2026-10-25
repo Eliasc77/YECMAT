@@ -1,3 +1,4 @@
+// YECMAT RAP - interfaz de tareas concurrentes por área
 @AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'DM Tarea de área'
 define root view entity ZI_DM_AreaTask

@@ -1,3 +1,4 @@
+// YECMAT RAP - proyección UI de tareas por área
 @AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'DM Tareas - consumo'
 @Metadata.allowExtensions: true

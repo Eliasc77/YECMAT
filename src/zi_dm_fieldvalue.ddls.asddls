@@ -1,3 +1,4 @@
+// YECMAT RAP - interfaz de valores dinámicos por área
 @AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'DM Valor de campo'
 define root view entity ZI_DM_FieldValue
