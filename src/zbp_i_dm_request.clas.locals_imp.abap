@@ -81,7 +81,7 @@ CLASS lhc_Request IMPLEMENTATION.
           AND field_status <> 'I'
         INTO TABLE @DATA(areas).
 
-      DATA task_rows TYPE TABLE FOR CREATE zi_dm_areatask\AreaTask.
+      DATA task_rows TYPE TABLE FOR CREATE zi_dm_areatask.
       LOOP AT areas ASSIGNING FIELD-SYMBOL(<area>).
         APPEND VALUE #(
           %cid = |AREA{ sy-tabix }|
