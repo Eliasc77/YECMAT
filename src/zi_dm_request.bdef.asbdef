@@ -15,8 +15,8 @@ etag master LastChangedAt
                      ParallelStartedAt, MaterialCreatedAt, ErrorText,
                      CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
 
-  action classify parameter ZDM_ClassifyP result [1] $self;
-  action rejectArea parameter ZDM_RejectP result [1] $self;
+  action classify parameter ZDM_CLASSIFY_P result [1] $self;
+  action rejectArea parameter ZDM_REJECT_P result [1] $self;
   action approveAndActivate result [1] $self;
 
   determination setInitialStatus on modify { create; }
