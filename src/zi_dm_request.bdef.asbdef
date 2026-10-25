@@ -1,36 +1,26 @@
 managed implementation in class zbp_i_dm_request unique;
 strict ( 2 );
-with draft;
 
 define behavior for ZI_DM_Request alias Request
 persistent table zdm_req_h
-draft table zdm_req_hd
-lock master total etag LocalLastChangedAt
-authorization master ( global, instance )
+lock master
+authorization master ( instance )
 etag master LastChangedAt
 {
   create;
   update;
   delete;
 
-  field ( numbering : managed, readonly ) RequestUUID;
-  field ( readonly ) RequestNo, Status, FlowType,
+  field ( readonly ) RequestUUID, RequestNo, Status, FlowType,
                      ParallelStartedAt, MaterialCreatedAt, ErrorText,
-                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt,
-                     LocalLastChangedAt;
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
 
-  action classify parameter ZDM_CLASSIFY_P result [1] $self;
-  action rejectArea parameter ZDM_REJECT_P result [1] $self;
+  action classify parameter ZDM_ClassifyP result [1] $self;
+  action rejectArea parameter ZDM_RejectP result [1] $self;
   action approveAndActivate result [1] $self;
 
   determination setInitialStatus on modify { create; }
   validation validateOperation on save { create; update; field Operation; }
-
-  draft action Edit;
-  draft action Activate optimized;
-  draft action Discard;
-  draft action Resume;
-  draft determine action Prepare { validation validateOperation; }
 
   mapping for zdm_req_h
   {
@@ -49,6 +39,5 @@ etag master LastChangedAt
     CreatedAt         = created_at;
     LastChangedBy     = last_changed_by;
     LastChangedAt     = last_changed_at;
-    LocalLastChangedAt = local_last_changed_at;
   }
 }

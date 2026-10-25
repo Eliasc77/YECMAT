@@ -11,8 +11,7 @@ etag master LastChangedAt
   update;
   delete;
 
-  field ( numbering : managed, readonly ) FieldValueUUID;
-  field ( readonly ) LastChangedBy, LastChangedAt;
+  field ( readonly ) FieldValueUUID, LastChangedBy, LastChangedAt;
   field ( readonly : update ) RequestUUID, Area, FieldName;
 
   validation validateOwnership on save { create; update; }

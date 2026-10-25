@@ -9,17 +9,15 @@ ENDCLASS.
 CLASS zcl_dm_trial_activation IMPLEMENTATION.
   METHOD process_next.
     GET TIME STAMP FIELD DATA(now).
-    SELECT FROM zdm_outbox
+    SELECT SINGLE FROM zdm_outbox
       FIELDS event_uuid, request_uuid
       WHERE status = 'N'
       ORDER BY created_at
-      INTO TABLE @DATA(events)
-      UP TO 1 ROWS.
-    IF events IS INITIAL.
+      INTO @DATA(event).
+    IF sy-subrc <> 0.
       message = 'No hay activaciones pendientes'.
       RETURN.
     ENDIF.
-    DATA(event) = events[ 1 ].
 
     "MOCK para BTP Trial: no existe un sistema de materiales local.
     UPDATE zdm_outbox

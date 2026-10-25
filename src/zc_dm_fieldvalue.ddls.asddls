@@ -1,4 +1,3 @@
-// YECMAT RAP - proyección UI de campos dinámicos
 @AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'DM Campos - consumo'
 @Metadata.allowExtensions: true

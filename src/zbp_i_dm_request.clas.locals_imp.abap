@@ -1,7 +1,5 @@
 CLASS lhc_Request DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
-    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
-      IMPORTING REQUEST requested_authorizations FOR Request RESULT result.
     METHODS get_instance_authorizations FOR INSTANCE AUTHORIZATION
       IMPORTING keys REQUEST requested_authorizations FOR Request RESULT result.
     METHODS setInitialStatus FOR DETERMINE ON MODIFY
@@ -17,10 +15,6 @@ CLASS lhc_Request DEFINITION INHERITING FROM cl_abap_behavior_handler.
 ENDCLASS.
 
 CLASS lhc_Request IMPLEMENTATION.
-  METHOD get_global_authorizations.
-    result-%create = if_abap_behv=>auth-allowed.
-  ENDMETHOD.
-
   METHOD get_instance_authorizations.
     "La comprobación PFCG concreta debe mapear los seis objetos Z_DM_ACCESO_*.
     result = VALUE #( FOR key IN keys
@@ -87,15 +81,21 @@ CLASS lhc_Request IMPLEMENTATION.
           AND field_status <> 'I'
         INTO TABLE @DATA(areas).
 
-      IF areas IS NOT INITIAL.
+      DATA task_rows TYPE TABLE FOR CREATE zi_dm_areatask\AreaTask.
+      LOOP AT areas ASSIGNING FIELD-SYMBOL(<area>).
+        APPEND VALUE #(
+          %cid = |AREA{ sy-tabix }|
+          AreaTaskUUID = cl_system_uuid=>create_uuid_x16_static( )
+          RequestUUID = <request>-RequestUUID
+          Area = <area>-area
+          TrafficLight = 'R'
+          EnabledAt = now ) TO task_rows.
+      ENDLOOP.
+      IF task_rows IS NOT INITIAL.
         MODIFY ENTITIES OF zi_dm_areatask
-          ENTITY AreaTask CREATE AUTO FILL CID FIELDS
-            ( RequestUUID Area TrafficLight EnabledAt )
-          WITH VALUE #( FOR area_row IN areas
-            ( RequestUUID = <request>-RequestUUID
-              Area = area_row-area
-              TrafficLight = 'R'
-              EnabledAt = now ) ).
+          ENTITY AreaTask CREATE FIELDS
+            ( AreaTaskUUID RequestUUID Area TrafficLight EnabledAt )
+          WITH task_rows.
       ENDIF.
 
       MODIFY ENTITIES OF zi_dm_request IN LOCAL MODE
@@ -112,7 +112,6 @@ CLASS lhc_Request IMPLEMENTATION.
 
   METHOD rejectArea.
     GET TIME STAMP FIELD DATA(now).
-    DATA initial_finished_at TYPE zdm_req_a-finished_at.
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<key>).
       SELECT SINGLE request_uuid FROM zdm_req_h
         WHERE request_uuid = @<key>-RequestUUID AND status = 'QA_REVIEW'
@@ -121,7 +120,7 @@ CLASS lhc_Request IMPLEMENTATION.
         APPEND VALUE #( %tky = <key>-%tky ) TO failed-request.
         CONTINUE.
       ENDIF.
-      UPDATE zdm_req_a SET traffic_light = 'R', finished_at = @initial_finished_at
+      UPDATE zdm_req_a SET traffic_light = 'R', finished_at = @CONV utclong( 0 )
         WHERE request_uuid = @request_uuid AND area = @<key>-%param-Area.
       INSERT zdm_audit FROM @( VALUE #(
         audit_uuid = cl_system_uuid=>create_uuid_x16_static( )
