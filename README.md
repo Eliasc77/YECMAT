@@ -2,7 +2,8 @@
 
 Modelo normalizado para SAP S/4HANA On-Premise: 15 tablas Dictionary
 `YMMT_DM_*`, flujos versionados, solicitudes, tareas, segmentos organizativos y
-valores configurables. Fuentes abapGit TABL en `src/`.
+valores configurables. Fuentes abapGit TABL en `src/`, con seis dominios y seis elementos de datos
+propios que deben activarse antes de las tablas.
 
 - [Modelo y decisiones](docs/arquitectura/MODELO_DATOS.md)
 - [DER Mermaid completo](docs/arquitectura/DER_DM.mmd)

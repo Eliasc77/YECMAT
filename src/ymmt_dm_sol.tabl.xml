@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<abapGit version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
- <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+<abapGit xmlns:asx="http://www.sap.com/abapxml" version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
+ <asx:abap version="1.0">
   <asx:values>
    <DD02V>
     <TABNAME>YMMT_DM_SOL</TABNAME>
@@ -74,23 +74,17 @@
      <FIELDNAME>FLUJO_ID</FIELDNAME>
      <ADMINFIELD>0</ADMINFIELD>
      <NOTNULL>X</NOTNULL>
-     <INTTYPE>C</INTTYPE>
-     <INTLEN>000040</INTLEN>
-     <DATATYPE>CHAR</DATATYPE>
-     <LENG>000020</LENG>
-     <MASK>  CHAR</MASK>
+     <ROLLNAME>YMME_DM_FLUJO_ID</ROLLNAME>
+     <COMPTYPE>E</COMPTYPE>
     </DD03P>
     <DD03P>
      <FIELDNAME>VERSION</FIELDNAME>
      <ADMINFIELD>0</ADMINFIELD>
      <NOTNULL>X</NOTNULL>
-     <INTTYPE>I</INTTYPE>
-     <INTLEN>000004</INTLEN>
-     <DATATYPE>INT4</DATATYPE>
-     <LENG>000010</LENG>
-     <MASK>  INT4</MASK>
      <CHECKTABLE>YMMT_DM_FLUJO_VR</CHECKTABLE>
      <SHLPORIGIN>P</SHLPORIGIN>
+     <ROLLNAME>YMME_DM_VERSION</ROLLNAME>
+     <COMPTYPE>E</COMPTYPE>
     </DD03P>
     <DD03P>
      <FIELDNAME>ESTADO</FIELDNAME>

@@ -15,6 +15,18 @@ No se han borrado tablas físicas ni registros en SAP.
 
 ## Decisiones e inconsistencias del DER
 
+**Corrección de activación a partir del diagnóstico ADT:** las FK Dictionary
+requieren elementos de datos; los tipos integrados CHAR/INT4 no bastan en sus
+componentes. Se incorporan seis dominios `YMMD_DM_*` y seis elementos `YMME_DM_*`
+para identificadores de flujo/paso/campo/sección, versión y nombres técnicos SAP.
+Se reutiliza el mismo elemento y dominio en ambos extremos de cada relación.
+El nombre técnico CHAR(30) sustituye a FIELDNAME (rechazado por el sistema destino)
+y TABNAME para evitar esa dependencia de catálogo estándar. No cambian campos,
+longitudes, valores almacenados, claves ni cardinalidades. Estos objetos deben
+activarse antes de las tablas. El error de activación de CAMPO impide también
+activar las tablas que lo referencian. Las validaciones estáticas anteriores
+no comprobaban el requisito de elemento de datos en las FK; se amplían aquí.
+
 **Corrección técnica de nombre, registrada antes de aplicarla:** la entidad
 lógica `YMMT_DM_FLUJO_VER` del DER fuente tiene 17 caracteres. Para respetar el
 límite de 16 caracteres de nombres de tabla Dictionary clásica On-Premise,

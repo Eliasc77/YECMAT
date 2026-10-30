@@ -11,7 +11,7 @@
         },
         {
           "name": "FLUJO_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_FLUJO_ID",
           "key": true
         },
         {
@@ -54,12 +54,12 @@
         },
         {
           "name": "FLUJO_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_FLUJO_ID",
           "key": true
         },
         {
           "name": "VERSION",
-          "type": "INT4",
+          "type": "YMME_DM_VERSION",
           "key": true
         },
         {
@@ -112,17 +112,17 @@
         },
         {
           "name": "FLUJO_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_FLUJO_ID",
           "key": true
         },
         {
           "name": "VERSION",
-          "type": "INT4",
+          "type": "YMME_DM_VERSION",
           "key": true
         },
         {
           "name": "PASO_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_PASO_ID",
           "key": true
         },
         {
@@ -206,12 +206,12 @@
         },
         {
           "name": "FLUJO_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_FLUJO_ID",
           "key": false
         },
         {
           "name": "VERSION",
-          "type": "INT4",
+          "type": "YMME_DM_VERSION",
           "key": false
         },
         {
@@ -283,17 +283,17 @@
         },
         {
           "name": "FLUJO_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_FLUJO_ID",
           "key": false
         },
         {
           "name": "VERSION",
-          "type": "INT4",
+          "type": "YMME_DM_VERSION",
           "key": false
         },
         {
           "name": "PASO_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_PASO_ID",
           "key": false
         },
         {
@@ -597,7 +597,7 @@
         },
         {
           "name": "CAMPO_ID",
-          "type": "CHAR30",
+          "type": "YMME_DM_CAMPO_ID",
           "key": true
         },
         {
@@ -607,12 +607,12 @@
         },
         {
           "name": "TABLA_SAP",
-          "type": "TABNAME",
+          "type": "YMME_DM_NOMBRE",
           "key": false
         },
         {
           "name": "CAMPO_SAP",
-          "type": "FIELDNAME",
+          "type": "YMME_DM_NOMBRE",
           "key": false
         },
         {
@@ -665,7 +665,7 @@
         },
         {
           "name": "SECCION_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_SECCION",
           "key": true
         },
         {
@@ -703,12 +703,12 @@
         },
         {
           "name": "FLUJO_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_FLUJO_ID",
           "key": false
         },
         {
           "name": "VERSION",
-          "type": "INT4",
+          "type": "YMME_DM_VERSION",
           "key": false
         },
         {
@@ -718,12 +718,12 @@
         },
         {
           "name": "CAMPO_ID",
-          "type": "CHAR30",
+          "type": "YMME_DM_CAMPO_ID",
           "key": false
         },
         {
           "name": "SECCION_ID",
-          "type": "CHAR20",
+          "type": "YMME_DM_SECCION",
           "key": false
         },
         {
@@ -802,7 +802,7 @@
         },
         {
           "name": "CAMPO_ID",
-          "type": "CHAR30",
+          "type": "YMME_DM_CAMPO_ID",
           "key": true
         },
         {
@@ -941,5 +941,43 @@
       "label": "agrupa",
       "cardinality": "||--o{"
     }
-  ]
+  ],
+  "data_elements": {
+    "YMME_DM_FLUJO_ID": {
+      "domain": "YMMD_DM_FLUJO_ID",
+      "datatype": "CHAR",
+      "length": 20,
+      "description": "Flujo"
+    },
+    "YMME_DM_VERSION": {
+      "domain": "YMMD_DM_VERSION",
+      "datatype": "INT4",
+      "length": 10,
+      "description": "Version"
+    },
+    "YMME_DM_PASO_ID": {
+      "domain": "YMMD_DM_PASO_ID",
+      "datatype": "CHAR",
+      "length": 20,
+      "description": "Paso"
+    },
+    "YMME_DM_CAMPO_ID": {
+      "domain": "YMMD_DM_CAMPO_ID",
+      "datatype": "CHAR",
+      "length": 30,
+      "description": "Campo"
+    },
+    "YMME_DM_SECCION": {
+      "domain": "YMMD_DM_SECCION",
+      "datatype": "CHAR",
+      "length": 20,
+      "description": "Seccion"
+    },
+    "YMME_DM_NOMBRE": {
+      "domain": "YMMD_DM_NOMBRE",
+      "datatype": "CHAR",
+      "length": 30,
+      "description": "Nombre tecnico SAP"
+    }
+  }
 }

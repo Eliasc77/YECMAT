@@ -8,12 +8,16 @@ ADT, abapGit y soporte de RAP/OData V4 antes de importar.
    transición. Git no identifica consumidores fuera de este repositorio.
 3. Conservar el paquete existente; verificar configuración para ABAP estándar
    On-Premise, namespace Y y autorizaciones. La metadata de paquete se conserva
-   sin modificar. No activar estas tablas bajo restricciones ABAP Cloud.
+   sin modificar. El objetivo inicial es On-Premise; si el paquete usa lenguaje
+   restringido, verificar disponibilidad de cada tipo estándar en el sistema real.
+   La corrección elimina FIELDNAME/TABNAME, sin certificar toda la compatibilidad Cloud.
 4. Confirmar elementos MANDT, SYSUUID_X16, SYUNAME, TIMESTAMPL, BOOLE_D, MATNR,
-   MTART, WERKS_D, LGORT_D, VKORG, VTWEG, BWKEY, BWTAR_D, MEINS, TABNAME y FIELDNAME.
+   MTART, WERKS_D, LGORT_D, VKORG, VTWEG, BWKEY, BWTAR_D y MEINS.
    Revisar extensión/longitud de material y conversión CUNIT.
 5. Importar primero objetos nuevos sin ejecutar bajas. Revisar el plan abapGit.
-   Orden (prefijo YMMT_DM_): FLUJO/CAMPO/SECCION; FLUJO_VR; PASO/REGLA/SOL;
+   Activar primero los seis dominios YMMD_DM_* y luego los seis elementos
+   YMME_DM_* incluidos. Después activar las tablas.
+   Orden de tablas (prefijo YMMT_DM_): FLUJO/CAMPO/SECCION; FLUJO_VR; PASO/REGLA/SOL;
    TAREA/SEG; SEG_CEN/ALM/VEN/VAL/UOM y DATO.
 6. Activar en ADT/SE11, comprobar PK/FK, índices Z01/Z02, clases de entrega,
    configuración técnica y ejecutar ATC. La comprobación local no lo sustituye.

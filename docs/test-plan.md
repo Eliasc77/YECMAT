@@ -2,8 +2,8 @@
 
 ## Comprobaciones locales
 
-`python3 tools/validate_dm.py` verifica XML, 15 tablas exactas, campos/PK/tipos,
-FK completas con mandante, metadata DD05M/DD08V, índices y coherencia DER/JSON/
+`python3 tools/validate_dm.py` verifica XML, 15 tablas, 6 dominios, 6 elementos, campos/PK/tipos,
+componentes FK con elementos de datos y dominios compatibles, FK completas con mandante, metadata DD05M/DD08V, índices y coherencia DER/JSON/
 diccionario. `python3 -m unittest discover -s tests -v` prueba que el validador
 detecta alteraciones críticas sobre copias temporales. No compilan ABAP.
 

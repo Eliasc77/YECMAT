@@ -69,6 +69,29 @@ class ModelValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValidationError, '15 TABL'):
             validate(self.root)
 
+    def test_foreign_key_requires_data_element(self):
+        self.corrupt('src/ymmt_dm_regla.tabl.xml',
+                     '<ROLLNAME>YMME_DM_FLUJO_ID</ROLLNAME>',
+                     '<DATATYPE>CHAR</DATATYPE><LENG>000020</LENG>')
+        with self.assertRaisesRegex(ValidationError, 'FK data element required'):
+            validate(self.root)
+
+    def test_restricted_standard_fieldname(self):
+        self.corrupt('src/ymmt_dm_campo.tabl.xml',
+                     '<ROLLNAME>YMME_DM_NOMBRE</ROLLNAME>', '<ROLLNAME>FIELDNAME</ROLLNAME>')
+        with self.assertRaisesRegex(ValidationError, 'Restricted standard element'):
+            validate(self.root)
+
+    def test_missing_domain(self):
+        (self.root / 'src/ymmd_dm_version.doma.xml').unlink()
+        with self.assertRaisesRegex(ValidationError, '6 DOMA'):
+            validate(self.root)
+
+    def test_incompatible_domain_length(self):
+        self.corrupt('src/ymmd_dm_campo_id.doma.xml', '<LENG>000030</LENG>', '<LENG>000020</LENG>')
+        with self.assertRaisesRegex(ValidationError, 'Domain length'):
+            validate(self.root)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -26,6 +26,25 @@ Los CHAR(n) son tipos Dictionary integrados, longitud en caracteres; INT4 tiene 
 `VALOR` tiene máximo 1333 caracteres, límite deliberado de CHAR DDIC; no se truncan entradas. Textos largos o binarios requieren una extensión posterior del modelo.
 Configuración: clase de entrega C / APPL2. Transacciones: A / APPL0. Sin buffering ni dependencia de idioma. Idioma original E en metadata; textos de descripción en español.
 
+## Dominios y elementos de datos propios
+
+Los componentes de las FK usan elementos de datos, basados en el mismo dominio
+en padre e hijo. No se definen FK directamente sobre CHAR/INT4 integrados.
+Los seis pares se importan antes de activar las tablas.
+
+| Elemento | Dominio | Tipo base | Uso |
+|---|---|---|---|
+| `YMME_DM_FLUJO_ID` | `YMMD_DM_FLUJO_ID` | `CHAR(20)` | Flujo |
+| `YMME_DM_VERSION` | `YMMD_DM_VERSION` | `INT4(10)` | Version |
+| `YMME_DM_PASO_ID` | `YMMD_DM_PASO_ID` | `CHAR(20)` | Paso |
+| `YMME_DM_CAMPO_ID` | `YMMD_DM_CAMPO_ID` | `CHAR(30)` | Campo |
+| `YMME_DM_SECCION` | `YMMD_DM_SECCION` | `CHAR(20)` | Seccion |
+| `YMME_DM_NOMBRE` | `YMMD_DM_NOMBRE` | `CHAR(30)` | Nombre tecnico SAP |
+
+`YMME_DM_NOMBRE` se usa en TABLA_SAP y CAMPO_SAP: sustituye las referencias
+a TABNAME/FIELDNAME por CHAR(30) propio. ADT rechazó FIELDNAME en el sistema
+destino; no se cambia la longitud ni se añade información funcional.
+
 ## YMMT_DM_FLUJO
 
 DM - Definicion de flujo. Clase de entrega `C`.
@@ -33,7 +52,7 @@ DM - Definicion de flujo. Clase de entrega `C`.
 | Campo | Tipo DDIC | Clave / referencia |
 |---|---|---|
 | `MANDT` | `MANDT` | PK |
-| `FLUJO_ID` | `CHAR20` | PK |
+| `FLUJO_ID` | `YMME_DM_FLUJO_ID` | PK |
 | `DESCRIPCION` | `CHAR80` | — |
 | `TIPO_MATERIAL` | `MTART` | — |
 | `TIPO_OPERACION` | `CHAR1` | — |
@@ -48,8 +67,8 @@ DM - Version de flujo. Clase de entrega `C`.
 | Campo | Tipo DDIC | Clave / referencia |
 |---|---|---|
 | `MANDT` | `MANDT` | PK, FK → `YMMT_DM_FLUJO` |
-| `FLUJO_ID` | `CHAR20` | PK, FK → `YMMT_DM_FLUJO` |
-| `VERSION` | `INT4` | PK |
+| `FLUJO_ID` | `YMME_DM_FLUJO_ID` | PK, FK → `YMMT_DM_FLUJO` |
+| `VERSION` | `YMME_DM_VERSION` | PK |
 | `ESTADO` | `CHAR12` | — |
 | `VIGENTE_DESDE` | `DATS` | — |
 | `VIGENTE_HASTA` | `DATS` | — |
@@ -64,9 +83,9 @@ DM - Paso de flujo versionado. Clase de entrega `C`.
 | Campo | Tipo DDIC | Clave / referencia |
 |---|---|---|
 | `MANDT` | `MANDT` | PK, FK → `YMMT_DM_FLUJO_VR` |
-| `FLUJO_ID` | `CHAR20` | PK, FK → `YMMT_DM_FLUJO_VR` |
-| `VERSION` | `INT4` | PK, FK → `YMMT_DM_FLUJO_VR` |
-| `PASO_ID` | `CHAR20` | PK |
+| `FLUJO_ID` | `YMME_DM_FLUJO_ID` | PK, FK → `YMMT_DM_FLUJO_VR` |
+| `VERSION` | `YMME_DM_VERSION` | PK, FK → `YMMT_DM_FLUJO_VR` |
+| `PASO_ID` | `YMME_DM_PASO_ID` | PK |
 | `AREA` | `CHAR10` | — |
 | `FASE` | `CHAR20` | — |
 | `CONDICION_BPM` | `CHAR1` | — |
@@ -87,8 +106,8 @@ DM - Solicitud de material. Clase de entrega `A`.
 | `TIPO_MATERIAL` | `MTART` | — |
 | `TIPO_OPERACION` | `CHAR1` | — |
 | `MATERIAL` | `MATNR` | — |
-| `FLUJO_ID` | `CHAR20` | FK → `YMMT_DM_FLUJO_VR` |
-| `VERSION` | `INT4` | FK → `YMMT_DM_FLUJO_VR` |
+| `FLUJO_ID` | `YMME_DM_FLUJO_ID` | FK → `YMMT_DM_FLUJO_VR` |
+| `VERSION` | `YMME_DM_VERSION` | FK → `YMMT_DM_FLUJO_VR` |
 | `ESTADO` | `CHAR12` | — |
 | `CREADO_POR` | `SYUNAME` | — |
 | `CREADO_EL` | `TIMESTAMPL` | — |
@@ -105,9 +124,9 @@ DM - Instancia de paso. Clase de entrega `A`.
 | `MANDT` | `MANDT` | PK, FK → `YMMT_DM_SOL`, `YMMT_DM_PASO` |
 | `TAREA_UUID` | `SYSUUID_X16` | PK |
 | `SOLICITUD_UUID` | `SYSUUID_X16` | FK → `YMMT_DM_SOL` |
-| `FLUJO_ID` | `CHAR20` | FK → `YMMT_DM_PASO` |
-| `VERSION` | `INT4` | FK → `YMMT_DM_PASO` |
-| `PASO_ID` | `CHAR20` | FK → `YMMT_DM_PASO` |
+| `FLUJO_ID` | `YMME_DM_FLUJO_ID` | FK → `YMMT_DM_PASO` |
+| `VERSION` | `YMME_DM_VERSION` | FK → `YMMT_DM_PASO` |
+| `PASO_ID` | `YMME_DM_PASO_ID` | FK → `YMMT_DM_PASO` |
 | `AREA` | `CHAR10` | — |
 | `ESTADO` | `CHAR12` | — |
 | `RESPONSABLE` | `SYUNAME` | — |
@@ -194,10 +213,10 @@ DM - Catalogo de campos. Clase de entrega `C`.
 | Campo | Tipo DDIC | Clave / referencia |
 |---|---|---|
 | `MANDT` | `MANDT` | PK |
-| `CAMPO_ID` | `CHAR30` | PK |
+| `CAMPO_ID` | `YMME_DM_CAMPO_ID` | PK |
 | `DESCRIPCION` | `CHAR80` | — |
-| `TABLA_SAP` | `TABNAME` | — |
-| `CAMPO_SAP` | `FIELDNAME` | — |
+| `TABLA_SAP` | `YMME_DM_NOMBRE` | — |
+| `CAMPO_SAP` | `YMME_DM_NOMBRE` | — |
 | `TIPO_SEGMENTO` | `CHAR10` | — |
 | `TIPO_DATO` | `CHAR10` | — |
 | `LONGITUD` | `INT4` | — |
@@ -214,7 +233,7 @@ DM - Seccion de formulario. Clase de entrega `C`.
 | Campo | Tipo DDIC | Clave / referencia |
 |---|---|---|
 | `MANDT` | `MANDT` | PK |
-| `SECCION_ID` | `CHAR20` | PK |
+| `SECCION_ID` | `YMME_DM_SECCION` | PK |
 | `DESCRIPCION` | `CHAR80` | — |
 | `ORDEN` | `INT4` | — |
 | `ACTIVO` | `BOOLE_D` | — |
@@ -228,11 +247,11 @@ DM - Regla de campo versionada. Clase de entrega `C`.
 |---|---|---|
 | `MANDT` | `MANDT` | PK, FK → `YMMT_DM_FLUJO_VR`, `YMMT_DM_CAMPO`, `YMMT_DM_SECCION` |
 | `REGLA_UUID` | `SYSUUID_X16` | PK |
-| `FLUJO_ID` | `CHAR20` | FK → `YMMT_DM_FLUJO_VR` |
-| `VERSION` | `INT4` | FK → `YMMT_DM_FLUJO_VR` |
+| `FLUJO_ID` | `YMME_DM_FLUJO_ID` | FK → `YMMT_DM_FLUJO_VR` |
+| `VERSION` | `YMME_DM_VERSION` | FK → `YMMT_DM_FLUJO_VR` |
 | `AREA` | `CHAR10` | — |
-| `CAMPO_ID` | `CHAR30` | FK → `YMMT_DM_CAMPO` |
-| `SECCION_ID` | `CHAR20` | FK → `YMMT_DM_SECCION` |
+| `CAMPO_ID` | `YMME_DM_CAMPO_ID` | FK → `YMMT_DM_CAMPO` |
+| `SECCION_ID` | `YMME_DM_SECCION` | FK → `YMMT_DM_SECCION` |
 | `ESTADO_CAMPO` | `CHAR1` | — |
 | `ORDEN` | `INT4` | — |
 | `ACTIVO` | `BOOLE_D` | — |
@@ -247,7 +266,7 @@ DM - Valor por campo y contexto. Clase de entrega `A`.
 |---|---|---|
 | `MANDT` | `MANDT` | PK, FK → `YMMT_DM_SEG`, `YMMT_DM_CAMPO` |
 | `SEGMENTO_UUID` | `SYSUUID_X16` | PK, FK → `YMMT_DM_SEG` |
-| `CAMPO_ID` | `CHAR30` | PK, FK → `YMMT_DM_CAMPO` |
+| `CAMPO_ID` | `YMME_DM_CAMPO_ID` | PK, FK → `YMMT_DM_CAMPO` |
 | `VALOR` | `CHAR1333` | — |
 | `MODIFICADO_POR` | `SYUNAME` | — |
 | `MODIFICADO_EL` | `TIMESTAMPL` | — |

@@ -21,7 +21,12 @@ KEYS = {
 STANDARD = {
     'MANDT', 'SYSUUID_X16', 'MTART', 'MATNR', 'WERKS_D', 'LGORT_D',
     'VKORG', 'VTWEG', 'BWKEY', 'BWTAR_D', 'MEINS', 'SYUNAME',
-    'TIMESTAMPL', 'BOOLE_D', 'TABNAME', 'FIELDNAME',
+    'TIMESTAMPL', 'BOOLE_D',
+}
+CUSTOM_TYPES = {
+    'FLUJO_ID': ('CHAR', 20), 'VERSION': ('INT4', 10),
+    'PASO_ID': ('CHAR', 20), 'CAMPO_ID': ('CHAR', 30),
+    'SECCION': ('CHAR', 20), 'NOMBRE': ('CHAR', 30),
 }
 
 
@@ -39,6 +44,26 @@ def validate(root=ROOT):
     doc = root / 'docs/arquitectura'
     model = json.loads((doc / 'modelo_dm.json').read_text())
     tables = model['tables']
+    elements = model['data_elements']
+    require(set(elements) == {'YMME_DM_' + n for n in CUSTOM_TYPES}, 'Custom data element set')
+    require(len(list((root / 'src').glob('*.dtel.xml'))) == 6, 'Expected 6 DTEL definitions')
+    require(len(list((root / 'src').glob('*.doma.xml'))) == 6, 'Expected 6 DOMA definitions')
+    for suffix, (datatype, length) in CUSTOM_TYPES.items():
+        name, domain = 'YMME_DM_' + suffix, 'YMMD_DM_' + suffix
+        spec = elements[name]
+        require(spec['domain'] == domain and spec['datatype'] == datatype and spec['length'] == length,
+                f'Custom type contract {name}')
+        dtel = ET.parse(root / 'src' / (name.lower() + '.dtel.xml'))
+        doma = ET.parse(root / 'src' / (domain.lower() + '.doma.xml'))
+        require(dtel.getroot().get('serializer') == 'LCL_OBJECT_DTEL', f'DTEL serializer {name}')
+        require(doma.getroot().get('serializer') == 'LCL_OBJECT_DOMA', f'DOMA serializer {domain}')
+        require(dtel.findtext('.//DD04V/ROLLNAME') == name, f'DTEL name {name}')
+        require(dtel.findtext('.//DD04V/DOMNAME') == domain, f'DTEL domain {name}')
+        require(dtel.findtext('.//DD04V/REFKIND') == 'D', f'DTEL reference kind {name}')
+        require(doma.findtext('.//DD01V/DOMNAME') == domain, f'DOMA name {domain}')
+        require(doma.findtext('.//DD01V/DATATYPE') == datatype, f'Domain type {domain}')
+        require(int(doma.findtext('.//DD01V/LENG', '0')) == length, f'Domain length {domain}')
+        require(int(doma.findtext('.//DD01V/OUTPUTLEN', '0')) == length, f'Domain output length {domain}')
     require(set(tables) == {PREFIX + n for n in KEYS}, 'Expected exactly 15 model tables')
     paths = list((root / 'src').rglob('*.tabl.xml'))
     require(len(paths) == 15, 'Expected exactly 15 TABL definitions')
@@ -70,6 +95,13 @@ def validate(root=ROOT):
         names = [f.findtext('FIELDNAME') for f in fields]
         require(len(set(names)) == len(names), f'Duplicate field {name}')
         require(names == [f['name'] for f in declared], f'Fields/order {name}')
+        fk_columns = {c for fk in spec['foreign_keys'] for c in fk['fields']}
+        for actual in fields:
+            col = actual.findtext('FIELDNAME')
+            require(actual.findtext('ROLLNAME') not in {'FIELDNAME', 'TABNAME'},
+                    f'Restricted standard element {name}.{col}')
+            if col in fk_columns:
+                require(bool(actual.findtext('ROLLNAME')), f'FK data element required {name}.{col}')
         actual_pk = [f.findtext('FIELDNAME') for f in fields if f.findtext('KEYFLAG') == 'X']
         require(actual_pk == expected_pk, f'PK {name}')
         require(names[:len(actual_pk)] == actual_pk, f'Non-contiguous PK {name}')
@@ -95,7 +127,7 @@ def validate(root=ROOT):
                 require(int(actual.findtext('INTLEN', '0')) == intlen, f'Internal length {name}.{col}')
                 require(int(actual.findtext('LENG', '0')) == leng, f'Length {name}.{col}')
             else:
-                require(typ in STANDARD, f'Unrecognized standard element {typ}')
+                require(typ in STANDARD or typ in elements, f'Unrecognized data element {typ}')
                 require(actual.findtext('ROLLNAME') == typ, f'Data element {name}.{col}')
                 require(actual.findtext('COMPTYPE') == 'E', f'Element component {name}.{col}')
                 require(actual.find('DATATYPE') is None, f'Overridden standard element {name}.{col}')
@@ -180,8 +212,9 @@ def validate(root=ROOT):
     require(sorted((a, b, c) for a, b, c, _ in parsed) == sorted(relation_edges), 'DER FK edges')
     require(sorted(parsed) == sorted((r['parent'], r['cardinality'], r['child'], r['label']) for r in model['relations']), 'DER relation contract')
     for path in (root / 'src').iterdir():
-        require(path.name == 'package.devc.xml' or path.name.startswith('ymmt_dm_'), f'Legacy source remains: {path.name}')
-    return f'OK: 15 tables, {field_count} fields, {fk_count} foreign keys, {index_count} indexes, 16 DER relations'
+        require(path.name == 'package.devc.xml' or path.name.startswith(('ymmt_dm_', 'ymme_dm_', 'ymmd_dm_')),
+                f'Legacy source remains: {path.name}')
+    return f'OK: 15 tables, 6 domains, 6 data elements, {field_count} fields, {fk_count} foreign keys, {index_count} indexes, 16 DER relations'
 
 
 if __name__ == '__main__':
