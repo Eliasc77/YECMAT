@@ -1,47 +1,24 @@
-# YECMAT – Gestión de datos maestros de materiales
+# YECMAT — Gestión de materiales DM
 
-Implementación base con **ABAP RESTful Application Programming Model (RAP)** para
-SAP BTP ABAP Environment Trial, usando exclusivamente fuentes ABAP Cloud.
+Modelo normalizado para SAP S/4HANA On-Premise: 15 tablas Dictionary
+`YMMT_DM_*`, flujos versionados, solicitudes, tareas, segmentos organizativos y
+valores configurables. Fuentes abapGit TABL en `src/`.
 
-La solución recibe solicitudes de creación, modificación e inactivación de
-materiales, permite que las áreas trabajen en paralelo y recién actualiza el
-maestro estándar al finalizar el flujo. El diseño evita mantener bloqueos sobre
-MARA/MARC durante la captura.
+- [Modelo y decisiones](docs/arquitectura/MODELO_DATOS.md)
+- [DER Mermaid completo](docs/arquitectura/DER_DM.mmd)
+- [Diccionario](docs/arquitectura/DICCIONARIO_DATOS.md)
+- [Relaciones y unicidad](docs/arquitectura/RELACIONES.md)
+- [Respaldo e inventario de limpieza](docs/arquitectura/LIMPIEZA.md)
+- [Validaciones](docs/arquitectura/VALIDACIONES.md)
+- [Importación en SAP](docs/deployment.md)
 
-## Alcance implementado
+Validación local desde la raíz:
 
-- Solicitud y tareas independientes por área (`PCP`, `AR`, `CONT`, `LOG`, `AS`,
-  `CC` y solicitante).
-- Valores genéricos por campo técnico para soportar una matriz dinámica sin
-  regenerar la aplicación.
-- Estados de semáforo `G/R/A/V`, clasificación BPM/no BPM y acciones RAP para
-  finalizar, reabrir, rechazar y aprobar.
-- Validación de obligatoriedad contra `ZDM_FIELD_C` al finalizar un área.
-- Auditoría de cambios y patrón outbox para procesamiento asíncrono.
-- Activación `MOCK` ejecutable dentro del trial y patrón outbox preparado para
-  sustituirse por una API HTTP pública de Product Master de un S/4 externo.
+```sh
+python3 tools/validate_dm.py
+python3 -m unittest discover -s tests -v
+```
 
-## Estructura
-
-- `src/`: fuentes ADT/abapGit.
-- `docs/requirements.md`: especificación consolidada de los adjuntos.
-- `docs/architecture.md`: decisiones técnicas, estados y concurrencia.
-- `docs/deployment.md`: orden de activación y configuración en SAP.
-- `docs/test-plan.md`: pruebas funcionales y de concurrencia.
-
-## Uso
-
-Vincular el paquete ADT con este repositorio mediante abapGit y ejecutar Pull
-sobre `main`. El repositorio incluye `.abapgit.xml` y metadata de sus objetos.
-Después se crea y publica el binding OData V4 en ADT. No se requiere Node.js ni
-servicios locales: el runtime es SAP BTP ABAP Environment.
-
-> BTP Trial no contiene MARA/MARC ni permite BAPIs clásicas. La activación real
-> debe llamar por HTTPS una API liberada del sistema S/4 destino.
-
-## Estado de la entrega
-
-Este repositorio contiene el núcleo backend, el contrato OData y una activación
-simulada para probar el flujo íntegro en el trial. No se debe transportar a
-productivo sin conectar la API pública de Product Master y reemplazar la
-autorización provisional de los behavior pools.
+Estado: fuentes locales, sin activación SAP. Los behaviors y el servicio anterior
+para BTP Trial se retiraron; aún no hay servicio OData V4 del nuevo modelo.
+No importar bajas sobre un sistema con datos sin un plan de transición separado.

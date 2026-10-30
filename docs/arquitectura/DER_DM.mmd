@@ -1,0 +1,165 @@
+erDiagram
+
+    YMMT_DM_FLUJO ||--o{ YMMT_DM_FLUJO_VR : tiene_versiones
+    YMMT_DM_FLUJO_VR ||--o{ YMMT_DM_PASO : define_pasos
+    YMMT_DM_FLUJO_VR ||--o{ YMMT_DM_REGLA : configura_campos
+    YMMT_DM_FLUJO_VR ||--o{ YMMT_DM_SOL : asigna_version
+    YMMT_DM_SOL ||--o{ YMMT_DM_TAREA : genera
+    YMMT_DM_PASO ||--o{ YMMT_DM_TAREA : instancia
+    YMMT_DM_SOL ||--o{ YMMT_DM_SEG : contiene
+    YMMT_DM_SEG ||--o| YMMT_DM_SEG_CEN : centro
+    YMMT_DM_SEG ||--o| YMMT_DM_SEG_ALM : almacen
+    YMMT_DM_SEG ||--o| YMMT_DM_SEG_VEN : ventas
+    YMMT_DM_SEG ||--o| YMMT_DM_SEG_VAL : valoracion
+    YMMT_DM_SEG ||--o| YMMT_DM_SEG_UOM : unidad
+    YMMT_DM_SEG ||--o{ YMMT_DM_DATO : contiene
+    YMMT_DM_CAMPO ||--o{ YMMT_DM_DATO : identifica
+    YMMT_DM_CAMPO ||--o{ YMMT_DM_REGLA : configura
+    YMMT_DM_SECCION ||--o{ YMMT_DM_REGLA : agrupa
+
+    YMMT_DM_FLUJO {
+        MANDT mandt PK
+        CHAR20 flujo_id PK
+        CHAR80 descripcion
+        MTART tipo_material
+        CHAR1 tipo_operacion
+        WERKS_D centro_criterio
+        BOOLE_D activo
+    }
+
+    YMMT_DM_FLUJO_VR {
+        MANDT mandt PK,FK
+        CHAR20 flujo_id PK,FK
+        INT4 version PK
+        CHAR12 estado
+        DATS vigente_desde
+        DATS vigente_hasta
+        SYUNAME creado_por
+        TIMESTAMPL creado_el
+    }
+
+    YMMT_DM_PASO {
+        MANDT mandt PK,FK
+        CHAR20 flujo_id PK,FK
+        INT4 version PK,FK
+        CHAR20 paso_id PK
+        CHAR10 area
+        CHAR20 fase
+        CHAR1 condicion_bpm
+        INT4 orden
+        BOOLE_D obligatorio
+        BOOLE_D activo
+    }
+
+    YMMT_DM_SOL {
+        MANDT mandt PK,FK
+        SYSUUID_X16 solicitud_uuid PK
+        CHAR20 numero_solicitud UK
+        MTART tipo_material
+        CHAR1 tipo_operacion
+        MATNR material
+        CHAR20 flujo_id FK
+        INT4 version FK
+        CHAR12 estado
+        SYUNAME creado_por
+        TIMESTAMPL creado_el
+    }
+
+    YMMT_DM_TAREA {
+        MANDT mandt PK,FK
+        SYSUUID_X16 tarea_uuid PK
+        SYSUUID_X16 solicitud_uuid FK
+        CHAR20 flujo_id FK
+        INT4 version FK
+        CHAR20 paso_id FK
+        CHAR10 area
+        CHAR12 estado
+        SYUNAME responsable
+        TIMESTAMPL creado_el
+    }
+
+    YMMT_DM_SEG {
+        MANDT mandt PK,FK
+        SYSUUID_X16 segmento_uuid PK
+        SYSUUID_X16 solicitud_uuid FK
+        CHAR10 tipo_segmento
+        CHAR12 estado
+    }
+
+    YMMT_DM_SEG_CEN {
+        MANDT mandt PK,FK
+        SYSUUID_X16 segmento_uuid PK,FK
+        WERKS_D centro
+    }
+
+    YMMT_DM_SEG_ALM {
+        MANDT mandt PK,FK
+        SYSUUID_X16 segmento_uuid PK,FK
+        WERKS_D centro
+        LGORT_D almacen
+    }
+
+    YMMT_DM_SEG_VEN {
+        MANDT mandt PK,FK
+        SYSUUID_X16 segmento_uuid PK,FK
+        VKORG org_ventas
+        VTWEG canal
+    }
+
+    YMMT_DM_SEG_VAL {
+        MANDT mandt PK,FK
+        SYSUUID_X16 segmento_uuid PK,FK
+        BWKEY area_valoracion
+        BWTAR_D tipo_valoracion
+    }
+
+    YMMT_DM_SEG_UOM {
+        MANDT mandt PK,FK
+        SYSUUID_X16 segmento_uuid PK,FK
+        MEINS unidad_alternativa
+    }
+
+    YMMT_DM_CAMPO {
+        MANDT mandt PK
+        CHAR30 campo_id PK
+        CHAR80 descripcion
+        TABNAME tabla_sap
+        FIELDNAME campo_sap
+        CHAR10 tipo_segmento
+        CHAR10 tipo_dato
+        INT4 longitud
+        INT4 decimales
+        CHAR30 ayuda_valores
+        CHAR20 tipo_control
+        BOOLE_D activo
+    }
+
+    YMMT_DM_SECCION {
+        MANDT mandt PK
+        CHAR20 seccion_id PK
+        CHAR80 descripcion
+        INT4 orden
+        BOOLE_D activo
+    }
+
+    YMMT_DM_REGLA {
+        MANDT mandt PK,FK
+        SYSUUID_X16 regla_uuid PK
+        CHAR20 flujo_id FK
+        INT4 version FK
+        CHAR10 area
+        CHAR30 campo_id FK
+        CHAR20 seccion_id FK
+        CHAR1 estado_campo
+        INT4 orden
+        BOOLE_D activo
+    }
+
+    YMMT_DM_DATO {
+        MANDT mandt PK,FK
+        SYSUUID_X16 segmento_uuid PK,FK
+        CHAR30 campo_id PK,FK
+        CHAR1333 valor
+        SYUNAME modificado_por
+        TIMESTAMPL modificado_el
+    }

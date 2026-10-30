@@ -1,45 +1,32 @@
-# Despliegue en SAP BTP ABAP Environment Trial
+# Preparación e importación en S/4HANA On-Premise
 
-## Prerrequisitos
+No se ha conectado SAP ni activado objetos. Confirmar release S/4HANA, SAP_BASIS,
+ADT, abapGit y soporte de RAP/OData V4 antes de importar.
 
-- SAP BTP ABAP Environment Trial y Eclipse/ADT actualizado.
-- Plugin abapGit para ADT.
-- Paquete `YECMAT` y autorización para publicar service bindings.
+1. Ejecutar validaciones locales del README y revisar el inventario de bajas.
+2. Revisar dependencias externas en ADT, respaldar datos y preparar transporte de
+   transición. Git no identifica consumidores fuera de este repositorio.
+3. Conservar el paquete existente; verificar configuración para ABAP estándar
+   On-Premise, namespace Y y autorizaciones. La metadata de paquete se conserva
+   sin modificar. No activar estas tablas bajo restricciones ABAP Cloud.
+4. Confirmar elementos MANDT, SYSUUID_X16, SYUNAME, TIMESTAMPL, BOOLE_D, MATNR,
+   MTART, WERKS_D, LGORT_D, VKORG, VTWEG, BWKEY, BWTAR_D, MEINS, TABNAME y FIELDNAME.
+   Revisar extensión/longitud de material y conversión CUNIT.
+5. Importar primero objetos nuevos sin ejecutar bajas. Revisar el plan abapGit.
+   Orden (prefijo YMMT_DM_): FLUJO/CAMPO/SECCION; FLUJO_VR; PASO/REGLA/SOL;
+   TAREA/SEG; SEG_CEN/ALM/VEN/VAL/UOM y DATO.
+6. Activar en ADT/SE11, comprobar PK/FK, índices Z01/Z02, clases de entrega,
+   configuración técnica y ejecutar ATC. La comprobación local no lo sustituye.
+7. Cargar catálogo/secciones, flujo/versiones en borrador, pasos y reglas usando
+   herramientas autorizadas; validar vigencias, criterios, áreas y campos antes
+   de publicar configuración. No hay carga inicial implícita.
+8. Diseñar RAP: altas atómicas SEG/subtipo, locks, validaciones, autorizaciones,
+   auditoría y estrategia ETag/draft; crear CDS, behaviors, clases, proyecciones,
+   servicio y binding V4 según release. No reutilizar directamente el servicio viejo.
+9. Preparar migración histórica asignando versión y contexto explícitos; reconciliar
+   conteos y valores antes del corte. Auditoría, outbox e integración con material
+   estándar requieren diseño propio: no tienen sustituto en las 15 tablas del DER.
+10. Ejecutar el plan SAP antes de publicar servicios o retirar objetos antiguos.
 
-## Orden
-
-1. Vincular el paquete `YECMAT` a `https://github.com/Eliasc77/YECMAT`, rama
-   `main`, y ejecutar Pull. `.abapgit.xml` y metadata están incluidos.
-2. Verificar que las tablas Dictionary `ZDM_REQ_H`, `ZDM_REQ_A`, `ZDM_REQ_F`,
-   `ZDM_FIELD_C`, `ZDM_AUDIT` y `ZDM_OUTBOX` estén activas.
-3. Activar CDS de interfaz y consumo.
-4. Activar behavior definitions y clases behavior pool.
-5. Activar service definition y service binding OData V4 UI.
-6. Cargar `ZDM_FIELD_C` con la matriz aprobada del Excel.
-7. Crear los roles PFCG y asignar autorizaciones por centro, tipo y área.
-8. Ejecutar `ZCL_DM_TRIAL_ACTIVATION` como ABAP Application (Console) para probar
-   el modo MOCK.
-9. Para integración real, crear el Service Consumption Model y Communication
-   Arrangement de la API pública del S/4 externo.
-
-## Bloqueos antes de productivo
-
-- Los métodos `get_instance_authorizations` permiten provisionalmente las
-  operaciones para facilitar la activación inicial. Sustituirlos por
-  `AUTHORITY-CHECK` contra los objetos PFCG creados; la UI nunca es control de
-  seguridad suficiente.
-- Sustituir el mock por una API HTTP liberada; BAPIs, commits clásicos y acceso a
-  MARA/MARC no son válidos en BTP ABAP Environment.
-- Generar y publicar un service binding OData V4 UI llamado, por ejemplo,
-  `ZUI_DM_O4` desde la service definition incluida.
-
-## Decisiones que requieren datos del sistema
-
-- El PDF usa `ZLEE` y el Excel también menciona `ZENV`: confirmar si son alias o
-  tipos distintos antes de cargar customizing.
-- Confirmar nombres reales de características/clases, campos Z y códigos de
-  estado de material.
-- Definir pools de correo, SLA por área y mecanismo productivo para ejecutar el
-  outbox (Application Jobs recomendado).
-
-No se deben guardar credenciales ni destinos RFC en Git.
+No hay scripts DROP TABLE/DELETE FROM ni migración destructiva. La baja de una
+fuente Git no autoriza borrar el objeto físico ni sus registros en SAP.

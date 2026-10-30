@@ -1,4 +1,0 @@
-CLASS zbp_i_dm_areatask DEFINITION
-  PUBLIC ABSTRACT FINAL
-  FOR BEHAVIOR OF zi_dm_areatask.
-ENDCLASS.

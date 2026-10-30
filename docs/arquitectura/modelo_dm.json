@@ -1,0 +1,945 @@
+{
+  "tables": {
+    "YMMT_DM_FLUJO": {
+      "description": "DM - Definicion de flujo",
+      "delivery_class": "C",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "FLUJO_ID",
+          "type": "CHAR20",
+          "key": true
+        },
+        {
+          "name": "DESCRIPCION",
+          "type": "CHAR80",
+          "key": false
+        },
+        {
+          "name": "TIPO_MATERIAL",
+          "type": "MTART",
+          "key": false
+        },
+        {
+          "name": "TIPO_OPERACION",
+          "type": "CHAR1",
+          "key": false
+        },
+        {
+          "name": "CENTRO_CRITERIO",
+          "type": "WERKS_D",
+          "key": false
+        },
+        {
+          "name": "ACTIVO",
+          "type": "BOOLE_D",
+          "key": false
+        }
+      ],
+      "foreign_keys": [],
+      "indexes": []
+    },
+    "YMMT_DM_FLUJO_VR": {
+      "description": "DM - Version de flujo",
+      "delivery_class": "C",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "FLUJO_ID",
+          "type": "CHAR20",
+          "key": true
+        },
+        {
+          "name": "VERSION",
+          "type": "INT4",
+          "key": true
+        },
+        {
+          "name": "ESTADO",
+          "type": "CHAR12",
+          "key": false
+        },
+        {
+          "name": "VIGENTE_DESDE",
+          "type": "DATS",
+          "key": false
+        },
+        {
+          "name": "VIGENTE_HASTA",
+          "type": "DATS",
+          "key": false
+        },
+        {
+          "name": "CREADO_POR",
+          "type": "SYUNAME",
+          "key": false
+        },
+        {
+          "name": "CREADO_EL",
+          "type": "TIMESTAMPL",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "FLUJO_ID",
+          "parent": "YMMT_DM_FLUJO",
+          "fields": [
+            "MANDT",
+            "FLUJO_ID"
+          ],
+          "cardinality": "0..*"
+        }
+      ],
+      "indexes": []
+    },
+    "YMMT_DM_PASO": {
+      "description": "DM - Paso de flujo versionado",
+      "delivery_class": "C",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "FLUJO_ID",
+          "type": "CHAR20",
+          "key": true
+        },
+        {
+          "name": "VERSION",
+          "type": "INT4",
+          "key": true
+        },
+        {
+          "name": "PASO_ID",
+          "type": "CHAR20",
+          "key": true
+        },
+        {
+          "name": "AREA",
+          "type": "CHAR10",
+          "key": false
+        },
+        {
+          "name": "FASE",
+          "type": "CHAR20",
+          "key": false
+        },
+        {
+          "name": "CONDICION_BPM",
+          "type": "CHAR1",
+          "key": false
+        },
+        {
+          "name": "ORDEN",
+          "type": "INT4",
+          "key": false
+        },
+        {
+          "name": "OBLIGATORIO",
+          "type": "BOOLE_D",
+          "key": false
+        },
+        {
+          "name": "ACTIVO",
+          "type": "BOOLE_D",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "VERSION",
+          "parent": "YMMT_DM_FLUJO_VR",
+          "fields": [
+            "MANDT",
+            "FLUJO_ID",
+            "VERSION"
+          ],
+          "cardinality": "0..*"
+        }
+      ],
+      "indexes": []
+    },
+    "YMMT_DM_SOL": {
+      "description": "DM - Solicitud de material",
+      "delivery_class": "A",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "SOLICITUD_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "NUMERO_SOLICITUD",
+          "type": "CHAR20",
+          "key": false
+        },
+        {
+          "name": "TIPO_MATERIAL",
+          "type": "MTART",
+          "key": false
+        },
+        {
+          "name": "TIPO_OPERACION",
+          "type": "CHAR1",
+          "key": false
+        },
+        {
+          "name": "MATERIAL",
+          "type": "MATNR",
+          "key": false
+        },
+        {
+          "name": "FLUJO_ID",
+          "type": "CHAR20",
+          "key": false
+        },
+        {
+          "name": "VERSION",
+          "type": "INT4",
+          "key": false
+        },
+        {
+          "name": "ESTADO",
+          "type": "CHAR12",
+          "key": false
+        },
+        {
+          "name": "CREADO_POR",
+          "type": "SYUNAME",
+          "key": false
+        },
+        {
+          "name": "CREADO_EL",
+          "type": "TIMESTAMPL",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "VERSION",
+          "parent": "YMMT_DM_FLUJO_VR",
+          "fields": [
+            "MANDT",
+            "FLUJO_ID",
+            "VERSION"
+          ],
+          "cardinality": "0..*"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "Z01",
+          "fields": [
+            "MANDT",
+            "NUMERO_SOLICITUD"
+          ],
+          "unique": true
+        },
+        {
+          "name": "Z02",
+          "fields": [
+            "MANDT",
+            "FLUJO_ID",
+            "VERSION"
+          ],
+          "unique": false
+        }
+      ]
+    },
+    "YMMT_DM_TAREA": {
+      "description": "DM - Instancia de paso",
+      "delivery_class": "A",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "TAREA_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "SOLICITUD_UUID",
+          "type": "SYSUUID_X16",
+          "key": false
+        },
+        {
+          "name": "FLUJO_ID",
+          "type": "CHAR20",
+          "key": false
+        },
+        {
+          "name": "VERSION",
+          "type": "INT4",
+          "key": false
+        },
+        {
+          "name": "PASO_ID",
+          "type": "CHAR20",
+          "key": false
+        },
+        {
+          "name": "AREA",
+          "type": "CHAR10",
+          "key": false
+        },
+        {
+          "name": "ESTADO",
+          "type": "CHAR12",
+          "key": false
+        },
+        {
+          "name": "RESPONSABLE",
+          "type": "SYUNAME",
+          "key": false
+        },
+        {
+          "name": "CREADO_EL",
+          "type": "TIMESTAMPL",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "SOLICITUD_UUID",
+          "parent": "YMMT_DM_SOL",
+          "fields": [
+            "MANDT",
+            "SOLICITUD_UUID"
+          ],
+          "cardinality": "0..*"
+        },
+        {
+          "anchor": "PASO_ID",
+          "parent": "YMMT_DM_PASO",
+          "fields": [
+            "MANDT",
+            "FLUJO_ID",
+            "VERSION",
+            "PASO_ID"
+          ],
+          "cardinality": "0..*"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "Z01",
+          "fields": [
+            "MANDT",
+            "SOLICITUD_UUID",
+            "FLUJO_ID",
+            "VERSION",
+            "PASO_ID"
+          ],
+          "unique": true
+        }
+      ]
+    },
+    "YMMT_DM_SEG": {
+      "description": "DM - Contexto de datos de solicitud",
+      "delivery_class": "A",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "SEGMENTO_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "SOLICITUD_UUID",
+          "type": "SYSUUID_X16",
+          "key": false
+        },
+        {
+          "name": "TIPO_SEGMENTO",
+          "type": "CHAR10",
+          "key": false
+        },
+        {
+          "name": "ESTADO",
+          "type": "CHAR12",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "SOLICITUD_UUID",
+          "parent": "YMMT_DM_SOL",
+          "fields": [
+            "MANDT",
+            "SOLICITUD_UUID"
+          ],
+          "cardinality": "0..*"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "Z01",
+          "fields": [
+            "MANDT",
+            "SOLICITUD_UUID",
+            "TIPO_SEGMENTO"
+          ],
+          "unique": false
+        }
+      ]
+    },
+    "YMMT_DM_SEG_CEN": {
+      "description": "DM - Segmento Centro",
+      "delivery_class": "A",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "SEGMENTO_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "CENTRO",
+          "type": "WERKS_D",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "SEGMENTO_UUID",
+          "parent": "YMMT_DM_SEG",
+          "fields": [
+            "MANDT",
+            "SEGMENTO_UUID"
+          ],
+          "cardinality": "0..1"
+        }
+      ],
+      "indexes": []
+    },
+    "YMMT_DM_SEG_ALM": {
+      "description": "DM - Segmento Almacen",
+      "delivery_class": "A",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "SEGMENTO_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "CENTRO",
+          "type": "WERKS_D",
+          "key": false
+        },
+        {
+          "name": "ALMACEN",
+          "type": "LGORT_D",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "SEGMENTO_UUID",
+          "parent": "YMMT_DM_SEG",
+          "fields": [
+            "MANDT",
+            "SEGMENTO_UUID"
+          ],
+          "cardinality": "0..1"
+        }
+      ],
+      "indexes": []
+    },
+    "YMMT_DM_SEG_VEN": {
+      "description": "DM - Segmento Ventas",
+      "delivery_class": "A",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "SEGMENTO_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "ORG_VENTAS",
+          "type": "VKORG",
+          "key": false
+        },
+        {
+          "name": "CANAL",
+          "type": "VTWEG",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "SEGMENTO_UUID",
+          "parent": "YMMT_DM_SEG",
+          "fields": [
+            "MANDT",
+            "SEGMENTO_UUID"
+          ],
+          "cardinality": "0..1"
+        }
+      ],
+      "indexes": []
+    },
+    "YMMT_DM_SEG_VAL": {
+      "description": "DM - Segmento Valoracion",
+      "delivery_class": "A",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "SEGMENTO_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "AREA_VALORACION",
+          "type": "BWKEY",
+          "key": false
+        },
+        {
+          "name": "TIPO_VALORACION",
+          "type": "BWTAR_D",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "SEGMENTO_UUID",
+          "parent": "YMMT_DM_SEG",
+          "fields": [
+            "MANDT",
+            "SEGMENTO_UUID"
+          ],
+          "cardinality": "0..1"
+        }
+      ],
+      "indexes": []
+    },
+    "YMMT_DM_SEG_UOM": {
+      "description": "DM - Segmento Unidad alternativa",
+      "delivery_class": "A",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "SEGMENTO_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "UNIDAD_ALTERNATIVA",
+          "type": "MEINS",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "SEGMENTO_UUID",
+          "parent": "YMMT_DM_SEG",
+          "fields": [
+            "MANDT",
+            "SEGMENTO_UUID"
+          ],
+          "cardinality": "0..1"
+        }
+      ],
+      "indexes": []
+    },
+    "YMMT_DM_CAMPO": {
+      "description": "DM - Catalogo de campos",
+      "delivery_class": "C",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "CAMPO_ID",
+          "type": "CHAR30",
+          "key": true
+        },
+        {
+          "name": "DESCRIPCION",
+          "type": "CHAR80",
+          "key": false
+        },
+        {
+          "name": "TABLA_SAP",
+          "type": "TABNAME",
+          "key": false
+        },
+        {
+          "name": "CAMPO_SAP",
+          "type": "FIELDNAME",
+          "key": false
+        },
+        {
+          "name": "TIPO_SEGMENTO",
+          "type": "CHAR10",
+          "key": false
+        },
+        {
+          "name": "TIPO_DATO",
+          "type": "CHAR10",
+          "key": false
+        },
+        {
+          "name": "LONGITUD",
+          "type": "INT4",
+          "key": false
+        },
+        {
+          "name": "DECIMALES",
+          "type": "INT4",
+          "key": false
+        },
+        {
+          "name": "AYUDA_VALORES",
+          "type": "CHAR30",
+          "key": false
+        },
+        {
+          "name": "TIPO_CONTROL",
+          "type": "CHAR20",
+          "key": false
+        },
+        {
+          "name": "ACTIVO",
+          "type": "BOOLE_D",
+          "key": false
+        }
+      ],
+      "foreign_keys": [],
+      "indexes": []
+    },
+    "YMMT_DM_SECCION": {
+      "description": "DM - Seccion de formulario",
+      "delivery_class": "C",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "SECCION_ID",
+          "type": "CHAR20",
+          "key": true
+        },
+        {
+          "name": "DESCRIPCION",
+          "type": "CHAR80",
+          "key": false
+        },
+        {
+          "name": "ORDEN",
+          "type": "INT4",
+          "key": false
+        },
+        {
+          "name": "ACTIVO",
+          "type": "BOOLE_D",
+          "key": false
+        }
+      ],
+      "foreign_keys": [],
+      "indexes": []
+    },
+    "YMMT_DM_REGLA": {
+      "description": "DM - Regla de campo versionada",
+      "delivery_class": "C",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "REGLA_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "FLUJO_ID",
+          "type": "CHAR20",
+          "key": false
+        },
+        {
+          "name": "VERSION",
+          "type": "INT4",
+          "key": false
+        },
+        {
+          "name": "AREA",
+          "type": "CHAR10",
+          "key": false
+        },
+        {
+          "name": "CAMPO_ID",
+          "type": "CHAR30",
+          "key": false
+        },
+        {
+          "name": "SECCION_ID",
+          "type": "CHAR20",
+          "key": false
+        },
+        {
+          "name": "ESTADO_CAMPO",
+          "type": "CHAR1",
+          "key": false
+        },
+        {
+          "name": "ORDEN",
+          "type": "INT4",
+          "key": false
+        },
+        {
+          "name": "ACTIVO",
+          "type": "BOOLE_D",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "VERSION",
+          "parent": "YMMT_DM_FLUJO_VR",
+          "fields": [
+            "MANDT",
+            "FLUJO_ID",
+            "VERSION"
+          ],
+          "cardinality": "0..*"
+        },
+        {
+          "anchor": "CAMPO_ID",
+          "parent": "YMMT_DM_CAMPO",
+          "fields": [
+            "MANDT",
+            "CAMPO_ID"
+          ],
+          "cardinality": "0..*"
+        },
+        {
+          "anchor": "SECCION_ID",
+          "parent": "YMMT_DM_SECCION",
+          "fields": [
+            "MANDT",
+            "SECCION_ID"
+          ],
+          "cardinality": "0..*"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "Z01",
+          "fields": [
+            "MANDT",
+            "FLUJO_ID",
+            "VERSION",
+            "AREA",
+            "CAMPO_ID"
+          ],
+          "unique": true
+        }
+      ]
+    },
+    "YMMT_DM_DATO": {
+      "description": "DM - Valor por campo y contexto",
+      "delivery_class": "A",
+      "fields": [
+        {
+          "name": "MANDT",
+          "type": "MANDT",
+          "key": true
+        },
+        {
+          "name": "SEGMENTO_UUID",
+          "type": "SYSUUID_X16",
+          "key": true
+        },
+        {
+          "name": "CAMPO_ID",
+          "type": "CHAR30",
+          "key": true
+        },
+        {
+          "name": "VALOR",
+          "type": "CHAR1333",
+          "key": false
+        },
+        {
+          "name": "MODIFICADO_POR",
+          "type": "SYUNAME",
+          "key": false
+        },
+        {
+          "name": "MODIFICADO_EL",
+          "type": "TIMESTAMPL",
+          "key": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "anchor": "SEGMENTO_UUID",
+          "parent": "YMMT_DM_SEG",
+          "fields": [
+            "MANDT",
+            "SEGMENTO_UUID"
+          ],
+          "cardinality": "0..*"
+        },
+        {
+          "anchor": "CAMPO_ID",
+          "parent": "YMMT_DM_CAMPO",
+          "fields": [
+            "MANDT",
+            "CAMPO_ID"
+          ],
+          "cardinality": "0..*"
+        }
+      ],
+      "indexes": []
+    }
+  },
+  "relations": [
+    {
+      "parent": "YMMT_DM_FLUJO",
+      "child": "YMMT_DM_FLUJO_VR",
+      "label": "tiene_versiones",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_FLUJO_VR",
+      "child": "YMMT_DM_PASO",
+      "label": "define_pasos",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_FLUJO_VR",
+      "child": "YMMT_DM_REGLA",
+      "label": "configura_campos",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_FLUJO_VR",
+      "child": "YMMT_DM_SOL",
+      "label": "asigna_version",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_SOL",
+      "child": "YMMT_DM_TAREA",
+      "label": "genera",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_PASO",
+      "child": "YMMT_DM_TAREA",
+      "label": "instancia",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_SOL",
+      "child": "YMMT_DM_SEG",
+      "label": "contiene",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_SEG",
+      "child": "YMMT_DM_SEG_CEN",
+      "label": "centro",
+      "cardinality": "||--o|"
+    },
+    {
+      "parent": "YMMT_DM_SEG",
+      "child": "YMMT_DM_SEG_ALM",
+      "label": "almacen",
+      "cardinality": "||--o|"
+    },
+    {
+      "parent": "YMMT_DM_SEG",
+      "child": "YMMT_DM_SEG_VEN",
+      "label": "ventas",
+      "cardinality": "||--o|"
+    },
+    {
+      "parent": "YMMT_DM_SEG",
+      "child": "YMMT_DM_SEG_VAL",
+      "label": "valoracion",
+      "cardinality": "||--o|"
+    },
+    {
+      "parent": "YMMT_DM_SEG",
+      "child": "YMMT_DM_SEG_UOM",
+      "label": "unidad",
+      "cardinality": "||--o|"
+    },
+    {
+      "parent": "YMMT_DM_SEG",
+      "child": "YMMT_DM_DATO",
+      "label": "contiene",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_CAMPO",
+      "child": "YMMT_DM_DATO",
+      "label": "identifica",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_CAMPO",
+      "child": "YMMT_DM_REGLA",
+      "label": "configura",
+      "cardinality": "||--o{"
+    },
+    {
+      "parent": "YMMT_DM_SECCION",
+      "child": "YMMT_DM_REGLA",
+      "label": "agrupa",
+      "cardinality": "||--o{"
+    }
+  ]
+}

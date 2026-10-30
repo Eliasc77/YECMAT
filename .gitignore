@@ -4,3 +4,5 @@
 .adt/
 *.saplogon
 *.bak
+__pycache__/
+*.pyc

@@ -1,5 +1,9 @@
 # Requerimiento consolidado
 
+> Referencia funcional histórica del modelo BTP Trial. Los nombres ZDM_* describen
+> el modelo anterior. Consultar [MODELO_DATOS.md](arquitectura/MODELO_DATOS.md) para
+> persistencia vigente. Behaviors, auditoría, outbox e integración requieren reconstrucción.
+
 Fuente funcional: `Configuración DM v2 (1).pdf` y `Resumen por áreas.xlsx`.
 Los documentos son referencias; este archivo expresa el comportamiento que
 implementa la solución.
