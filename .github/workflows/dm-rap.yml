@@ -1,0 +1,23 @@
+name: DM RAP contracts
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 tools/validate_dm.py
+      - run: python3 -m tools.validate_rap
+      - run: python3 -m unittest discover -s tests -v
+      - run: npx --yes @abaplint/cli@2.120.92 abaplint.json
+      - name: Generated artifacts stay in sync
+        run: |
+          python3 tools/generate_rap.py
+          git diff --exit-code -- src docs/arquitectura

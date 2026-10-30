@@ -1,17 +1,16 @@
-# Modelo de datos DM para S/4HANA On-Premise
+# Modelo de datos DM y ampliación RAP para ABAP Cloud Trial
 
 ## Alcance y estado
 
-Se implementan las 15 tablas del DER en formato Dictionary abapGit TABL, en
-`src/ymmt_dm_*.tabl.xml`. Son fuentes generadas y comprobadas estructuralmente
-en Git, **no activadas en SAP**. No se conoce el release exacto de S/4HANA,
-SAP_BASIS ni abapGit destino. Se usa Dictionary clásico, sin el indicador de
-lenguaje ABAP Cloud del modelo anterior.
+El modelo base de 15 tablas se publicó en work. El usuario confirmó después que
+el destino es ABAP Cloud Trial (TRL_EN) y pidió la capa RAP en otra rama.
+`feature/dm-rap-dinamico` conserva las PK/FK y añade los cinco atributos de soporte,
+ETags, índice natural y comportamientos descritos en
+[RAP_DINAMICO.md](RAP_DINAMICO.md). Las fuentes locales no están activadas en SAP.
 
-Esta entrega reconstruye persistencia y arquitectura. Los CDS, behaviors y
-servicio anterior se retiran con sus dependencias. Su reconstrucción sobre el
-nuevo modelo queda pendiente; no se entrega un servicio OData operativo.
-No se han borrado tablas físicas ni registros en SAP.
+La primera versión se diseñó para On-Premise; sus decisiones relacionales se
+conservan con las ampliaciones expresas de esta rama. Los objetos BTP Trial
+antiguos ZDM_* no se restauran. No se han borrado registros SAP desde este entorno.
 
 ## Decisiones e inconsistencias del DER
 
@@ -35,7 +34,7 @@ sin cambio de atributos, claves ni cardinalidades. El DER actualizado, XML y
 diccionario usan el nombre físico corregido. No se genera una tabla duplicada
 ni un alias de persistencia de 17 caracteres.
 
-1. **Mandante:** MANDT es el único campo añadido al DER funcional, como primer
+1. **Mandante:** MANDT se añadió al DER base como primer
    componente de todas las PK, FK e índices. NOTNULL evita NULL SQL, pero no
    impide valores iniciales ABAP. UUID, referencias y obligatorios deben validarse.
 2. **General:** SEG.TIPO_SEGMENTO = GENERAL representa campos de cabecera
@@ -45,15 +44,15 @@ ni un alias de persistencia de 17 caracteres.
 3. **Especialización exclusiva:** cada segmento organizativo necesita exactamente
    un subtipo coherente. Las cinco relaciones opcionales 1:0..1 del DER no expresan
    esa exclusividad; GENERAL es la excepción sin subtipo. El tipo de un segmento
-   con datos no puede cambiar. Estas restricciones requieren validación RAP.
+   con datos no puede cambiar. Estas restricciones se validan en el BO Segmento.
 4. **Independencia:** SEG_ALM contiene su propio CENTRO y no exige un SEG_CEN.
    Ventas, valoración y unidades no dependen de un centro implícito. BWKEY no se
    equipara a WERKS: el nivel de valoración depende del sistema SAP.
 5. **Unicidad:** la clave natural de segmento cruza dos tablas. Con los campos
    originales no hay índice SQL que garantice contexto único por solicitud.
-   [RELACIONES.md](RELACIONES.md) define las claves y el protocolo de bloqueo
-   pendiente. No se impone unicidad por tipo, que impediría varios centros.
-   Se añaden índices únicos sin campos adicionales para número de solicitud,
+   Esta rama añade CONTEXTO_CLAVE y un índice único en SEG;
+   [RELACIONES.md](RELACIONES.md) documenta las claves naturales y sus controles. No se impone unicidad por tipo, que impediría varios centros.
+   Se mantienen los índices únicos del modelo base para número de solicitud,
    tarea por paso y regla por flujo/versión/área/campo, evitando duplicados
    contradictorios. Regla inactiva tampoco puede duplicar la misma clave.
 6. **Versiones:** SOL fija FLUJO_ID/VERSION al crearse. Una versión publicada y
@@ -116,29 +115,19 @@ El mismo campo en dos centros genera valores en segmentos distintos. Tipo de
 valoración inicial representa ausencia de valoración separada, no un segmento
 incompleto. No omitir canal ni centro de almacén. Validar combinaciones en SAP.
 
-## Concurrencia y RAP futuro
+## Concurrencia y RAP
 
-SOL, TAREA y SEG no tienen última modificación en el DER. CREADO_EL es inmutable
-y no sirve como ETag de modificación. DATO.MODIFICADO_EL puede ser ETag del dato
-si se mantiene en cada escritura, pero no es ETag de toda la solicitud.
-No se han añadido campos ETag de forma implícita.
-
-Antes de RAP managed con control optimista completo, añadir y justificar última
-modificación en las raíces y total ETag si se adopta draft; alternativamente
-diseñar control pesimista/unmanaged y evaluar su contrato. Las ediciones
-independientes requieren locks por segmento/dato y tarea; un lock duradero de SOL
-serializaría áreas. Altas de contexto y transiciones globales usan locks breves
-de SOL, orden fijo de adquisición y una LUW. No introducir COMMIT WORK en handlers.
-
-Las claves y tipos son utilizables en CDS View Entities con asociaciones de
-cardinalidad explícita y aislamiento por mandante. No exponer MANDT para edición
-OData. Quedan por diseñar behaviors, autorizaciones, proyecciones, servicio y
-binding V4 compatibles con el release On-Premise real.
+Las raíces SOL, SEG, TAREA y DATO tienen ETag de modificación, locks independientes
+y cuatro behaviors managed. La creación de contexto es atómica con su subtipo;
+los valores se guardan en un BO independiente con guardas de reglas, permisos y
+locks de las tareas afectadas. El cierre global es una acción explícita de SOL.
+Consultar [RAP_DINAMICO.md](RAP_DINAMICO.md) para el contrato de acciones, la UI por
+metadata y los límites de autorización/integración del Trial.
 
 ## Validación
 
 Ejecutar `python3 tools/validate_dm.py` y
-`python3 -m unittest discover -s tests -v`. Son validaciones estáticas de XML,
+`python3 -m tools.validate_rap` y `python3 -m unittest discover -s tests -v`. Son validaciones estáticas de XML,
 contrato JSON, claves, tipos, FK, índices y coherencia DER/diccionario. No compilan
 ABAP ni demuestran integridad de datos en ejecución. La metadata FK/índices se
 contrastó con el serializer TABL público de abapGit (DD05M_TABLE/DD08V_TABLE,

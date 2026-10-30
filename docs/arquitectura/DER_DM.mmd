@@ -24,7 +24,7 @@ erDiagram
         MTART tipo_material
         CHAR1 tipo_operacion
         WERKS_D centro_criterio
-        BOOLE_D activo
+        ABAP_BOOLEAN activo
     }
 
     YMMT_DM_FLUJO_VR {
@@ -47,8 +47,8 @@ erDiagram
         CHAR20 fase
         CHAR1 condicion_bpm
         INT4 orden
-        BOOLE_D obligatorio
-        BOOLE_D activo
+        ABAP_BOOLEAN obligatorio
+        ABAP_BOOLEAN activo
     }
 
     YMMT_DM_SOL {
@@ -63,6 +63,8 @@ erDiagram
         CHAR12 estado
         SYUNAME creado_por
         TIMESTAMPL creado_el
+        CHAR1 clasificacion_bpm
+        ABP_LOCINST_LASTCHANGE_TSTMPL last_changed_at
     }
 
     YMMT_DM_TAREA {
@@ -76,6 +78,7 @@ erDiagram
         CHAR12 estado
         SYUNAME responsable
         TIMESTAMPL creado_el
+        ABP_LOCINST_LASTCHANGE_TSTMPL last_changed_at
     }
 
     YMMT_DM_SEG {
@@ -84,6 +87,8 @@ erDiagram
         SYSUUID_X16 solicitud_uuid FK
         CHAR10 tipo_segmento
         CHAR12 estado
+        CHAR100 contexto_clave
+        ABP_LOCINST_LASTCHANGE_TSTMPL last_changed_at
     }
 
     YMMT_DM_SEG_CEN {
@@ -131,7 +136,7 @@ erDiagram
         INT4 decimales
         CHAR30 ayuda_valores
         CHAR20 tipo_control
-        BOOLE_D activo
+        ABAP_BOOLEAN activo
     }
 
     YMMT_DM_SECCION {
@@ -139,7 +144,7 @@ erDiagram
         YMME_DM_SECCION seccion_id PK
         CHAR80 descripcion
         INT4 orden
-        BOOLE_D activo
+        ABAP_BOOLEAN activo
     }
 
     YMMT_DM_REGLA {
@@ -152,7 +157,7 @@ erDiagram
         YMME_DM_SECCION seccion_id FK
         CHAR1 estado_campo
         INT4 orden
-        BOOLE_D activo
+        ABAP_BOOLEAN activo
     }
 
     YMMT_DM_DATO {
@@ -161,5 +166,5 @@ erDiagram
         YMME_DM_CAMPO_ID campo_id PK,FK
         CHAR1333 valor
         SYUNAME modificado_por
-        TIMESTAMPL modificado_el
+        ABP_LOCINST_LASTCHANGE_TSTMPL modificado_el
     }

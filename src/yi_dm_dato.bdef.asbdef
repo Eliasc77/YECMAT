@@ -1,0 +1,24 @@
+managed implementation in class YBP_I_DM_DATO unique;
+strict ( 2 );
+
+define behavior for YI_DM_DATO alias Dato
+persistent table ymmt_dm_dato
+lock master
+authorization master ( global, instance )
+etag master ModificadoEl
+{
+  create;
+  update;
+  field ( readonly ) ModificadoPor, ModificadoEl;
+  field ( mandatory : create, readonly : update ) SegmentoUUID, CampoId;
+  determination audit on modify { create; field Valor; }
+  validation validateValue on save { create; update; }
+  mapping for ymmt_dm_dato
+  {
+    SegmentoUUID = segmento_uuid;
+    CampoId = campo_id;
+    Valor = valor;
+    ModificadoPor = modificado_por;
+    ModificadoEl = modificado_el;
+  }
+}

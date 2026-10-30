@@ -2,7 +2,8 @@
 
 > Referencia funcional histórica del modelo BTP Trial. Los nombres ZDM_* describen
 > el modelo anterior. Consultar [MODELO_DATOS.md](arquitectura/MODELO_DATOS.md) para
-> persistencia vigente. Behaviors, auditoría, outbox e integración requieren reconstrucción.
+> persistencia vigente. La capa RAP nueva está en RAP_DINAMICO.md; auditoría
+> histórica, outbox e integración Product Master permanecen pendientes.
 
 Fuente funcional: `Configuración DM v2 (1).pdf` y `Resumen por áreas.xlsx`.
 Los documentos son referencias; este archivo expresa el comportamiento que

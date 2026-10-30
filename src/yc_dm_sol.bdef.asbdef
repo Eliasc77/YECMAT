@@ -1,0 +1,12 @@
+projection;
+strict ( 2 );
+
+define behavior for YC_DM_SOL alias Solicitud
+use etag
+{
+  use create;
+  use action Iniciar;
+  use action Cerrar;
+  use action Aprobar;
+  use action Reabrir;
+}

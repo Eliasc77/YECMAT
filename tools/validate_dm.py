@@ -21,7 +21,7 @@ KEYS = {
 STANDARD = {
     'MANDT', 'SYSUUID_X16', 'MTART', 'MATNR', 'WERKS_D', 'LGORT_D',
     'VKORG', 'VTWEG', 'BWKEY', 'BWTAR_D', 'MEINS', 'SYUNAME',
-    'TIMESTAMPL', 'BOOLE_D',
+    'TIMESTAMPL', 'ABAP_BOOLEAN', 'ABP_LOCINST_LASTCHANGE_TSTMPL',
 }
 CUSTOM_TYPES = {
     'FLUJO_ID': ('CHAR', 20), 'VERSION': ('INT4', 10),
@@ -189,6 +189,7 @@ def validate(root=ROOT):
         'SOL': ['MANDT', 'NUMERO_SOLICITUD'],
         'TAREA': ['MANDT', 'SOLICITUD_UUID', 'FLUJO_ID', 'VERSION', 'PASO_ID'],
         'REGLA': ['MANDT', 'FLUJO_ID', 'VERSION', 'AREA', 'CAMPO_ID'],
+        'SEG': ['MANDT', 'SOLICITUD_UUID', 'TIPO_SEGMENTO', 'CONTEXTO_CLAVE'],
     }.items():
         require(any(i['unique'] and i['fields'] == unique_cols for i in tables[PREFIX + suffix]['indexes']), f'Required unique index {suffix}')
 
@@ -212,7 +213,7 @@ def validate(root=ROOT):
     require(sorted((a, b, c) for a, b, c, _ in parsed) == sorted(relation_edges), 'DER FK edges')
     require(sorted(parsed) == sorted((r['parent'], r['cardinality'], r['child'], r['label']) for r in model['relations']), 'DER relation contract')
     for path in (root / 'src').iterdir():
-        require(path.name == 'package.devc.xml' or path.name.startswith(('ymmt_dm_', 'ymme_dm_', 'ymmd_dm_')),
+        require(path.name == 'package.devc.xml' or path.name.startswith(('ymmt_dm_', 'ymme_dm_', 'ymmd_dm_', 'yi_dm_', 'yc_dm_', 'yr_', 'ybp_i_dm_', 'ycl_dm_', 'yd_dm_', 'yui_dm_')),
                 f'Legacy source remains: {path.name}')
     return f'OK: 15 tables, 6 domains, 6 data elements, {field_count} fields, {fk_count} foreign keys, {index_count} indexes, 16 DER relations'
 

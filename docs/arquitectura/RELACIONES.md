@@ -1,7 +1,7 @@
 # Relaciones y cardinalidades
 
 Cada hijo tiene exactamente un padre por relación; un padre puede tener cero o muchos hijos, salvo los subtipos (cero o uno). Todas las FK incluyen MANDT.
-Se incluyen metadata DD08V/DD05M de Dictionary. Estas relaciones son semánticas DDIC: no equivalen a FOREIGN KEY SQL ni protegen Open SQL de escrituras huérfanas. La futura capa RAP debe validarlas al guardar.
+Se incluyen metadata DD08V/DD05M de Dictionary. Estas relaciones son semánticas DDIC: no equivalen a FOREIGN KEY SQL ni protegen Open SQL de escrituras huérfanas. Los handlers RAP validan las relaciones operativas al guardar; el customizing se mantiene fuera del servicio.
 
 | Padre | Hijo | Clave completa del padre referenciada | Hijos por padre |
 |---|---|---|---|
@@ -44,8 +44,21 @@ Se incluyen metadata DD08V/DD05M de Dictionary. Estas relaciones son semánticas
 | VALORACION | solicitud_uuid + VALORACION + area_valoracion + tipo_valoracion | SEG_VAL |
 | UNIDAD | solicitud_uuid + UNIDAD + unidad_alternativa | SEG_UOM |
 
-Estas claves atraviesan SEG y su subtipo. Con los campos del DER no es posible crear un índice SQL único que incluya SOLICITUD_UUID y el contexto del subtipo sin duplicar información.
-Se conserva el diseño normalizado: la futura operación RAP de alta debe bloquear brevemente la solicitud (enqueue por mandante/solicitud), buscar el contexto mediante JOIN, crear SEG y subtipo en la misma LUW y rechazar duplicados. Todas las vías de escritura deben usar esa operación.
-El bloqueo se mantiene desde la búsqueda hasta el commit/rollback de la creación; dos sesiones no deben validar ambas antes de guardar. GENERAL usa el mismo protocolo. El índice SEG.Z01 facilita la búsqueda pero NO garantiza unicidad.
-La edición de datos ya existentes usará bloqueos por segmento/dato. No se precisa crear un segmento CENTRO para poder crear uno ALMACEN: el centro se guarda en el contexto de almacén y se comprueba contra customizing SAP.
-Si se exige protección de unicidad también ante SQL externo, es necesario modificar el DER con una clave contextual en SEG o una tabla de registro de contextos; esa ampliación no se implementa sin una especificación funcional.
+En el DER base estas claves atravesaban SEG y su subtipo, sin poder representarse
+como índice único. La rama RAP añade SEG.CONTEXTO_CLAVE CHAR(100), derivado del
+tipo y de los valores organizativos mediante prefijos de longitud, sin colisiones
+por separadores. El índice único Z02 incluye MANDT, SOLICITUD_UUID, TIPO_SEGMENTO y
+CONTEXTO_CLAVE. Z01 sigue siendo índice de búsqueda no único.
+
+El backend genera la clave, impide modificar el contexto tras crearlo y comprueba
+que GENERAL no tenga subtipo y cada tipo organizativo tenga exactamente el suyo.
+La creación raíz/subtipo es una LUW. Se mantiene un lock corto de SOL durante el
+alta para excluir cierres y un índice SQL protege duplicados entre transacciones.
+No es necesario crear un segmento CENTRO para crear ALMACEN; ambos son contextos
+independientes. Se valida el centro explícito frente al criterio del flujo; la
+validez del resto de claves SAP debe contrastarse mediante APIs liberadas del
+sistema de materiales al integrar, ya que el Trial no contiene ese maestro.
+
+Los valores usan ETag y lock propios y locks breves de las tareas que dependen del
+campo. Una tarea finalizada congela sus campos compartidos. Ver
+[RAP_DINAMICO.md](RAP_DINAMICO.md) para el protocolo entre captura y cierre.

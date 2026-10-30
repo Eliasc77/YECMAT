@@ -19,7 +19,8 @@ Los campos funcionales y claves se conservan del DER fuente. Los tipos DDIC est�
 | MEINS | UNIT(3), clave interna SAP; conversión CUNIT en frontera de servicio |
 | SYUNAME | CHAR(12), usuario ABAP |
 | TIMESTAMPL | DEC(21,7), instante UTC largo |
-| BOOLE_D | CHAR(1), X / espacio |
+| ABP_LOCINST_LASTCHANGE_TSTMPL | Timestamp largo mantenido por RAP para ETag local |
+| ABAP_BOOLEAN | CHAR(1), X / espacio; sustituye BOOLE_D obsoleto |
 
 Los CHAR(n) son tipos Dictionary integrados, longitud en caracteres; INT4 tiene 4 bytes y longitud de salida 10. DATS usa 8 caracteres.
 `NOTNULL` evita NULL SQL; no rechaza valores iniciales ABAP. UUID no inicial, referencias y valores obligatorios necesitan validaciones de aplicación.
@@ -57,7 +58,7 @@ DM - Definicion de flujo. Clase de entrega `C`.
 | `TIPO_MATERIAL` | `MTART` | — |
 | `TIPO_OPERACION` | `CHAR1` | — |
 | `CENTRO_CRITERIO` | `WERKS_D` | — |
-| `ACTIVO` | `BOOLE_D` | — |
+| `ACTIVO` | `ABAP_BOOLEAN` | — |
 
 
 ## YMMT_DM_FLUJO_VR
@@ -90,8 +91,8 @@ DM - Paso de flujo versionado. Clase de entrega `C`.
 | `FASE` | `CHAR20` | — |
 | `CONDICION_BPM` | `CHAR1` | — |
 | `ORDEN` | `INT4` | — |
-| `OBLIGATORIO` | `BOOLE_D` | — |
-| `ACTIVO` | `BOOLE_D` | — |
+| `OBLIGATORIO` | `ABAP_BOOLEAN` | — |
+| `ACTIVO` | `ABAP_BOOLEAN` | — |
 
 
 ## YMMT_DM_SOL
@@ -111,6 +112,8 @@ DM - Solicitud de material. Clase de entrega `A`.
 | `ESTADO` | `CHAR12` | — |
 | `CREADO_POR` | `SYUNAME` | — |
 | `CREADO_EL` | `TIMESTAMPL` | — |
+| `CLASIFICACION_BPM` | `CHAR1` | — |
+| `LAST_CHANGED_AT` | `ABP_LOCINST_LASTCHANGE_TSTMPL` | — |
 
 - Índice `Z01` único: `MANDT, NUMERO_SOLICITUD`.
 - Índice `Z02` no único: `MANDT, FLUJO_ID, VERSION`.
@@ -131,6 +134,7 @@ DM - Instancia de paso. Clase de entrega `A`.
 | `ESTADO` | `CHAR12` | — |
 | `RESPONSABLE` | `SYUNAME` | — |
 | `CREADO_EL` | `TIMESTAMPL` | — |
+| `LAST_CHANGED_AT` | `ABP_LOCINST_LASTCHANGE_TSTMPL` | — |
 
 - Índice `Z01` único: `MANDT, SOLICITUD_UUID, FLUJO_ID, VERSION, PASO_ID`.
 
@@ -145,8 +149,11 @@ DM - Contexto de datos de solicitud. Clase de entrega `A`.
 | `SOLICITUD_UUID` | `SYSUUID_X16` | FK → `YMMT_DM_SOL` |
 | `TIPO_SEGMENTO` | `CHAR10` | — |
 | `ESTADO` | `CHAR12` | — |
+| `CONTEXTO_CLAVE` | `CHAR100` | — |
+| `LAST_CHANGED_AT` | `ABP_LOCINST_LASTCHANGE_TSTMPL` | — |
 
 - Índice `Z01` no único: `MANDT, SOLICITUD_UUID, TIPO_SEGMENTO`.
+- Índice `Z02` único: `MANDT, SOLICITUD_UUID, TIPO_SEGMENTO, CONTEXTO_CLAVE`.
 
 ## YMMT_DM_SEG_CEN
 
@@ -223,7 +230,7 @@ DM - Catalogo de campos. Clase de entrega `C`.
 | `DECIMALES` | `INT4` | — |
 | `AYUDA_VALORES` | `CHAR30` | — |
 | `TIPO_CONTROL` | `CHAR20` | — |
-| `ACTIVO` | `BOOLE_D` | — |
+| `ACTIVO` | `ABAP_BOOLEAN` | — |
 
 
 ## YMMT_DM_SECCION
@@ -236,7 +243,7 @@ DM - Seccion de formulario. Clase de entrega `C`.
 | `SECCION_ID` | `YMME_DM_SECCION` | PK |
 | `DESCRIPCION` | `CHAR80` | — |
 | `ORDEN` | `INT4` | — |
-| `ACTIVO` | `BOOLE_D` | — |
+| `ACTIVO` | `ABAP_BOOLEAN` | — |
 
 
 ## YMMT_DM_REGLA
@@ -254,7 +261,7 @@ DM - Regla de campo versionada. Clase de entrega `C`.
 | `SECCION_ID` | `YMME_DM_SECCION` | FK → `YMMT_DM_SECCION` |
 | `ESTADO_CAMPO` | `CHAR1` | — |
 | `ORDEN` | `INT4` | — |
-| `ACTIVO` | `BOOLE_D` | — |
+| `ACTIVO` | `ABAP_BOOLEAN` | — |
 
 - Índice `Z01` único: `MANDT, FLUJO_ID, VERSION, AREA, CAMPO_ID`.
 
@@ -269,4 +276,4 @@ DM - Valor por campo y contexto. Clase de entrega `A`.
 | `CAMPO_ID` | `YMME_DM_CAMPO_ID` | PK, FK → `YMMT_DM_CAMPO` |
 | `VALOR` | `CHAR1333` | — |
 | `MODIFICADO_POR` | `SYUNAME` | — |
-| `MODIFICADO_EL` | `TIMESTAMPL` | — |
+| `MODIFICADO_EL` | `ABP_LOCINST_LASTCHANGE_TSTMPL` | — |

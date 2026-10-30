@@ -1,0 +1,18 @@
+@EndUserText.label: 'DM captura dinamica'
+define service YUI_DM_O4 {
+  expose YC_DM_SOL as Solicitudes;
+  expose YC_DM_SEG as Segmentos;
+  expose YC_DM_TAREA as Tareas;
+  expose YC_DM_DATO as Datos;
+  expose YC_DM_FLUJO as Flujos;
+  expose YC_DM_FLUJO_VR as Versiones;
+  expose YC_DM_PASO as Pasos;
+  expose YC_DM_CAMPO as Campos;
+  expose YC_DM_SECCION as Secciones;
+  expose YC_DM_REGLA as Reglas;
+  expose YC_DM_SEG_CEN as ContextoCentro;
+  expose YC_DM_SEG_ALM as ContextoAlmacen;
+  expose YC_DM_SEG_VEN as ContextoVentas;
+  expose YC_DM_SEG_VAL as ContextoValoracion;
+  expose YC_DM_SEG_UOM as ContextoUnidad;
+}

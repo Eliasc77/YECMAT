@@ -1,0 +1,22 @@
+{
+  "global": {
+    "files": "/src/**/*.*"
+  },
+  "syntax": {
+    "version": {
+      "release": "Newest",
+      "language": "Cloud"
+    }
+  },
+  "rules": {
+    "parser_error": true,
+    "cds_parser_error": true,
+    "bdef_parser_error": true,
+    "bdef_check_syntax": true,
+    "cds_check_syntax": {
+      "exclude": [
+        "src/yi_dm_seg.ddls.asddls"
+      ]
+    }
+  }
+}

@@ -36,7 +36,7 @@
         },
         {
           "name": "ACTIVO",
-          "type": "BOOLE_D",
+          "type": "ABAP_BOOLEAN",
           "key": false
         }
       ],
@@ -147,12 +147,12 @@
         },
         {
           "name": "OBLIGATORIO",
-          "type": "BOOLE_D",
+          "type": "ABAP_BOOLEAN",
           "key": false
         },
         {
           "name": "ACTIVO",
-          "type": "BOOLE_D",
+          "type": "ABAP_BOOLEAN",
           "key": false
         }
       ],
@@ -227,6 +227,16 @@
         {
           "name": "CREADO_EL",
           "type": "TIMESTAMPL",
+          "key": false
+        },
+        {
+          "name": "CLASIFICACION_BPM",
+          "type": "CHAR1",
+          "key": false
+        },
+        {
+          "name": "LAST_CHANGED_AT",
+          "type": "ABP_LOCINST_LASTCHANGE_TSTMPL",
           "key": false
         }
       ],
@@ -315,6 +325,11 @@
           "name": "CREADO_EL",
           "type": "TIMESTAMPL",
           "key": false
+        },
+        {
+          "name": "LAST_CHANGED_AT",
+          "type": "ABP_LOCINST_LASTCHANGE_TSTMPL",
+          "key": false
         }
       ],
       "foreign_keys": [
@@ -381,6 +396,16 @@
           "name": "ESTADO",
           "type": "CHAR12",
           "key": false
+        },
+        {
+          "name": "CONTEXTO_CLAVE",
+          "type": "CHAR100",
+          "key": false
+        },
+        {
+          "name": "LAST_CHANGED_AT",
+          "type": "ABP_LOCINST_LASTCHANGE_TSTMPL",
+          "key": false
         }
       ],
       "foreign_keys": [
@@ -403,6 +428,16 @@
             "TIPO_SEGMENTO"
           ],
           "unique": false
+        },
+        {
+          "name": "Z02",
+          "fields": [
+            "MANDT",
+            "SOLICITUD_UUID",
+            "TIPO_SEGMENTO",
+            "CONTEXTO_CLAVE"
+          ],
+          "unique": true
         }
       ]
     },
@@ -647,7 +682,7 @@
         },
         {
           "name": "ACTIVO",
-          "type": "BOOLE_D",
+          "type": "ABAP_BOOLEAN",
           "key": false
         }
       ],
@@ -680,7 +715,7 @@
         },
         {
           "name": "ACTIVO",
-          "type": "BOOLE_D",
+          "type": "ABAP_BOOLEAN",
           "key": false
         }
       ],
@@ -738,7 +773,7 @@
         },
         {
           "name": "ACTIVO",
-          "type": "BOOLE_D",
+          "type": "ABAP_BOOLEAN",
           "key": false
         }
       ],
@@ -817,7 +852,7 @@
         },
         {
           "name": "MODIFICADO_EL",
-          "type": "TIMESTAMPL",
+          "type": "ABP_LOCINST_LASTCHANGE_TSTMPL",
           "key": false
         }
       ],

@@ -1,0 +1,38 @@
+projection;
+strict ( 2 );
+
+define behavior for YC_DM_SEG alias Segmento
+use etag
+{
+  use create;
+  use association _Centro { create; }
+  use association _Almacen { create; }
+  use association _Ventas { create; }
+  use association _Valoracion { create; }
+  use association _Unidad { create; }
+}
+
+define behavior for YC_DM_SEG_CEN alias Centro
+{
+  use association _Segmento;
+}
+
+define behavior for YC_DM_SEG_ALM alias Almacen
+{
+  use association _Segmento;
+}
+
+define behavior for YC_DM_SEG_VEN alias Ventas
+{
+  use association _Segmento;
+}
+
+define behavior for YC_DM_SEG_VAL alias Valoracion
+{
+  use association _Segmento;
+}
+
+define behavior for YC_DM_SEG_UOM alias Unidad
+{
+  use association _Segmento;
+}

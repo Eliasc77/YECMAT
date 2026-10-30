@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit xmlns:asx="http://www.sap.com/abapxml" version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>YBP_I_DM_SOL</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>DM behavior Solicitud</DESCRIPT>
+    <CATEGORY>06</CATEGORY>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+    <CLSDEFINT>YI_DM_SOL</CLSDEFINT>
+   </VSEOCLASS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

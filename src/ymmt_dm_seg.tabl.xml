@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<abapGit version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
- <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+<abapGit xmlns:asx="http://www.sap.com/abapxml" version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
+ <asx:abap version="1.0">
   <asx:values>
    <DD02V>
     <TABNAME>YMMT_DM_SEG</TABNAME>
@@ -65,6 +65,23 @@
      <LENG>000012</LENG>
      <MASK>  CHAR</MASK>
     </DD03P>
+    <DD03P>
+     <FIELDNAME>CONTEXTO_CLAVE</FIELDNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <NOTNULL>X</NOTNULL>
+     <INTTYPE>C</INTTYPE>
+     <INTLEN>000200</INTLEN>
+     <DATATYPE>CHAR</DATATYPE>
+     <LENG>000100</LENG>
+     <MASK>  CHAR</MASK>
+    </DD03P>
+    <DD03P>
+     <FIELDNAME>LAST_CHANGED_AT</FIELDNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <NOTNULL>X</NOTNULL>
+     <ROLLNAME>ABP_LOCINST_LASTCHANGE_TSTMPL</ROLLNAME>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
    </DD03P_TABLE>
    <DD05M_TABLE>
     <DD05M>
@@ -102,6 +119,14 @@
      <DDLANGUAGE>E</DDLANGUAGE>
      <DDTEXT>DM Z01</DDTEXT>
     </DD12V>
+    <DD12V>
+     <SQLTAB>YMMT_DM_SEG</SQLTAB>
+     <INDEXNAME>Z02</INDEXNAME>
+     <AS4LOCAL>A</AS4LOCAL>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <UNIQUEFLAG>X</UNIQUEFLAG>
+     <DDTEXT>DM contexto unico</DDTEXT>
+    </DD12V>
    </DD12V>
    <DD17V>
     <DD17V>
@@ -124,6 +149,34 @@
      <POSITION>0003</POSITION>
      <AS4LOCAL>A</AS4LOCAL>
      <FIELDNAME>TIPO_SEGMENTO</FIELDNAME>
+    </DD17V>
+    <DD17V>
+     <SQLTAB>YMMT_DM_SEG</SQLTAB>
+     <INDEXNAME>Z02</INDEXNAME>
+     <POSITION>0001</POSITION>
+     <AS4LOCAL>A</AS4LOCAL>
+     <FIELDNAME>MANDT</FIELDNAME>
+    </DD17V>
+    <DD17V>
+     <SQLTAB>YMMT_DM_SEG</SQLTAB>
+     <INDEXNAME>Z02</INDEXNAME>
+     <POSITION>0002</POSITION>
+     <AS4LOCAL>A</AS4LOCAL>
+     <FIELDNAME>SOLICITUD_UUID</FIELDNAME>
+    </DD17V>
+    <DD17V>
+     <SQLTAB>YMMT_DM_SEG</SQLTAB>
+     <INDEXNAME>Z02</INDEXNAME>
+     <POSITION>0003</POSITION>
+     <AS4LOCAL>A</AS4LOCAL>
+     <FIELDNAME>TIPO_SEGMENTO</FIELDNAME>
+    </DD17V>
+    <DD17V>
+     <SQLTAB>YMMT_DM_SEG</SQLTAB>
+     <INDEXNAME>Z02</INDEXNAME>
+     <POSITION>0004</POSITION>
+     <AS4LOCAL>A</AS4LOCAL>
+     <FIELDNAME>CONTEXTO_CLAVE</FIELDNAME>
     </DD17V>
    </DD17V>
   </asx:values>

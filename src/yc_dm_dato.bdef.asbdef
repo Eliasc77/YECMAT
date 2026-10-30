@@ -1,0 +1,9 @@
+projection;
+strict ( 2 );
+
+define behavior for YC_DM_DATO alias Dato
+use etag
+{
+  use create;
+  use update;
+}
