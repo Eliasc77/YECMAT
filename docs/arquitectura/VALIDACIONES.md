@@ -6,7 +6,7 @@
 |---|---|
 | Validador de persistencia | 15 tablas, 6 dominios, 6 elementos; 107 campos, 16 FK, 6 índices |
 | Validador RAP | 30 CDS de tabla + 4 auxiliares/parámetros, 18 DCL, 8 BDEF, 4 pools y 15 entity sets |
-| Pruebas Python | 23 pruebas de contrato y regresión aprobadas |
+| Pruebas Python | 26 pruebas de contrato y regresión aprobadas |
 | abaplint 2.120.92 | 0 incidencias en 165 archivos de fuentes/metadata, gramática Cloud |
 | Mermaid 11.12.0 | DER actualizado analizado como erDiagram |
 | XML | Metadata bien formada, pares fuente/XML presentes |
@@ -52,3 +52,20 @@ que quede fuera de esos artefactos.
 
 No se conectó SAP ni se modificaron datos físicos. El estado LISTA_INTEG no afirma
 activación ni encolado de materiales. Consultar la guía de importación antes del Pull.
+
+## Corrección del diagnóstico de activación UNION
+
+El log de ADT indicó `Key definition of branch 2 must match key definition of
+branch 1` en YI_DM_SOL_USR y YI_DM_DATO_USR. La segunda rama de ambos UNION no
+repetía los marcadores KEY de la primera. Se igualan las claves por posición,
+conservando atributos, tipos, UNION DISTINCT y los filtros de acceso.
+
+El generador queda corregido y el validador compara aliases y posiciones de clave
+en todas las ramas. Tres regresiones detectan la ausencia de KEY en cada auxiliar
+y el intercambio de columnas entre ramas. No se cambian tablas, PK de tablas,
+datos, permisos ni cardinalidades por esta corrección.
+
+Después del Pull, activar primero ambos auxiliares (solo dependen de tablas),
+luego los CDS de interfaz con asociaciones/composiciones en conjunto y finalmente
+proyecciones y objetos RAP dependientes. El aviso de ayuda de búsqueda no heredada
+no es el error bloqueante del log. La nueva activación sigue pendiente en SAP.

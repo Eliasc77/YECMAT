@@ -19,8 +19,8 @@ union select distinct from ymmt_dm_seg as S
       and R.version = H.version and R.campo_id = C.campo_id
     inner join ymmt_dm_tarea as T on T.solicitud_uuid = H.solicitud_uuid and T.area = R.area
 {
-  S.segmento_uuid as SegmentoUUID,
-  C.campo_id as CampoId,
-  T.responsable as Usuario
+  key S.segmento_uuid as SegmentoUUID,
+  key C.campo_id as CampoId,
+  key T.responsable as Usuario
 }
 where R.activo = 'X' and C.activo = 'X' and R.estado_campo <> 'I' and T.responsable <> ''

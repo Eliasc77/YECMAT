@@ -8,7 +8,7 @@ define view entity YI_DM_SOL_USR
 }
 union select from ymmt_dm_tarea
 {
-  solicitud_uuid as SolicitudUUID,
-  responsable as Usuario
+  key solicitud_uuid as SolicitudUUID,
+  key responsable as Usuario
 }
 where responsable <> ''

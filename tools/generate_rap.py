@@ -159,8 +159,8 @@ define view entity YI_DM_SOL_USR
 }
 union select from ymmt_dm_tarea
 {
-  solicitud_uuid as SolicitudUUID,
-  responsable as Usuario
+  key solicitud_uuid as SolicitudUUID,
+  key responsable as Usuario
 }
 where responsable <> ''
 """)
@@ -170,7 +170,7 @@ where responsable <> ''
     inner join ymmt_dm_regla as R on R.flujo_id = H.flujo_id
       and R.version = H.version and R.campo_id = C.campo_id"""
     filters="R.activo = 'X' and C.activo = 'X' and R.estado_campo <> 'I'"
-    source('YI_DM_DATO_USR','DDLS','asddls',"@EndUserText.label: 'DM acceso por campo y contexto'\n@AccessControl.authorizationCheck: #NOT_REQUIRED\ndefine view entity YI_DM_DATO_USR\n  as select distinct "+common+"\n{\n  key S.segmento_uuid as SegmentoUUID,\n  key C.campo_id as CampoId,\n  key H.creado_por as Usuario\n}\nwhere "+filters+"\nunion select distinct "+common+"\n    inner join ymmt_dm_tarea as T on T.solicitud_uuid = H.solicitud_uuid and T.area = R.area\n{\n  S.segmento_uuid as SegmentoUUID,\n  C.campo_id as CampoId,\n  T.responsable as Usuario\n}\nwhere "+filters+" and T.responsable <> ''\n")
+    source('YI_DM_DATO_USR','DDLS','asddls',"@EndUserText.label: 'DM acceso por campo y contexto'\n@AccessControl.authorizationCheck: #NOT_REQUIRED\ndefine view entity YI_DM_DATO_USR\n  as select distinct "+common+"\n{\n  key S.segmento_uuid as SegmentoUUID,\n  key C.campo_id as CampoId,\n  key H.creado_por as Usuario\n}\nwhere "+filters+"\nunion select distinct "+common+"\n    inner join ymmt_dm_tarea as T on T.solicitud_uuid = H.solicitud_uuid and T.area = R.area\n{\n  key S.segmento_uuid as SegmentoUUID,\n  key C.campo_id as CampoId,\n  key T.responsable as Usuario\n}\nwhere "+filters+" and T.responsable <> ''\n")
     source('YD_DM_INICIAR','DDLS','asddls',"@EndUserText.label: 'DM clasificacion BPM'\ndefine abstract entity YD_DM_INICIAR {\n  ClasificacionBpm : abap.char(1);\n}")
     source('YD_DM_REABRIR','DDLS','asddls',"@EndUserText.label: 'DM tarea a reabrir'\ndefine abstract entity YD_DM_REABRIR {\n  TareaUUID : abap.raw(16);\n}")
     exposes=[('SOL','Solicitudes'),('SEG','Segmentos'),('TAREA','Tareas'),('DATO','Datos'),('FLUJO','Flujos'),('FLUJO_VR','Versiones'),('PASO','Pasos'),('CAMPO','Campos'),('SECCION','Secciones'),('REGLA','Reglas')]+[('SEG_'+k,'Contexto'+v) for k,v in SUBS.items()]

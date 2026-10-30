@@ -43,3 +43,19 @@ class RapContractTests(unittest.TestCase):
     def test_failed_lock_not_checked_at_save(self):
         self.mutate('src/ybp_i_dm_dato.clas.locals_imp.abap','line_exists( blocked[','line_exists( ignored[')
         with self.assertRaisesRegex(ValidationError,'Failed lock must prevent'):validate(self.root)
+
+    def test_union_request_member_keys_must_match(self):
+        self.mutate('src/yi_dm_sol_usr.ddls.asddls',
+                    'key responsable as Usuario', 'responsable as Usuario')
+        with self.assertRaisesRegex(ValidationError,'UNION key/element mismatch'):validate(self.root)
+
+    def test_union_field_access_keys_must_match(self):
+        self.mutate('src/yi_dm_dato_usr.ddls.asddls',
+                    'key T.responsable as Usuario', 'T.responsable as Usuario')
+        with self.assertRaisesRegex(ValidationError,'UNION key/element mismatch'):validate(self.root)
+
+    def test_union_key_positions_must_match(self):
+        self.mutate('src/yi_dm_sol_usr.ddls.asddls',
+                    'key solicitud_uuid as SolicitudUUID,\n  key responsable as Usuario',
+                    'key responsable as Usuario,\n  key solicitud_uuid as SolicitudUUID')
+        with self.assertRaisesRegex(ValidationError,'UNION key/element mismatch'):validate(self.root)

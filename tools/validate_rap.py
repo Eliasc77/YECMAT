@@ -14,10 +14,25 @@ def aliases(col):
     special={'UUID':'UUID','ID':'Id','BPM':'Bpm','SAP':'Sap','UOM':'Uom'}
     return ''.join(special.get(p,p.title()) for p in col.split('_'))
 
+def validate_union_keys(source, name):
+    """CDS UNION branches must declare identical key positions and element names."""
+    branches=re.split(r'\bunion(?:\s+all)?\s+select\b',source,flags=re.I)
+    require(len(branches)>1,f'Missing UNION branches {name}')
+    projections=[]
+    for branch in branches:
+        blocks=re.findall(r'\{([^{}]*)\}',branch,re.S)
+        require(len(blocks)==1,f'UNION projection list {name}')
+        columns=re.findall(r'^\s*(key\s+)?[\w.]+\s+as\s+(\w+)\s*,?\s*$',blocks[0],re.M|re.I)
+        require(bool(columns),f'Empty UNION projection {name}')
+        projections.append([(alias.lower(),bool(key)) for key,alias in columns])
+    require(all(p==projections[0] for p in projections[1:]),f'UNION key/element mismatch {name}')
+
 def validate(root=ROOT):
     root=Path(root); src=root/'src'
     model=json.loads((root/'docs/arquitectura/modelo_dm.json').read_text())
     tables=model['tables']
+    for name in ['yi_dm_sol_usr','yi_dm_dato_usr']:
+        validate_union_keys((src/(name+'.ddls.asddls')).read_text(),name)
     for path in src.glob('*.xml'):
         E.parse(path)
     for name, spec in tables.items():
