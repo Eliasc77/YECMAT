@@ -1,0 +1,286 @@
+{
+  "source": "User-supplied OData V4 metadata, 2026-10-31",
+  "namespace": "com.sap.gateway.srvd.yui_dm_o4.v0001",
+  "entities": {
+    "Campos": {
+      "keys": [
+        "CampoId"
+      ],
+      "properties": {
+        "CampoId": "Edm.String",
+        "Descripcion": "Edm.String",
+        "TablaSap": "Edm.String",
+        "CampoSap": "Edm.String",
+        "TipoSegmento": "Edm.String",
+        "TipoDato": "Edm.String",
+        "Longitud": "Edm.Int32",
+        "Decimales": "Edm.Int32",
+        "AyudaValores": "Edm.String",
+        "TipoControl": "Edm.String",
+        "Activo": "Edm.Boolean"
+      },
+      "navigation": {}
+    },
+    "ContextoAlmacen": {
+      "keys": [
+        "SegmentoUUID"
+      ],
+      "properties": {
+        "SegmentoUUID": "Edm.Guid",
+        "Centro": "Edm.String",
+        "Almacen": "Edm.String"
+      },
+      "navigation": {
+        "_Segmento": "com.sap.gateway.srvd.yui_dm_o4.v0001.SegmentosType"
+      }
+    },
+    "ContextoCentro": {
+      "keys": [
+        "SegmentoUUID"
+      ],
+      "properties": {
+        "SegmentoUUID": "Edm.Guid",
+        "Centro": "Edm.String"
+      },
+      "navigation": {
+        "_Segmento": "com.sap.gateway.srvd.yui_dm_o4.v0001.SegmentosType"
+      }
+    },
+    "ContextoUnidad": {
+      "keys": [
+        "SegmentoUUID"
+      ],
+      "properties": {
+        "SegmentoUUID": "Edm.Guid",
+        "UnidadAlternativa": "Edm.String"
+      },
+      "navigation": {
+        "_Segmento": "com.sap.gateway.srvd.yui_dm_o4.v0001.SegmentosType"
+      }
+    },
+    "ContextoValoracion": {
+      "keys": [
+        "SegmentoUUID"
+      ],
+      "properties": {
+        "SegmentoUUID": "Edm.Guid",
+        "AreaValoracion": "Edm.String",
+        "TipoValoracion": "Edm.String"
+      },
+      "navigation": {
+        "_Segmento": "com.sap.gateway.srvd.yui_dm_o4.v0001.SegmentosType"
+      }
+    },
+    "ContextoVentas": {
+      "keys": [
+        "SegmentoUUID"
+      ],
+      "properties": {
+        "SegmentoUUID": "Edm.Guid",
+        "OrgVentas": "Edm.String",
+        "Canal": "Edm.String"
+      },
+      "navigation": {
+        "_Segmento": "com.sap.gateway.srvd.yui_dm_o4.v0001.SegmentosType"
+      }
+    },
+    "Datos": {
+      "keys": [
+        "SegmentoUUID",
+        "CampoId"
+      ],
+      "properties": {
+        "SegmentoUUID": "Edm.Guid",
+        "CampoId": "Edm.String",
+        "Valor": "Edm.String",
+        "ModificadoPor": "Edm.String",
+        "ModificadoEl": "Edm.DateTimeOffset"
+      },
+      "navigation": {
+        "_Segmento": "com.sap.gateway.srvd.yui_dm_o4.v0001.SegmentosType"
+      }
+    },
+    "Flujos": {
+      "keys": [
+        "FlujoId"
+      ],
+      "properties": {
+        "FlujoId": "Edm.String",
+        "Descripcion": "Edm.String",
+        "TipoMaterial": "Edm.String",
+        "TipoOperacion": "Edm.String",
+        "CentroCriterio": "Edm.String",
+        "Activo": "Edm.Boolean"
+      },
+      "navigation": {}
+    },
+    "Pasos": {
+      "keys": [
+        "FlujoId",
+        "Version",
+        "PasoId"
+      ],
+      "properties": {
+        "FlujoId": "Edm.String",
+        "Version": "Edm.Int32",
+        "PasoId": "Edm.String",
+        "Area": "Edm.String",
+        "Fase": "Edm.String",
+        "CondicionBpm": "Edm.String",
+        "Orden": "Edm.Int32",
+        "Obligatorio": "Edm.Boolean",
+        "Activo": "Edm.Boolean"
+      },
+      "navigation": {}
+    },
+    "Reglas": {
+      "keys": [
+        "ReglaUUID"
+      ],
+      "properties": {
+        "ReglaUUID": "Edm.Guid",
+        "FlujoId": "Edm.String",
+        "Version": "Edm.Int32",
+        "Area": "Edm.String",
+        "CampoId": "Edm.String",
+        "SeccionId": "Edm.String",
+        "EstadoCampo": "Edm.String",
+        "Orden": "Edm.Int32",
+        "Activo": "Edm.Boolean"
+      },
+      "navigation": {}
+    },
+    "Secciones": {
+      "keys": [
+        "SeccionId"
+      ],
+      "properties": {
+        "SeccionId": "Edm.String",
+        "Descripcion": "Edm.String",
+        "Orden": "Edm.Int32",
+        "Activo": "Edm.Boolean"
+      },
+      "navigation": {}
+    },
+    "Segmentos": {
+      "keys": [
+        "SegmentoUUID"
+      ],
+      "properties": {
+        "SegmentoUUID": "Edm.Guid",
+        "SolicitudUUID": "Edm.Guid",
+        "TipoSegmento": "Edm.String",
+        "Estado": "Edm.String",
+        "ContextoClave": "Edm.String",
+        "LastChangedAt": "Edm.DateTimeOffset"
+      },
+      "navigation": {
+        "_Almacen": "com.sap.gateway.srvd.yui_dm_o4.v0001.ContextoAlmacenType",
+        "_Centro": "com.sap.gateway.srvd.yui_dm_o4.v0001.ContextoCentroType",
+        "_Solicitud": "com.sap.gateway.srvd.yui_dm_o4.v0001.SolicitudesType",
+        "_Unidad": "com.sap.gateway.srvd.yui_dm_o4.v0001.ContextoUnidadType",
+        "_Valoracion": "com.sap.gateway.srvd.yui_dm_o4.v0001.ContextoValoracionType",
+        "_Ventas": "com.sap.gateway.srvd.yui_dm_o4.v0001.ContextoVentasType"
+      }
+    },
+    "Solicitudes": {
+      "keys": [
+        "SolicitudUUID"
+      ],
+      "properties": {
+        "SolicitudUUID": "Edm.Guid",
+        "NumeroSolicitud": "Edm.String",
+        "TipoMaterial": "Edm.String",
+        "TipoOperacion": "Edm.String",
+        "Material": "Edm.String",
+        "FlujoId": "Edm.String",
+        "Version": "Edm.Int32",
+        "Estado": "Edm.String",
+        "CreadoPor": "Edm.String",
+        "CreadoEl": "Edm.DateTimeOffset",
+        "ClasificacionBpm": "Edm.String",
+        "LastChangedAt": "Edm.DateTimeOffset"
+      },
+      "navigation": {
+        "_Segmentos": "Collection(com.sap.gateway.srvd.yui_dm_o4.v0001.SegmentosType)",
+        "_Tareas": "Collection(com.sap.gateway.srvd.yui_dm_o4.v0001.TareasType)"
+      }
+    },
+    "Tareas": {
+      "keys": [
+        "TareaUUID"
+      ],
+      "properties": {
+        "TareaUUID": "Edm.Guid",
+        "SolicitudUUID": "Edm.Guid",
+        "FlujoId": "Edm.String",
+        "Version": "Edm.Int32",
+        "PasoId": "Edm.String",
+        "Area": "Edm.String",
+        "Estado": "Edm.String",
+        "Responsable": "Edm.String",
+        "CreadoEl": "Edm.DateTimeOffset",
+        "LastChangedAt": "Edm.DateTimeOffset"
+      },
+      "navigation": {
+        "_Solicitud": "com.sap.gateway.srvd.yui_dm_o4.v0001.SolicitudesType"
+      }
+    },
+    "Versiones": {
+      "keys": [
+        "FlujoId",
+        "Version"
+      ],
+      "properties": {
+        "FlujoId": "Edm.String",
+        "Version": "Edm.Int32",
+        "Estado": "Edm.String",
+        "VigenteDesde": "Edm.Date",
+        "VigenteHasta": "Edm.Date",
+        "CreadoPor": "Edm.String",
+        "CreadoEl": "Edm.DateTimeOffset"
+      },
+      "navigation": {}
+    }
+  },
+  "actions": [
+    {
+      "name": "Reabrir",
+      "parameters": {
+        "_it": "com.sap.gateway.srvd.yui_dm_o4.v0001.SolicitudesType",
+        "TareaUUID": "Edm.Guid"
+      }
+    },
+    {
+      "name": "Finalizar",
+      "parameters": {
+        "_it": "com.sap.gateway.srvd.yui_dm_o4.v0001.TareasType"
+      }
+    },
+    {
+      "name": "Aprobar",
+      "parameters": {
+        "_it": "com.sap.gateway.srvd.yui_dm_o4.v0001.SolicitudesType"
+      }
+    },
+    {
+      "name": "Cerrar",
+      "parameters": {
+        "_it": "com.sap.gateway.srvd.yui_dm_o4.v0001.SolicitudesType"
+      }
+    },
+    {
+      "name": "Iniciar",
+      "parameters": {
+        "_it": "com.sap.gateway.srvd.yui_dm_o4.v0001.TareasType"
+      }
+    },
+    {
+      "name": "Iniciar",
+      "parameters": {
+        "_it": "com.sap.gateway.srvd.yui_dm_o4.v0001.SolicitudesType",
+        "ClasificacionBpm": "Edm.String"
+      }
+    }
+  ]
+}

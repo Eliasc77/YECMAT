@@ -1,0 +1,10 @@
+.dmPage .sapMPageHeader { box-shadow: 0 1px 8px #132b4420; }
+.dmHero { padding: 1.5rem 2rem 1rem; background: #eef4fa; border-bottom: 1px solid #dce5ed; }
+.dmWorkspace { padding: 1rem 2rem 2rem; gap: 1rem; }
+.dmCard { border: 1px solid #dce5ed; border-radius: .75rem; overflow: hidden; background: white; }
+.dmCard .sapMPanelContent { padding: 1rem; }
+.dmColumns { gap: 1rem; }
+.dmHint { color: #52677c; }
+.dmFieldHelp { font-size: .75rem; color: #52677c; }
+.dmForm { margin-bottom: 1rem; }
+@media (max-width: 700px) { .dmWorkspace { padding: .75rem; } .dmHero { padding: 1rem; } }

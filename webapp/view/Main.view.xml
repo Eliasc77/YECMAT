@@ -1,0 +1,66 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="com.yecmat.dm.controller.Main" displayBlock="true">
+  <App>
+    <Page class="dmPage" title="Solicitudes de material" busy="{vm&gt;/busy}" busyIndicatorDelay="0">
+      <headerContent>
+        <ObjectStatus text="Demo · datos temporales" state="Warning" visible="{vm&gt;/demo}"/>
+        <Button text="Nueva solicitud" icon="sap-icon://add" type="Emphasized" press="onCreateRequest"/>
+        <Button text="Actualizar" icon="sap-icon://refresh" press="onRefresh"/>
+      </headerContent>
+      <content>
+        <VBox class="dmHero">
+          <Title text="Captura de materiales" titleStyle="H2"/>
+          <Text text="Selecciona una solicitud y una tarea. Los campos se muestran segun las reglas de cada area." class="dmHint sapUiTinyMarginTop"/>
+          <MessageStrip text="Modo demo: los cambios viven solo en esta pestaña y se pierden al recargar. No se envian datos a SAP." type="Warning" showIcon="true" visible="{vm&gt;/demo}" class="sapUiSmallMarginTop"/>
+        </VBox>
+        <VBox class="dmWorkspace">
+          <MessageStrip text="{vm&gt;/error}" type="Error" showIcon="true" showCloseButton="true" close="onClearError" visible="{= !!${vm&gt;/error} }"/>
+          <MessageStrip text="{vm&gt;/status}" type="Information" showIcon="true" visible="{= !!${vm&gt;/status} }"/>
+          <Panel class="dmCard" headerText="1 · Solicitudes">
+            <headerToolbar><OverflowToolbar><Title text="Solicitudes"/><ToolbarSpacer/><SearchField width="18rem" placeholder="Buscar numero o material" liveChange="onSearch"/></OverflowToolbar></headerToolbar>
+            <Table id="requests" items="{vm&gt;/requests}" mode="SingleSelectMaster" selectionChange="onRequestSelect" growing="true" growingThreshold="20" noDataText="No hay solicitudes. Puedes crear una con Nueva solicitud.">
+              <columns><Column><Text text="Solicitud"/></Column><Column minScreenWidth="Tablet" demandPopin="true"><Text text="Material / tipo"/></Column><Column><Text text="Estado"/></Column><Column minScreenWidth="Tablet" demandPopin="true"><Text text="Flujo"/></Column></columns>
+              <items><ColumnListItem><cells><ObjectIdentifier title="{vm&gt;NumeroSolicitud}" text="{vm&gt;CreadoPor}"/><Text text="{vm&gt;Material} {vm&gt;TipoMaterial}"/><ObjectStatus text="{vm&gt;Estado}"/><Text text="{vm&gt;FlujoId} · v{vm&gt;Version}"/></cells></ColumnListItem></items>
+            </Table>
+          </Panel>
+          <Panel class="dmCard" visible="{= !!${vm&gt;/request} }">
+            <headerToolbar><OverflowToolbar><Title text="{vm&gt;/request/NumeroSolicitud}"/><ObjectStatus text="{vm&gt;/request/Estado}"/><ToolbarSpacer/>
+              <Button text="Iniciar flujo" press="onStartRequest" enabled="{= ${vm&gt;/request/Estado} === 'BORRADOR' }"/>
+              <Button text="Cerrar captura" press="onCloseRequest" enabled="{= ${vm&gt;/request/Estado} === 'EN_CURSO' }"/>
+              <Button text="Aprobar" press="onApproveRequest" enabled="{= ${vm&gt;/request/Estado} === 'REVISION' }"/>
+              <Button text="Reabrir tarea" press="onReopenTask" enabled="{= !!${vm&gt;/task} &amp;&amp; ${vm&gt;/task/Estado} === 'FINALIZADA' }"/>
+            </OverflowToolbar></headerToolbar>
+            <Title text="2 · Tareas por area" titleStyle="H4" class="sapUiSmallMarginBottom"/>
+            <Table id="tasks" items="{vm&gt;/tasks}" mode="SingleSelectMaster" selectionChange="onTaskSelect" noDataText="Inicia el flujo para generar las tareas.">
+              <columns><Column><Text text="Area / paso"/></Column><Column><Text text="Estado"/></Column><Column minScreenWidth="Tablet" demandPopin="true"><Text text="Responsable"/></Column></columns>
+              <items><ColumnListItem><cells><ObjectIdentifier title="{vm&gt;Area}" text="{vm&gt;PasoId}"/><ObjectStatus text="{vm&gt;Estado}"/><Text text="{vm&gt;Responsable}"/></cells></ColumnListItem></items>
+            </Table>
+          </Panel>
+          <Panel class="dmCard" visible="{= !!${vm&gt;/task} }">
+            <headerToolbar><OverflowToolbar><Title text="3 · Captura · {vm&gt;/task/Area}"/><ObjectStatus text="{vm&gt;/task/Estado}"/><ToolbarSpacer/>
+              <Button text="Iniciar tarea" press="onStartTask" enabled="{= ${vm&gt;/task/Estado} === 'PENDIENTE' &amp;&amp; ${vm&gt;/request/Estado} === 'EN_CURSO' }"/>
+              <Button text="Guardar valores" icon="sap-icon://save" type="Emphasized" press="onSave" enabled="{= ${vm&gt;/dirty} &amp;&amp; ${vm&gt;/canEdit} }"/>
+              <Button text="Finalizar tarea" press="onFinishTask" enabled="{vm&gt;/canEdit}"/>
+            </OverflowToolbar></headerToolbar>
+            <FlexBox wrap="Wrap" class="dmColumns">
+              <VBox width="19rem">
+                <Title text="Contextos organizativos" titleStyle="H5"/>
+                <Text text="Agrega cada centro, almacen o unidad que necesites completar." class="dmHint sapUiTinyMarginTop sapUiSmallMarginBottom"/>
+                <Button text="Agregar contexto" icon="sap-icon://add" press="onCreateSegment" enabled="{vm&gt;/canContext}" class="sapUiSmallMarginBottom"/>
+                <List id="segments" items="{vm&gt;/segments}" mode="SingleSelectMaster" selectionChange="onSegmentSelect" noDataText="No hay contextos para esta area.">
+                  <items><StandardListItem title="{vm&gt;_label}" description="{vm&gt;TipoSegmento}"/></items>
+                </List>
+              </VBox>
+              <VBox class="sapUiSmallMarginBegin" width="auto">
+                <layoutData><FlexItemData growFactor="1" baseSize="22rem"/></layoutData>
+                <Title text="{vm&gt;/segment/_label}" titleStyle="H4"/>
+                <MessageStrip text="Tarea finalizada o solicitud cerrada: los valores se muestran en consulta." type="Information" showIcon="true" visible="{= !!${vm&gt;/segment} &amp;&amp; !${vm&gt;/canEdit} }" class="sapUiSmallMarginTop"/>
+                <Text text="Selecciona o agrega un contexto para ver sus campos." visible="{= !${vm&gt;/segment} }" class="dmHint sapUiSmallMarginTop"/>
+                <VBox id="dynamicForms" class="sapUiSmallMarginTop"/>
+              </VBox>
+            </FlexBox>
+          </Panel>
+        </VBox>
+      </content>
+    </Page>
+  </App>
+</mvc:View>

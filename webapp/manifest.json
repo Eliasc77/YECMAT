@@ -1,0 +1,21 @@
+{
+  "_version": "1.58.0",
+  "sap.app": {
+    "id": "com.yecmat.dm", "type": "application",
+    "title": "Solicitudes de material", "description": "Captura por area y contexto organizativo",
+    "applicationVersion": { "version": "0.1.0" },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata4/sap/ybd_dm_o4/srvd/sap/yui_dm_o4/0001/",
+        "type": "OData", "settings": { "odataVersion": "4.0" }
+      }
+    }
+  },
+  "sap.ui": { "technology": "UI5", "deviceTypes": { "desktop": true, "tablet": true, "phone": true } },
+  "sap.ui5": {
+    "dependencies": { "minUI5Version": "1.120.0", "libs": { "sap.ui.core": {}, "sap.m": {}, "sap.ui.layout": {} } },
+    "rootView": { "viewName": "com.yecmat.dm.view.Main", "type": "XML", "id": "main", "async": true },
+    "resources": { "css": [{ "uri": "css/style.css" }] },
+    "contentDensities": { "compact": true, "cozy": true }
+  }
+}

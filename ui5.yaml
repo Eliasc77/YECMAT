@@ -1,0 +1,22 @@
+specVersion: "3.0"
+metadata:
+  name: com.yecmat.dm
+type: application
+framework:
+  name: OpenUI5
+  version: "1.120.39"
+  libraries:
+    - name: sap.ui.core
+    - name: sap.m
+    - name: sap.ui.layout
+    - name: themelib_sap_horizon
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        backend:
+          - path: /sap
+            url: https://6449ad14-b137-4a27-8017-6421c2c4f0b0.abap-web.us10.hana.ondemand.com
+            client: "100"
+            authenticationType: reentranceTicket
