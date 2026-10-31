@@ -1,0 +1,23 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Datos de centro', typeNamePlural: 'Datos de centros',
+  title: { value: 'Centro' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Centro', direction: #ASC }] }]
+annotate view YC_DM_SEG_CEN with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.hidden: true
+  SegmentoUUID;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Centro' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Centro' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  Centro;
+
+}

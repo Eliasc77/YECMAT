@@ -1,0 +1,47 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Contexto organizativo', typeNamePlural: 'Contextos organizativos',
+  title: { value: 'TipoSegmento' },
+  description: { value: 'Estado' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'TipoSegmento', direction: #ASC }] }]
+annotate view YC_DM_SEG with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 },
+    { id: 'Contexto2', type: #IDENTIFICATION_REFERENCE, label: 'Centro', position: 20, targetElement: '_Centro' },
+    { id: 'Contexto3', type: #IDENTIFICATION_REFERENCE, label: 'Almacen', position: 30, targetElement: '_Almacen' },
+    { id: 'Contexto4', type: #IDENTIFICATION_REFERENCE, label: 'Ventas', position: 40, targetElement: '_Ventas' },
+    { id: 'Contexto5', type: #IDENTIFICATION_REFERENCE, label: 'Valoracion', position: 50, targetElement: '_Valoracion' },
+    { id: 'Contexto6', type: #IDENTIFICATION_REFERENCE, label: 'Unidad alternativa', position: 60, targetElement: '_Unidad' }
+  ]
+  @UI.hidden: true
+  SegmentoUUID;
+
+  @UI.identification: [{ position: 210, label: 'SolicitudUUID' }]
+  SolicitudUUID;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Tipo de contexto' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Tipo de contexto' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  TipoSegmento;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Estado' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Estado' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  Estado;
+
+  @UI.hidden: true
+  ContextoClave;
+
+  @UI.hidden: true
+  LastChangedAt;
+
+}

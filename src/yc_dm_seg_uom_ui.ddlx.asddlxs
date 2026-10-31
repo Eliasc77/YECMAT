@@ -1,0 +1,23 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Unidad alternativa', typeNamePlural: 'Unidades alternativas',
+  title: { value: 'UnidadAlternativa' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'UnidadAlternativa', direction: #ASC }] }]
+annotate view YC_DM_SEG_UOM with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.hidden: true
+  SegmentoUUID;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Unidad alternativa' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Unidad alternativa' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  UnidadAlternativa;
+
+}

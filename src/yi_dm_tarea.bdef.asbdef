@@ -1,0 +1,33 @@
+managed implementation in class YBP_I_DM_TAREA unique;
+strict ( 2 );
+
+define behavior for YI_DM_TAREA alias Tarea
+persistent table ymmt_dm_tarea
+lock master
+authorization master ( global, instance )
+etag master LastChangedAt
+{
+  create;
+  update;
+  field ( numbering : managed, readonly ) TareaUUID;
+  field ( readonly ) FlujoId, Version, Area, Estado, CreadoEl, LastChangedAt;
+  field ( mandatory : create, readonly : update ) SolicitudUUID, PasoId;
+  determination defaults on modify { create; }
+  validation validateTask on save { create; update; }
+  action Iniciar result [1] $self;
+  action Finalizar result [1] $self;
+  action Reabrir result [1] $self;
+  mapping for ymmt_dm_tarea
+  {
+    TareaUUID = tarea_uuid;
+    SolicitudUUID = solicitud_uuid;
+    FlujoId = flujo_id;
+    Version = version;
+    PasoId = paso_id;
+    Area = area;
+    Estado = estado;
+    Responsable = responsable;
+    CreadoEl = creado_el;
+    LastChangedAt = last_changed_at;
+  }
+}

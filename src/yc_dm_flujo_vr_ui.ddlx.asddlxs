@@ -1,0 +1,71 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Version de flujo', typeNamePlural: 'Versiones de flujo',
+  title: { value: 'FlujoId' },
+  description: { value: 'Estado' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'FlujoId', direction: #ASC }] }]
+annotate view YC_DM_FLUJO_VR with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.lineItem: [
+    { position: 10, label: 'Flujo' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Flujo' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  FlujoId;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Version' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Version' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  Version;
+
+  @UI.lineItem: [
+    { position: 30, label: 'Estado' }
+  ]
+  @UI.identification: [
+    { position: 30, label: 'Estado' }
+  ]
+  @UI.selectionField: [{ position: 30 }]
+  Estado;
+
+  @UI.lineItem: [
+    { position: 40, label: 'Vigente desde' }
+  ]
+  @UI.identification: [
+    { position: 40, label: 'Vigente desde' }
+  ]
+  VigenteDesde;
+
+  @UI.lineItem: [
+    { position: 50, label: 'Vigente hasta' }
+  ]
+  @UI.identification: [
+    { position: 50, label: 'Vigente hasta' }
+  ]
+  VigenteHasta;
+
+  @UI.lineItem: [
+    { position: 60, label: 'Creado por' }
+  ]
+  @UI.identification: [
+    { position: 60, label: 'Creado por' }
+  ]
+  CreadoPor;
+
+  @UI.lineItem: [
+    { position: 70, label: 'Creado el' }
+  ]
+  @UI.identification: [
+    { position: 70, label: 'Creado el' }
+  ]
+  CreadoEl;
+
+}

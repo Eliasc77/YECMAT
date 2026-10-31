@@ -1,0 +1,10 @@
+projection;
+strict ( 2 );
+
+define behavior for YC_DM_TAREA alias Tarea
+use etag
+{
+  use update;
+  use action Iniciar;
+  use action Finalizar;
+}

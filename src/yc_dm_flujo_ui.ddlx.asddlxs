@@ -1,0 +1,65 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Flujo', typeNamePlural: 'Flujos',
+  title: { value: 'FlujoId' },
+  description: { value: 'Descripcion' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'FlujoId', direction: #ASC }] }]
+annotate view YC_DM_FLUJO with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.lineItem: [
+    { position: 10, label: 'Flujo' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Flujo' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  FlujoId;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Descripcion' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Descripcion' }
+  ]
+  Descripcion;
+
+  @UI.lineItem: [
+    { position: 30, label: 'Tipo de material' }
+  ]
+  @UI.identification: [
+    { position: 30, label: 'Tipo de material' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  TipoMaterial;
+
+  @UI.lineItem: [
+    { position: 40, label: 'Operacion' }
+  ]
+  @UI.identification: [
+    { position: 40, label: 'Operacion' }
+  ]
+  @UI.selectionField: [{ position: 30 }]
+  TipoOperacion;
+
+  @UI.lineItem: [
+    { position: 50, label: 'Centro de seleccion' }
+  ]
+  @UI.identification: [
+    { position: 50, label: 'Centro de seleccion' }
+  ]
+  @UI.selectionField: [{ position: 40 }]
+  CentroCriterio;
+
+  @UI.lineItem: [
+    { position: 60, label: 'Activo' }
+  ]
+  @UI.identification: [
+    { position: 60, label: 'Activo' }
+  ]
+  @UI.selectionField: [{ position: 50 }]
+  Activo;
+
+}

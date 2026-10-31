@@ -1,0 +1,5 @@
+@EndUserText.label: 'DM acceso de solicitud'
+@MappingRole: true
+define role YR_C_DM_SEG_VEN {
+  grant select on YC_DM_SEG_VEN where inheriting conditions from entity YI_DM_SEG_VEN;
+}

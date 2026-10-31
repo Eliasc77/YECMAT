@@ -1,0 +1,5 @@
+@EndUserText.label: 'DM acceso de solicitud'
+@MappingRole: true
+define role YR_I_DM_SOL {
+  grant select on YI_DM_SOL where _Acceso.Usuario = $session.user;
+}

@@ -1,0 +1,46 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Seccion', typeNamePlural: 'Secciones',
+  title: { value: 'SeccionId' },
+  description: { value: 'Descripcion' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Orden', direction: #ASC }] }]
+annotate view YC_DM_SECCION with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.lineItem: [
+    { position: 10, label: 'Seccion' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Seccion' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  SeccionId;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Descripcion' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Descripcion' }
+  ]
+  Descripcion;
+
+  @UI.lineItem: [
+    { position: 30, label: 'Orden' }
+  ]
+  @UI.identification: [
+    { position: 30, label: 'Orden' }
+  ]
+  Orden;
+
+  @UI.lineItem: [
+    { position: 40, label: 'Activo' }
+  ]
+  @UI.identification: [
+    { position: 40, label: 'Activo' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  Activo;
+
+}

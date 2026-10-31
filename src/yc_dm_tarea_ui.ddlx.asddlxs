@@ -1,0 +1,75 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Tarea', typeNamePlural: 'Tareas',
+  title: { value: 'Area' },
+  description: { value: 'Estado' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'CreadoEl', direction: #DESC }] }]
+annotate view YC_DM_TAREA with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.identification: [{ position: 200, label: 'TareaUUID' }]
+  TareaUUID;
+
+  @UI.identification: [{ position: 210, label: 'SolicitudUUID' }]
+  SolicitudUUID;
+
+  @UI.hidden: true
+  FlujoId;
+
+  @UI.hidden: true
+  Version;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Paso' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Paso' }
+  ]
+  @UI.selectionField: [{ position: 40 }]
+  PasoId;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Area' },
+    { type: #FOR_ACTION, dataAction: 'Iniciar', label: 'Iniciar tarea' },
+    { type: #FOR_ACTION, dataAction: 'Finalizar', label: 'Finalizar tarea' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Area' },
+    { type: #FOR_ACTION, dataAction: 'Iniciar', label: 'Iniciar tarea' },
+    { type: #FOR_ACTION, dataAction: 'Finalizar', label: 'Finalizar tarea' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  Area;
+
+  @UI.lineItem: [
+    { position: 30, label: 'Estado' }
+  ]
+  @UI.identification: [
+    { position: 30, label: 'Estado' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  Estado;
+
+  @UI.lineItem: [
+    { position: 40, label: 'Responsable' }
+  ]
+  @UI.identification: [
+    { position: 40, label: 'Responsable' }
+  ]
+  @UI.selectionField: [{ position: 30 }]
+  Responsable;
+
+  @UI.lineItem: [
+    { position: 50, label: 'Creado el' }
+  ]
+  @UI.identification: [
+    { position: 50, label: 'Creado el' }
+  ]
+  CreadoEl;
+
+  @UI.hidden: true
+  LastChangedAt;
+
+}

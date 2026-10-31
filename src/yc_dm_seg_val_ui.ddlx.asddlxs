@@ -1,0 +1,33 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Datos de valoracion', typeNamePlural: 'Datos de valoracion',
+  title: { value: 'AreaValoracion' },
+  description: { value: 'TipoValoracion' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'AreaValoracion', direction: #ASC }] }]
+annotate view YC_DM_SEG_VAL with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.hidden: true
+  SegmentoUUID;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Area de valoracion' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Area de valoracion' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  AreaValoracion;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Tipo de valoracion' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Tipo de valoracion' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  TipoValoracion;
+
+}
