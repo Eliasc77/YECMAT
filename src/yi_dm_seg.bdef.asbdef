@@ -1,0 +1,110 @@
+managed implementation in class YBP_I_DM_SEG unique;
+strict ( 2 );
+
+define behavior for YI_DM_SEG alias Segmento
+persistent table ymmt_dm_seg
+lock master
+authorization master ( global, instance )
+etag master LastChangedAt
+{
+  create;
+  update;
+  field ( numbering : managed, readonly ) SegmentoUUID;
+  field ( readonly ) Estado, ContextoClave, LastChangedAt;
+  field ( mandatory : create, readonly : update ) SolicitudUUID, TipoSegmento;
+  determination defaults on modify { create; }
+  determination context on save { create; }
+  validation validateContext on save { create; update; }
+  association _Centro { create; }
+  association _Almacen { create; }
+  association _Ventas { create; }
+  association _Valoracion { create; }
+  association _Unidad { create; }
+  mapping for ymmt_dm_seg
+  {
+    SegmentoUUID = segmento_uuid;
+    SolicitudUUID = solicitud_uuid;
+    TipoSegmento = tipo_segmento;
+    Estado = estado;
+    ContextoClave = contexto_clave;
+    LastChangedAt = last_changed_at;
+  }
+}
+
+define behavior for YI_DM_SEG_CEN alias Centro
+persistent table ymmt_dm_seg_cen
+lock dependent by _Segmento
+authorization dependent by _Segmento
+{
+  field ( readonly ) SegmentoUUID;
+  association _Segmento;
+  validation validateSubtype on save { create; }
+  mapping for ymmt_dm_seg_cen
+  {
+    SegmentoUUID = segmento_uuid;
+    Centro = centro;
+  }
+}
+
+define behavior for YI_DM_SEG_ALM alias Almacen
+persistent table ymmt_dm_seg_alm
+lock dependent by _Segmento
+authorization dependent by _Segmento
+{
+  field ( readonly ) SegmentoUUID;
+  association _Segmento;
+  validation validateSubtype on save { create; }
+  mapping for ymmt_dm_seg_alm
+  {
+    SegmentoUUID = segmento_uuid;
+    Centro = centro;
+    Almacen = almacen;
+  }
+}
+
+define behavior for YI_DM_SEG_VEN alias Ventas
+persistent table ymmt_dm_seg_ven
+lock dependent by _Segmento
+authorization dependent by _Segmento
+{
+  field ( readonly ) SegmentoUUID;
+  association _Segmento;
+  validation validateSubtype on save { create; }
+  mapping for ymmt_dm_seg_ven
+  {
+    SegmentoUUID = segmento_uuid;
+    OrgVentas = org_ventas;
+    Canal = canal;
+  }
+}
+
+define behavior for YI_DM_SEG_VAL alias Valoracion
+persistent table ymmt_dm_seg_val
+lock dependent by _Segmento
+authorization dependent by _Segmento
+{
+  field ( readonly ) SegmentoUUID;
+  association _Segmento;
+  validation validateSubtype on save { create; }
+  mapping for ymmt_dm_seg_val
+  {
+    SegmentoUUID = segmento_uuid;
+    AreaValoracion = area_valoracion;
+    TipoValoracion = tipo_valoracion;
+  }
+}
+
+define behavior for YI_DM_SEG_UOM alias Unidad
+persistent table ymmt_dm_seg_uom
+lock dependent by _Segmento
+authorization dependent by _Segmento
+{
+  field ( readonly ) SegmentoUUID;
+  association _Segmento;
+  validation validateSubtype on save { create; }
+  mapping for ymmt_dm_seg_uom
+  {
+    SegmentoUUID = segmento_uuid;
+    UnidadAlternativa = unidad_alternativa;
+  }
+}

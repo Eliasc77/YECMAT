@@ -1,0 +1,37 @@
+managed implementation in class YBP_I_DM_SOL unique;
+strict ( 2 );
+
+define behavior for YI_DM_SOL alias Solicitud
+persistent table ymmt_dm_sol
+lock master
+authorization master ( global, instance )
+etag master LastChangedAt
+{
+  create;
+  update;
+  field ( numbering : managed, readonly ) SolicitudUUID;
+  field ( readonly ) Estado, ClasificacionBpm, CreadoPor, CreadoEl, LastChangedAt;
+  field ( mandatory : create, readonly : update ) NumeroSolicitud, TipoMaterial, TipoOperacion, FlujoId, Version;
+  field ( readonly : update ) Material;
+  determination defaults on modify { create; }
+  validation validateRequest on save { create; update; }
+  action Iniciar parameter YD_DM_INICIAR result [1] $self;
+  action Cerrar result [1] $self;
+  action Aprobar result [1] $self;
+  action Reabrir parameter YD_DM_REABRIR result [1] $self;
+  mapping for ymmt_dm_sol
+  {
+    SolicitudUUID = solicitud_uuid;
+    NumeroSolicitud = numero_solicitud;
+    TipoMaterial = tipo_material;
+    TipoOperacion = tipo_operacion;
+    Material = material;
+    FlujoId = flujo_id;
+    Version = version;
+    Estado = estado;
+    CreadoPor = creado_por;
+    CreadoEl = creado_el;
+    ClasificacionBpm = clasificacion_bpm;
+    LastChangedAt = last_changed_at;
+  }
+}
