@@ -1,0 +1,246 @@
+{
+  "purpose": "DEMO_TRIAL_NOT_APPROVED_PRODUCTION_MATRIX",
+  "flow_id": "DM_DEMO_ZFER",
+  "version": 1,
+  "material_type": "ZFER",
+  "operation": "C",
+  "counts": {
+    "flujos": 1,
+    "versiones": 1,
+    "pasos": 3,
+    "campos": 9,
+    "secciones": 6,
+    "reglas": 9
+  },
+  "campos": [
+    {
+      "campo_id": "MAKT_MAKTX",
+      "descripcion": "Descripcion breve",
+      "tabla_sap": "MAKT",
+      "campo_sap": "MAKTX",
+      "tipo_segmento": "GENERAL",
+      "tipo_dato": "CHAR",
+      "longitud": 40,
+      "decimales": 0,
+      "ayuda_valores": "",
+      "tipo_control": "Input",
+      "activo": "X"
+    },
+    {
+      "campo_id": "MARA_MEINS",
+      "descripcion": "Unidad de medida base",
+      "tabla_sap": "MARA",
+      "campo_sap": "MEINS",
+      "tipo_segmento": "GENERAL",
+      "tipo_dato": "UNIT",
+      "longitud": 3,
+      "decimales": 0,
+      "ayuda_valores": "",
+      "tipo_control": "Input",
+      "activo": "X"
+    },
+    {
+      "campo_id": "MARA_MATKL",
+      "descripcion": "Grupo de articulos",
+      "tabla_sap": "MARA",
+      "campo_sap": "MATKL",
+      "tipo_segmento": "GENERAL",
+      "tipo_dato": "CHAR",
+      "longitud": 9,
+      "decimales": 0,
+      "ayuda_valores": "",
+      "tipo_control": "Input",
+      "activo": "X"
+    },
+    {
+      "campo_id": "MARC_EKGRP",
+      "descripcion": "Grupo de compras",
+      "tabla_sap": "MARC",
+      "campo_sap": "EKGRP",
+      "tipo_segmento": "CENTRO",
+      "tipo_dato": "CHAR",
+      "longitud": 3,
+      "decimales": 0,
+      "ayuda_valores": "",
+      "tipo_control": "Input",
+      "activo": "X"
+    },
+    {
+      "campo_id": "MARD_LGPBE",
+      "descripcion": "Ubicacion en almacen",
+      "tabla_sap": "MARD",
+      "campo_sap": "LGPBE",
+      "tipo_segmento": "ALMACEN",
+      "tipo_dato": "CHAR",
+      "longitud": 10,
+      "decimales": 0,
+      "ayuda_valores": "",
+      "tipo_control": "Input",
+      "activo": "X"
+    },
+    {
+      "campo_id": "MVKE_MTPOS",
+      "descripcion": "Grupo de tipos de posicion",
+      "tabla_sap": "MVKE",
+      "campo_sap": "MTPOS",
+      "tipo_segmento": "VENTAS",
+      "tipo_dato": "CHAR",
+      "longitud": 4,
+      "decimales": 0,
+      "ayuda_valores": "",
+      "tipo_control": "Input",
+      "activo": "X"
+    },
+    {
+      "campo_id": "MBEW_STPRS",
+      "descripcion": "Precio estandar",
+      "tabla_sap": "MBEW",
+      "campo_sap": "STPRS",
+      "tipo_segmento": "VALORACION",
+      "tipo_dato": "CURR",
+      "longitud": 11,
+      "decimales": 2,
+      "ayuda_valores": "",
+      "tipo_control": "Decimal",
+      "activo": "X"
+    },
+    {
+      "campo_id": "MARM_UMREZ",
+      "descripcion": "Numerador de conversion",
+      "tabla_sap": "MARM",
+      "campo_sap": "UMREZ",
+      "tipo_segmento": "UNIDAD",
+      "tipo_dato": "DEC",
+      "longitud": 5,
+      "decimales": 0,
+      "ayuda_valores": "",
+      "tipo_control": "Integer",
+      "activo": "X"
+    },
+    {
+      "campo_id": "MARM_UMREN",
+      "descripcion": "Denominador de conversion",
+      "tabla_sap": "MARM",
+      "campo_sap": "UMREN",
+      "tipo_segmento": "UNIDAD",
+      "tipo_dato": "DEC",
+      "longitud": 5,
+      "decimales": 0,
+      "ayuda_valores": "",
+      "tipo_control": "Integer",
+      "activo": "X"
+    }
+  ],
+  "secciones": [
+    {
+      "seccion_id": "BASICOS",
+      "descripcion": "Datos basicos",
+      "orden": 10,
+      "activo": "X"
+    },
+    {
+      "seccion_id": "COMPRAS",
+      "descripcion": "Compras por centro",
+      "orden": 20,
+      "activo": "X"
+    },
+    {
+      "seccion_id": "ALMACEN",
+      "descripcion": "Datos de almacen",
+      "orden": 30,
+      "activo": "X"
+    },
+    {
+      "seccion_id": "VENTAS",
+      "descripcion": "Datos de ventas",
+      "orden": 40,
+      "activo": "X"
+    },
+    {
+      "seccion_id": "VALORACION",
+      "descripcion": "Datos de valoracion",
+      "orden": 50,
+      "activo": "X"
+    },
+    {
+      "seccion_id": "UNIDADES",
+      "descripcion": "Unidades alternativas",
+      "orden": 60,
+      "activo": "X"
+    }
+  ],
+  "rules_without_uuid": [
+    {
+      "area": "PCP",
+      "campo_id": "MAKT_MAKTX",
+      "seccion_id": "BASICOS",
+      "estado_campo": "M",
+      "orden": 10,
+      "activo": "X"
+    },
+    {
+      "area": "PCP",
+      "campo_id": "MARA_MEINS",
+      "seccion_id": "BASICOS",
+      "estado_campo": "M",
+      "orden": 20,
+      "activo": "X"
+    },
+    {
+      "area": "PCP",
+      "campo_id": "MARA_MATKL",
+      "seccion_id": "BASICOS",
+      "estado_campo": "M",
+      "orden": 30,
+      "activo": "X"
+    },
+    {
+      "area": "LOG",
+      "campo_id": "MARC_EKGRP",
+      "seccion_id": "COMPRAS",
+      "estado_campo": "M",
+      "orden": 10,
+      "activo": "X"
+    },
+    {
+      "area": "LOG",
+      "campo_id": "MARD_LGPBE",
+      "seccion_id": "ALMACEN",
+      "estado_campo": "O",
+      "orden": 10,
+      "activo": "X"
+    },
+    {
+      "area": "PCP",
+      "campo_id": "MVKE_MTPOS",
+      "seccion_id": "VENTAS",
+      "estado_campo": "O",
+      "orden": 10,
+      "activo": "X"
+    },
+    {
+      "area": "CONT",
+      "campo_id": "MBEW_STPRS",
+      "seccion_id": "VALORACION",
+      "estado_campo": "M",
+      "orden": 10,
+      "activo": "X"
+    },
+    {
+      "area": "PCP",
+      "campo_id": "MARM_UMREZ",
+      "seccion_id": "UNIDADES",
+      "estado_campo": "M",
+      "orden": 10,
+      "activo": "X"
+    },
+    {
+      "area": "PCP",
+      "campo_id": "MARM_UMREN",
+      "seccion_id": "UNIDADES",
+      "estado_campo": "M",
+      "orden": 20,
+      "activo": "X"
+    }
+  ]
+}
