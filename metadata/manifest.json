@@ -1,0 +1,211 @@
+{
+  "extensions": [
+    {
+      "object": "YC_DM_SOL_UI",
+      "target": "YC_DM_SOL",
+      "fields": [
+        "SolicitudUUID",
+        "NumeroSolicitud",
+        "TipoMaterial",
+        "TipoOperacion",
+        "Material",
+        "FlujoId",
+        "Version",
+        "Estado",
+        "CreadoPor",
+        "CreadoEl",
+        "ClasificacionBpm",
+        "LastChangedAt"
+      ],
+      "actions": [
+        "Iniciar",
+        "Cerrar",
+        "Aprobar",
+        "Reabrir"
+      ]
+    },
+    {
+      "object": "YC_DM_TAREA_UI",
+      "target": "YC_DM_TAREA",
+      "fields": [
+        "TareaUUID",
+        "SolicitudUUID",
+        "FlujoId",
+        "Version",
+        "PasoId",
+        "Area",
+        "Estado",
+        "Responsable",
+        "CreadoEl",
+        "LastChangedAt"
+      ],
+      "actions": [
+        "Iniciar",
+        "Finalizar"
+      ]
+    },
+    {
+      "object": "YC_DM_SEG_UI",
+      "target": "YC_DM_SEG",
+      "fields": [
+        "SegmentoUUID",
+        "SolicitudUUID",
+        "TipoSegmento",
+        "Estado",
+        "ContextoClave",
+        "LastChangedAt"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_DATO_UI",
+      "target": "YC_DM_DATO",
+      "fields": [
+        "SegmentoUUID",
+        "CampoId",
+        "Valor",
+        "ModificadoPor",
+        "ModificadoEl"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_FLUJO_UI",
+      "target": "YC_DM_FLUJO",
+      "fields": [
+        "FlujoId",
+        "Descripcion",
+        "TipoMaterial",
+        "TipoOperacion",
+        "CentroCriterio",
+        "Activo"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_FLUJO_VR_UI",
+      "target": "YC_DM_FLUJO_VR",
+      "fields": [
+        "FlujoId",
+        "Version",
+        "Estado",
+        "VigenteDesde",
+        "VigenteHasta",
+        "CreadoPor",
+        "CreadoEl"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_PASO_UI",
+      "target": "YC_DM_PASO",
+      "fields": [
+        "FlujoId",
+        "Version",
+        "PasoId",
+        "Area",
+        "Fase",
+        "CondicionBpm",
+        "Orden",
+        "Obligatorio",
+        "Activo"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_CAMPO_UI",
+      "target": "YC_DM_CAMPO",
+      "fields": [
+        "CampoId",
+        "Descripcion",
+        "TablaSap",
+        "CampoSap",
+        "TipoSegmento",
+        "TipoDato",
+        "Longitud",
+        "Decimales",
+        "AyudaValores",
+        "TipoControl",
+        "Activo"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_SECCION_UI",
+      "target": "YC_DM_SECCION",
+      "fields": [
+        "SeccionId",
+        "Descripcion",
+        "Orden",
+        "Activo"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_REGLA_UI",
+      "target": "YC_DM_REGLA",
+      "fields": [
+        "ReglaUUID",
+        "FlujoId",
+        "Version",
+        "Area",
+        "CampoId",
+        "SeccionId",
+        "EstadoCampo",
+        "Orden",
+        "Activo"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_SEG_CEN_UI",
+      "target": "YC_DM_SEG_CEN",
+      "fields": [
+        "SegmentoUUID",
+        "Centro"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_SEG_ALM_UI",
+      "target": "YC_DM_SEG_ALM",
+      "fields": [
+        "SegmentoUUID",
+        "Centro",
+        "Almacen"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_SEG_VEN_UI",
+      "target": "YC_DM_SEG_VEN",
+      "fields": [
+        "SegmentoUUID",
+        "OrgVentas",
+        "Canal"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_SEG_VAL_UI",
+      "target": "YC_DM_SEG_VAL",
+      "fields": [
+        "SegmentoUUID",
+        "AreaValoracion",
+        "TipoValoracion"
+      ],
+      "actions": []
+    },
+    {
+      "object": "YC_DM_SEG_UOM_UI",
+      "target": "YC_DM_SEG_UOM",
+      "fields": [
+        "SegmentoUUID",
+        "UnidadAlternativa"
+      ],
+      "actions": []
+    }
+  ],
+  "prerequisite": "@Metadata.allowExtensions: true on each target YC_DM_*",
+  "backend_reference_commit": "4c28e866e6b0eadc9a3e27d1ff983542199313df"
+}

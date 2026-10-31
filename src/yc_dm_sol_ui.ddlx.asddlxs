@@ -1,0 +1,114 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Solicitud de material', typeNamePlural: 'Solicitudes de material',
+  title: { value: 'NumeroSolicitud' },
+  description: { value: 'Estado' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'CreadoEl', direction: #DESC }] }]
+annotate view YC_DM_SOL with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 },
+    { id: 'Contextos', type: #LINEITEM_REFERENCE, label: 'Contextos', position: 20, targetElement: '_Segmentos' },
+    { id: 'Tareas', type: #LINEITEM_REFERENCE, label: 'Tareas', position: 30, targetElement: '_Tareas' }
+  ]
+  @UI.hidden: true
+  SolicitudUUID;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Solicitud' },
+    { type: #FOR_ACTION, dataAction: 'Iniciar', label: 'Iniciar flujo' },
+    { type: #FOR_ACTION, dataAction: 'Cerrar', label: 'Cerrar captura' },
+    { type: #FOR_ACTION, dataAction: 'Aprobar', label: 'Aprobar' },
+    { type: #FOR_ACTION, dataAction: 'Reabrir', label: 'Reabrir tarea' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Solicitud' },
+    { type: #FOR_ACTION, dataAction: 'Iniciar', label: 'Iniciar flujo' },
+    { type: #FOR_ACTION, dataAction: 'Cerrar', label: 'Cerrar captura' },
+    { type: #FOR_ACTION, dataAction: 'Aprobar', label: 'Aprobar' },
+    { type: #FOR_ACTION, dataAction: 'Reabrir', label: 'Reabrir tarea' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  NumeroSolicitud;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Tipo de material' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Tipo de material' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  TipoMaterial;
+
+  @UI.lineItem: [
+    { position: 30, label: 'Operacion' }
+  ]
+  @UI.identification: [
+    { position: 30, label: 'Operacion' }
+  ]
+  @UI.selectionField: [{ position: 30 }]
+  TipoOperacion;
+
+  @UI.lineItem: [
+    { position: 60, label: 'Material' }
+  ]
+  @UI.identification: [
+    { position: 60, label: 'Material' }
+  ]
+  @UI.selectionField: [{ position: 40 }]
+  Material;
+
+  @UI.lineItem: [
+    { position: 40, label: 'Flujo' }
+  ]
+  @UI.identification: [
+    { position: 40, label: 'Flujo' }
+  ]
+  FlujoId;
+
+  @UI.lineItem: [
+    { position: 50, label: 'Version' }
+  ]
+  @UI.identification: [
+    { position: 50, label: 'Version' }
+  ]
+  Version;
+
+  @UI.lineItem: [
+    { position: 70, label: 'Estado' }
+  ]
+  @UI.identification: [
+    { position: 70, label: 'Estado' }
+  ]
+  @UI.selectionField: [{ position: 50 }]
+  Estado;
+
+  @UI.lineItem: [
+    { position: 90, label: 'Creado por' }
+  ]
+  @UI.identification: [
+    { position: 90, label: 'Creado por' }
+  ]
+  @UI.selectionField: [{ position: 60 }]
+  CreadoPor;
+
+  @UI.lineItem: [
+    { position: 100, label: 'Creado el' }
+  ]
+  @UI.identification: [
+    { position: 100, label: 'Creado el' }
+  ]
+  CreadoEl;
+
+  @UI.lineItem: [
+    { position: 80, label: 'Clasificacion BPM' }
+  ]
+  @UI.identification: [
+    { position: 80, label: 'Clasificacion BPM' }
+  ]
+  ClasificacionBpm;
+
+  @UI.hidden: true
+  LastChangedAt;
+
+}

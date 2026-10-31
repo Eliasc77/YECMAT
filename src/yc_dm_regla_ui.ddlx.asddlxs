@@ -1,0 +1,86 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Regla de campo', typeNamePlural: 'Reglas de campos',
+  title: { value: 'CampoId' },
+  description: { value: 'Area' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Orden', direction: #ASC }] }]
+annotate view YC_DM_REGLA with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.hidden: true
+  ReglaUUID;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Flujo' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Flujo' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  FlujoId;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Version' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Version' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  Version;
+
+  @UI.lineItem: [
+    { position: 30, label: 'Area' }
+  ]
+  @UI.identification: [
+    { position: 30, label: 'Area' }
+  ]
+  @UI.selectionField: [{ position: 30 }]
+  Area;
+
+  @UI.lineItem: [
+    { position: 40, label: 'Campo' }
+  ]
+  @UI.identification: [
+    { position: 40, label: 'Campo' }
+  ]
+  @UI.selectionField: [{ position: 40 }]
+  CampoId;
+
+  @UI.lineItem: [
+    { position: 50, label: 'Seccion' }
+  ]
+  @UI.identification: [
+    { position: 50, label: 'Seccion' }
+  ]
+  @UI.selectionField: [{ position: 50 }]
+  SeccionId;
+
+  @UI.lineItem: [
+    { position: 60, label: 'Estado del campo' }
+  ]
+  @UI.identification: [
+    { position: 60, label: 'Estado del campo' }
+  ]
+  @UI.selectionField: [{ position: 60 }]
+  EstadoCampo;
+
+  @UI.lineItem: [
+    { position: 70, label: 'Orden' }
+  ]
+  @UI.identification: [
+    { position: 70, label: 'Orden' }
+  ]
+  Orden;
+
+  @UI.lineItem: [
+    { position: 80, label: 'Activo' }
+  ]
+  @UI.identification: [
+    { position: 80, label: 'Activo' }
+  ]
+  @UI.selectionField: [{ position: 70 }]
+  Activo;
+
+}

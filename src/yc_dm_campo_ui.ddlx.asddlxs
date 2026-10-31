@@ -1,0 +1,106 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Campo configurable', typeNamePlural: 'Catalogo de campos',
+  title: { value: 'CampoId' },
+  description: { value: 'Descripcion' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'CampoId', direction: #ASC }] }]
+annotate view YC_DM_CAMPO with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.lineItem: [
+    { position: 10, label: 'Campo' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Campo' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  CampoId;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Descripcion' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Descripcion' }
+  ]
+  Descripcion;
+
+  @UI.lineItem: [
+    { position: 30, label: 'Tabla SAP' }
+  ]
+  @UI.identification: [
+    { position: 30, label: 'Tabla SAP' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  TablaSap;
+
+  @UI.lineItem: [
+    { position: 40, label: 'Campo SAP' }
+  ]
+  @UI.identification: [
+    { position: 40, label: 'Campo SAP' }
+  ]
+  @UI.selectionField: [{ position: 30 }]
+  CampoSap;
+
+  @UI.lineItem: [
+    { position: 50, label: 'Tipo de contexto' }
+  ]
+  @UI.identification: [
+    { position: 50, label: 'Tipo de contexto' }
+  ]
+  @UI.selectionField: [{ position: 40 }]
+  TipoSegmento;
+
+  @UI.lineItem: [
+    { position: 60, label: 'Tipo de dato' }
+  ]
+  @UI.identification: [
+    { position: 60, label: 'Tipo de dato' }
+  ]
+  @UI.selectionField: [{ position: 50 }]
+  TipoDato;
+
+  @UI.lineItem: [
+    { position: 70, label: 'Longitud' }
+  ]
+  @UI.identification: [
+    { position: 70, label: 'Longitud' }
+  ]
+  Longitud;
+
+  @UI.lineItem: [
+    { position: 80, label: 'Decimales' }
+  ]
+  @UI.identification: [
+    { position: 80, label: 'Decimales' }
+  ]
+  Decimales;
+
+  @UI.lineItem: [
+    { position: 100, label: 'Ayuda de valores' }
+  ]
+  @UI.identification: [
+    { position: 100, label: 'Ayuda de valores' }
+  ]
+  AyudaValores;
+
+  @UI.lineItem: [
+    { position: 90, label: 'Control de captura' }
+  ]
+  @UI.identification: [
+    { position: 90, label: 'Control de captura' }
+  ]
+  TipoControl;
+
+  @UI.lineItem: [
+    { position: 110, label: 'Activo' }
+  ]
+  @UI.identification: [
+    { position: 110, label: 'Activo' }
+  ]
+  @UI.selectionField: [{ position: 60 }]
+  Activo;
+
+}

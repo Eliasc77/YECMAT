@@ -1,0 +1,7 @@
+seccion_id,descripcion,orden,activo
+BASICOS,Datos basicos,10,X
+COMPRAS,Compras por centro,20,X
+ALMACEN,Datos de almacen,30,X
+VENTAS,Datos de ventas,40,X
+VALORACION,Datos de valoracion,50,X
+UNIDADES,Unidades alternativas,60,X

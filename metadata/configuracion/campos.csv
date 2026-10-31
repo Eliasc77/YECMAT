@@ -1,0 +1,10 @@
+campo_id,descripcion,tabla_sap,campo_sap,tipo_segmento,tipo_dato,longitud,decimales,ayuda_valores,tipo_control,activo
+MAKT_MAKTX,Descripcion breve,MAKT,MAKTX,GENERAL,CHAR,40,0,,Input,X
+MARA_MEINS,Unidad de medida base,MARA,MEINS,GENERAL,UNIT,3,0,,Input,X
+MARA_MATKL,Grupo de articulos,MARA,MATKL,GENERAL,CHAR,9,0,,Input,X
+MARC_EKGRP,Grupo de compras,MARC,EKGRP,CENTRO,CHAR,3,0,,Input,X
+MARD_LGPBE,Ubicacion en almacen,MARD,LGPBE,ALMACEN,CHAR,10,0,,Input,X
+MVKE_MTPOS,Grupo de tipos de posicion,MVKE,MTPOS,VENTAS,CHAR,4,0,,Input,X
+MBEW_STPRS,Precio estandar,MBEW,STPRS,VALORACION,CURR,11,2,,Decimal,X
+MARM_UMREZ,Numerador de conversion,MARM,UMREZ,UNIDAD,DEC,5,0,,Integer,X
+MARM_UMREN,Denominador de conversion,MARM,UMREN,UNIDAD,DEC,5,0,,Integer,X

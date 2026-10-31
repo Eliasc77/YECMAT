@@ -1,0 +1,50 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Valor de campo', typeNamePlural: 'Valores de campos',
+  title: { value: 'CampoId' },
+  description: { value: 'Valor' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'CampoId', direction: #ASC }] }]
+annotate view YC_DM_DATO with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.identification: [{ position: 200, label: 'SegmentoUUID' }]
+  SegmentoUUID;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Campo' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Campo' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  CampoId;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Valor' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Valor' }
+  ]
+  @UI.multiLineText: true
+  Valor;
+
+  @UI.lineItem: [
+    { position: 30, label: 'Modificado por' }
+  ]
+  @UI.identification: [
+    { position: 30, label: 'Modificado por' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  ModificadoPor;
+
+  @UI.lineItem: [
+    { position: 40, label: 'Modificado el' }
+  ]
+  @UI.identification: [
+    { position: 40, label: 'Modificado el' }
+  ]
+  ModificadoEl;
+
+}

@@ -1,0 +1,33 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Datos de ventas', typeNamePlural: 'Datos de ventas',
+  title: { value: 'OrgVentas' },
+  description: { value: 'Canal' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'OrgVentas', direction: #ASC }] }]
+annotate view YC_DM_SEG_VEN with
+{
+  @UI.facet: [
+    { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'General', position: 10 }
+  ]
+  @UI.hidden: true
+  SegmentoUUID;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Organizacion de ventas' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Organizacion de ventas' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  OrgVentas;
+
+  @UI.lineItem: [
+    { position: 20, label: 'Canal' }
+  ]
+  @UI.identification: [
+    { position: 20, label: 'Canal' }
+  ]
+  @UI.selectionField: [{ position: 20 }]
+  Canal;
+
+}
