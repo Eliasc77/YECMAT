@@ -1,0 +1,5 @@
+@EndUserText.label: 'DM administradores'
+@MappingRole: true
+define role YR_I_DM_CFG {
+  grant select on YI_DM_CFG where _Access.UserName = $session.user;
+}

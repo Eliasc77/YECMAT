@@ -1,0 +1,316 @@
+{
+  "Campos": [
+    {
+      "CampoId": "MAKT_MAKTX",
+      "Descripcion": "Descripcion breve",
+      "TablaSap": "MAKT",
+      "CampoSap": "MAKTX",
+      "TipoSegmento": "GENERAL",
+      "TipoDato": "CHAR",
+      "Longitud": 40,
+      "Decimales": 0,
+      "AyudaValores": "",
+      "TipoControl": "Input",
+      "Activo": true
+    },
+    {
+      "CampoId": "MARA_MEINS",
+      "Descripcion": "Unidad de medida base",
+      "TablaSap": "MARA",
+      "CampoSap": "MEINS",
+      "TipoSegmento": "GENERAL",
+      "TipoDato": "UNIT",
+      "Longitud": 3,
+      "Decimales": 0,
+      "AyudaValores": "",
+      "TipoControl": "Input",
+      "Activo": true
+    },
+    {
+      "CampoId": "MARA_MATKL",
+      "Descripcion": "Grupo de articulos",
+      "TablaSap": "MARA",
+      "CampoSap": "MATKL",
+      "TipoSegmento": "GENERAL",
+      "TipoDato": "CHAR",
+      "Longitud": 9,
+      "Decimales": 0,
+      "AyudaValores": "",
+      "TipoControl": "Input",
+      "Activo": true
+    },
+    {
+      "CampoId": "MARC_EKGRP",
+      "Descripcion": "Grupo de compras",
+      "TablaSap": "MARC",
+      "CampoSap": "EKGRP",
+      "TipoSegmento": "CENTRO",
+      "TipoDato": "CHAR",
+      "Longitud": 3,
+      "Decimales": 0,
+      "AyudaValores": "",
+      "TipoControl": "Input",
+      "Activo": true
+    },
+    {
+      "CampoId": "MARD_LGPBE",
+      "Descripcion": "Ubicacion en almacen",
+      "TablaSap": "MARD",
+      "CampoSap": "LGPBE",
+      "TipoSegmento": "ALMACEN",
+      "TipoDato": "CHAR",
+      "Longitud": 10,
+      "Decimales": 0,
+      "AyudaValores": "",
+      "TipoControl": "Input",
+      "Activo": true
+    },
+    {
+      "CampoId": "MVKE_MTPOS",
+      "Descripcion": "Grupo de tipos de posicion",
+      "TablaSap": "MVKE",
+      "CampoSap": "MTPOS",
+      "TipoSegmento": "VENTAS",
+      "TipoDato": "CHAR",
+      "Longitud": 4,
+      "Decimales": 0,
+      "AyudaValores": "",
+      "TipoControl": "Input",
+      "Activo": true
+    },
+    {
+      "CampoId": "MBEW_STPRS",
+      "Descripcion": "Precio estandar",
+      "TablaSap": "MBEW",
+      "CampoSap": "STPRS",
+      "TipoSegmento": "VALORACION",
+      "TipoDato": "CURR",
+      "Longitud": 11,
+      "Decimales": 2,
+      "AyudaValores": "",
+      "TipoControl": "Decimal",
+      "Activo": true
+    },
+    {
+      "CampoId": "MARM_UMREZ",
+      "Descripcion": "Numerador de conversion",
+      "TablaSap": "MARM",
+      "CampoSap": "UMREZ",
+      "TipoSegmento": "UNIDAD",
+      "TipoDato": "DEC",
+      "Longitud": 5,
+      "Decimales": 0,
+      "AyudaValores": "",
+      "TipoControl": "Integer",
+      "Activo": true
+    },
+    {
+      "CampoId": "MARM_UMREN",
+      "Descripcion": "Denominador de conversion",
+      "TablaSap": "MARM",
+      "CampoSap": "UMREN",
+      "TipoSegmento": "UNIDAD",
+      "TipoDato": "DEC",
+      "Longitud": 5,
+      "Decimales": 0,
+      "AyudaValores": "",
+      "TipoControl": "Integer",
+      "Activo": true
+    }
+  ],
+  "Secciones": [
+    {
+      "SeccionId": "BASICOS",
+      "Descripcion": "Datos basicos",
+      "Orden": 10,
+      "Activo": true
+    },
+    {
+      "SeccionId": "COMPRAS",
+      "Descripcion": "Compras por centro",
+      "Orden": 20,
+      "Activo": true
+    },
+    {
+      "SeccionId": "ALMACEN",
+      "Descripcion": "Datos de almacen",
+      "Orden": 30,
+      "Activo": true
+    },
+    {
+      "SeccionId": "VENTAS",
+      "Descripcion": "Datos de ventas",
+      "Orden": 40,
+      "Activo": true
+    },
+    {
+      "SeccionId": "VALORACION",
+      "Descripcion": "Datos de valoracion",
+      "Orden": 50,
+      "Activo": true
+    },
+    {
+      "SeccionId": "UNIDADES",
+      "Descripcion": "Unidades alternativas",
+      "Orden": 60,
+      "Activo": true
+    }
+  ],
+  "Flujos": [
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Descripcion": "Configuracion demo ZFER",
+      "TipoMaterial": "ZFER",
+      "TipoOperacion": "C",
+      "CentroCriterio": "",
+      "Activo": true
+    }
+  ],
+  "Versiones": [
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "Estado": "PUBLICADA",
+      "VigenteDesde": "2020-01-01",
+      "VigenteHasta": "9999-12-31",
+      "CreadoPor": "DEMO",
+      "CreadoEl": "2026-10-31T00:00:00Z"
+    }
+  ],
+  "Pasos": [
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "PasoId": "PCP_CAPTURA",
+      "Area": "PCP",
+      "Fase": "CAPTURA",
+      "CondicionBpm": "",
+      "Orden": 10,
+      "Obligatorio": true,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "PasoId": "LOG_CAPTURA",
+      "Area": "LOG",
+      "Fase": "CAPTURA",
+      "CondicionBpm": "",
+      "Orden": 20,
+      "Obligatorio": true,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "PasoId": "CONT_CAPTURA",
+      "Area": "CONT",
+      "Fase": "CAPTURA",
+      "CondicionBpm": "",
+      "Orden": 30,
+      "Obligatorio": true,
+      "Activo": true
+    }
+  ],
+  "Reglas": [
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "ReglaUUID": "00000000-0000-0000-0000-000000000001",
+      "Area": "PCP",
+      "CampoId": "MAKT_MAKTX",
+      "SeccionId": "BASICOS",
+      "EstadoCampo": "M",
+      "Orden": 10,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "ReglaUUID": "00000000-0000-0000-0000-000000000002",
+      "Area": "PCP",
+      "CampoId": "MARA_MEINS",
+      "SeccionId": "BASICOS",
+      "EstadoCampo": "M",
+      "Orden": 20,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "ReglaUUID": "00000000-0000-0000-0000-000000000003",
+      "Area": "PCP",
+      "CampoId": "MARA_MATKL",
+      "SeccionId": "BASICOS",
+      "EstadoCampo": "M",
+      "Orden": 30,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "ReglaUUID": "00000000-0000-0000-0000-000000000004",
+      "Area": "LOG",
+      "CampoId": "MARC_EKGRP",
+      "SeccionId": "COMPRAS",
+      "EstadoCampo": "M",
+      "Orden": 10,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "ReglaUUID": "00000000-0000-0000-0000-000000000005",
+      "Area": "LOG",
+      "CampoId": "MARD_LGPBE",
+      "SeccionId": "ALMACEN",
+      "EstadoCampo": "O",
+      "Orden": 10,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "ReglaUUID": "00000000-0000-0000-0000-000000000006",
+      "Area": "PCP",
+      "CampoId": "MVKE_MTPOS",
+      "SeccionId": "VENTAS",
+      "EstadoCampo": "O",
+      "Orden": 10,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "ReglaUUID": "00000000-0000-0000-0000-000000000007",
+      "Area": "CONT",
+      "CampoId": "MBEW_STPRS",
+      "SeccionId": "VALORACION",
+      "EstadoCampo": "M",
+      "Orden": 10,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "ReglaUUID": "00000000-0000-0000-0000-000000000008",
+      "Area": "PCP",
+      "CampoId": "MARM_UMREZ",
+      "SeccionId": "UNIDADES",
+      "EstadoCampo": "M",
+      "Orden": 10,
+      "Activo": true
+    },
+    {
+      "FlujoId": "DM_DEMO_ZFER",
+      "Version": 1,
+      "ReglaUUID": "00000000-0000-0000-0000-000000000009",
+      "Area": "PCP",
+      "CampoId": "MARM_UMREN",
+      "SeccionId": "UNIDADES",
+      "EstadoCampo": "M",
+      "Orden": 20,
+      "Activo": true
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+.dmHero { padding: 1.5rem 2rem; background: #edf4fa; border-bottom: 1px solid #d7e4ef; }
+.dmWork { padding: 1rem 2rem 2rem; gap: 1rem; }
+.dmCard { border: 1px solid #dce5ed; border-radius: .75rem; overflow: hidden; background: #fff; }
+.dmCard .sapMPanelContent { padding: 1rem; }
+.dmHint { color: #52677c; }
+.dmEdit .sapMDialogScrollCont { padding: 1rem; }
+@media(max-width:700px) { .dmHero { padding: 1rem; } .dmWork { padding: .75rem; } }

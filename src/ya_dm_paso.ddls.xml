@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit xmlns:ns0="http://www.sap.com/abapxml" version="v1.0.0" serializer="LCL_OBJECT_DDLS" serializer_version="v1.0.0">
+  <ns0:abap version="1.0">
+    <ns0:values>
+      <DDLS>
+        <DDLNAME>YA_DM_PASO</DDLNAME>
+        <DDLANGUAGE>E</DDLANGUAGE>
+        <DDTEXT>DM mantenimiento YA_DM_PASO</DDTEXT>
+        <SOURCE_TYPE>W</SOURCE_TYPE>
+      </DDLS>
+    </ns0:values>
+  </ns0:abap>
+</abapGit>

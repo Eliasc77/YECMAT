@@ -1,0 +1,50 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="com.yecmat.dm.admin.controller.Main" displayBlock="true">
+  <App><Page title="Mantenimientos DM" busy="{vm&gt;/busy}" busyIndicatorDelay="0">
+    <headerContent>
+      <ObjectStatus text="Demo · cambios temporales" state="Warning" visible="{vm&gt;/demo}"/>
+      <Button text="Actualizar" icon="sap-icon://refresh" press="onRefresh"/>
+    </headerContent>
+    <content>
+      <VBox class="dmHero">
+        <Title text="Configuracion de materiales" titleStyle="H2"/>
+        <Text text="Administra los campos y las reglas que utilizan las solicitudes de material." class="dmHint sapUiTinyMarginTop"/>
+        <ObjectStatus text="Revision de configuracion: {vm&gt;/root/Revision}" class="sapUiSmallMarginTop" visible="{= !!${vm&gt;/root} }"/>
+        <MessageStrip text="Modo demo: no se consulta ni modifica SAP. Los cambios se pierden al recargar la pagina." type="Warning" showIcon="true" visible="{vm&gt;/demo}" class="sapUiSmallMarginTop"/>
+      </VBox>
+      <VBox class="dmWork">
+        <MessageStrip text="{vm&gt;/error}" type="Error" showIcon="true" visible="{= !!${vm&gt;/error} }"/>
+        <MessageStrip text="{vm&gt;/status}" type="Success" showIcon="true" visible="{= !!${vm&gt;/status} }"/>
+        <IconTabBar id="sections" expandable="false" selectedKey="Campos" select="onSectionSelect" class="dmCard">
+          <items>
+            <IconTabFilter key="Campos" text="Campos" icon="sap-icon://form" count="{vm&gt;/counts/Campos}"/>
+            <IconTabFilter key="Secciones" text="Secciones" icon="sap-icon://group-2" count="{vm&gt;/counts/Secciones}"/>
+            <IconTabFilter key="Flujos" text="Flujos" icon="sap-icon://workflow-tasks" count="{vm&gt;/counts/Flujos}"/>
+            <IconTabFilter key="Versiones" text="Versiones" icon="sap-icon://history" count="{vm&gt;/counts/Versiones}"/>
+            <IconTabFilter key="Pasos" text="Pasos" icon="sap-icon://activity-items" count="{vm&gt;/counts/Pasos}"/>
+            <IconTabFilter key="Reglas" text="Reglas" icon="sap-icon://checklist" count="{vm&gt;/counts/Reglas}"/>
+          </items>
+          <content>
+            <VBox>
+              <Title text="{vm&gt;/title}" titleStyle="H3"/>
+              <Text text="{vm&gt;/hint}" class="dmHint sapUiTinyMarginTop sapUiSmallMarginBottom"/>
+              <MessageStrip text="Una version publicada o retirada conserva sus pasos y reglas. Copiala para realizar cambios en un borrador nuevo." type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
+              <OverflowToolbar>
+                <SearchField width="18rem" value="{vm&gt;/search}" placeholder="Buscar en este mantenimiento" liveChange="onSearch"/>
+                <Select id="flowFilter" width="15rem" selectedKey="{vm&gt;/flow}" change="onFlowFilter" visible="{= ${vm&gt;/set} === 'Versiones' || ${vm&gt;/set} === 'Pasos' || ${vm&gt;/set} === 'Reglas' }"/>
+                <Input width="6rem" value="{vm&gt;/version}" placeholder="Version" type="Number" change="onVersionFilter" visible="{= ${vm&gt;/set} === 'Pasos' || ${vm&gt;/set} === 'Reglas' }"/>
+                <ToolbarSpacer/>
+                <Button text="Nuevo" icon="sap-icon://add" type="Emphasized" press="onCreate" enabled="{= !!${vm&gt;/root} }"/>
+                <Button text="Editar" icon="sap-icon://edit" press="onEdit" enabled="{vm&gt;/canEdit}"/>
+                <Button text="Copiar version" press="onCopy" visible="{= ${vm&gt;/set} === 'Versiones' }" enabled="{vm&gt;/canCopy}"/>
+                <Button text="Publicar" press="onPublish" visible="{= ${vm&gt;/set} === 'Versiones' }" enabled="{vm&gt;/canPublish}"/>
+                <Button text="Retirar" press="onRetire" visible="{= ${vm&gt;/set} === 'Versiones' }" enabled="{vm&gt;/canRetire}"/>
+              </OverflowToolbar>
+              <Table id="records" mode="SingleSelectMaster" selectionChange="onSelect" growing="true" growingThreshold="30" noDataText="No hay registros para estos filtros. Usa Nuevo para agregar configuracion."/>
+              <Text text="{vm&gt;/selectionHint}" class="dmHint sapUiSmallMarginTop"/>
+            </VBox>
+          </content>
+        </IconTabBar>
+      </VBox>
+    </content>
+  </Page></App>
+</mvc:View>

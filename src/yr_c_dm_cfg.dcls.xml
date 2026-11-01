@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit xmlns:ns0="http://www.sap.com/abapxml" version="v1.0.0" serializer="LCL_OBJECT_DCLS" serializer_version="v1.0.0">
+ <ns0:abap version="1.0">
+  <ns0:values>
+   <DCLS>
+    <DCLNAME>YR_C_DM_CFG</DCLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DDTEXT>YR_C_DM_CFG</DDTEXT>
+   </DCLS>
+  </ns0:values>
+ </ns0:abap>
+</abapGit>

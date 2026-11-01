@@ -1,0 +1,5 @@
+@EndUserText.label: 'DM administradores proyeccion'
+@MappingRole: true
+define role YR_C_DM_CFG {
+  grant select on YC_DM_CFG where inheriting conditions from entity YI_DM_CFG;
+}

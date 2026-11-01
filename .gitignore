@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+ui5-local.yaml
+.DS_Store
+playwright-report/
+test-results/
