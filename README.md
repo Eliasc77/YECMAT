@@ -58,7 +58,7 @@ El nuevo servicio es `YUI_DM_CFG_O4`. Crea un binding llamado `YBD_DM_CFG_O4` y 
 /sap/opu/odata4/sap/ybd_dm_cfg_o4/srvd/sap/yui_dm_cfg_o4/0001/
 ```
 
-Si el binding genera otra ruta o versión de endpoint, actualiza `webapp/manifest.json` con la URI que muestra ADT. El namespace esperado de la acción es `com.sap.gateway.srvd.yui_dm_cfg_o4.v0001`; se debe contrastar con el `$metadata` del servicio activado.
+Si el binding genera otra ruta o versión de endpoint, actualiza `webapp/manifest.json` con la URI que muestra ADT. La app obtiene el namespace de Aplicar desde el `$metadata` del servicio activado.
 
 El proxy de `ui5.yaml` utiliza el **host API `.abap.`**, con `authenticationType: reentranceTicket` y cliente `100`. El host web `.abap-web.` devuelve el acceso OAuth si se usa sin la sesión apropiada. No cambies el proxy al host web ni copies cookies/tickets al proyecto.
 
@@ -68,7 +68,31 @@ Después de activar, publicar y ejecutar la inicialización, configura el sistem
 npm start
 ```
 
-Completa el acceso SAP solicitado por Fiori tools. La URL debe estar **sin `mode=demo`**. Para usar el frontend y la captura a la vez, arráncalos en puertos distintos: por ejemplo `npm start -- --port 8081` para este proyecto.
+Completa el acceso SAP solicitado por Fiori tools. La URL debe estar **sin `mode=demo`**. La cabecera indica si se está comprobando la conexión, si hay datos demo o si está conectado a SAP. La app lee `$metadata` antes de habilitar cambios: comprueba las entidades y los parámetros de `Aplicar`, y obtiene su namespace desde el servicio. No permite guardar contra un binding de captura por error.
+
+Si la conexión falla, se deshabilitan los cambios y se muestra una orientación diferente para login OAuth, binding/ruta, contrato incompatible o registro `GLOBAL` no visible. Una tabla vacía en ese estado no significa que SAP no tenga registros.
+
+Para usar el frontend y la captura a la vez, arráncalos en puertos distintos: por ejemplo `npm start -- --port 8081` para este proyecto.
+
+## Trabajo desde la web
+
+El panel **Preparar una configuracion** permite recorrer Campos → Secciones → Flujos → Versiones → Pasos → Reglas. En Versiones, **Ver pasos** y **Ver reglas** abren el mantenimiento filtrado por la versión seleccionada.
+
+**Revisar version** muestra los pendientes de flujo, fechas, pasos A/B, campos, secciones, reglas y solapamientos. Esa revisión se ejecuta sobre la instantánea cargada, sin escribir en SAP. Publicar sigue validando definitivamente en el backend y requiere un borrador editable.
+
+Cada mantenimiento ofrece **Plantilla CSV**, **Exportar CSV** e **Importar CSV**; en pantallas estrechas algunas acciones están en el menú de más opciones de la barra. La exportación contiene los registros filtrados que están cargados, no solamente los que se ven en la primera página de la tabla.
+
+1. Descarga la plantilla del mantenimiento y completa las claves y datos.
+2. Usa CSV UTF-8 separado por **punto y coma**. Las cabeceras son los nombres técnicos de la plantilla. Fechas: `YYYY-MM-DD`; booleanos: `true/false` o `X/vacío`.
+3. Elige el archivo o pega su texto en **Importar CSV** y pulsa **Validar archivo**. La vista previa no guarda nada.
+4. El modo inicial solo crea. Para actualizar debes marcar explícitamente la opción de actualizar registros existentes editables. Las columnas omitidas conservan su valor en las actualizaciones; no cambian claves ni habilitan edición de versiones protegidas.
+5. Corrige todos los errores de la vista previa antes de pulsar **Importar registros**. Se admiten hasta 500 registros / 2 MB por carga.
+
+Cada registro usa la misma acción RAP que el formulario y confirma su propia transacción. No es una transacción única para todo el CSV. Un error detiene la carga y muestra el número de registros con confirmación; actualiza y revisa los restantes antes de repetir. Si otra sesión cambia la revisión entre registros, la carga se detiene para no actualizar usando una revisión no revisada por el usuario.
+
+Las importaciones de versiones solo crean/actualizan borradores y fechas: no publican ni retiran. Importa en orden para que existan las referencias: campos/secciones → flujos → versiones → pasos → reglas. La vista previa complementa la validación del backend; puede haber errores adicionales al guardar (por ejemplo un campo que ya tiene datos capturados).
+
+La exportación protege los textos que podrían interpretarse como fórmulas al abrirlos en una hoja de cálculo; la importación de ese mismo formato recupera su texto.
 
 ## Reglas de edición y publicación
 
@@ -88,7 +112,7 @@ Además de esta lista, asigna el acceso IAM del nuevo servicio a los usuarios co
 
 Cada guardado invoca la acción **Aplicar** sobre un registro de control `GLOBAL`. RAP usa su lock y ETag para serializar cambios y rechazar una pantalla desactualizada con HTTP 412. La app también comprueba que las seis colecciones leídas correspondan a una misma revisión. La revisión es global: incluso cambios en distintos mantenimientos pueden requerir que otro administrador actualice su pantalla.
 
-El handler valida y prepara el cambio; el **additional saver** escribe las tablas existentes dentro de la misma transacción RAP que actualiza la revisión y registra la operación. No hay `COMMIT WORK` en el handler ni en el saver.
+El handler valida y prepara el cambio; el **additional saver** escribe las tablas existentes dentro de la misma transacción RAP que actualiza la revisión. No hay `COMMIT WORK` en el handler ni en el saver.
 
 | Configuración | Persistencia |
 | --- | --- |
@@ -99,7 +123,9 @@ El handler valida y prepara el cambio; el **additional saver** escribe las tabla
 | Pasos | `YMMT_DM_PASO` |
 | Reglas | `YMMT_DM_REGLA` |
 
-Solo se añaden tres tablas de soporte: `YMMT_DM_CFG_CTL` (revisión), `YMMT_DM_CFG_USR` (administradores) y `YMMT_DM_CFG_LOG` (usuario, fecha, operación y clave). El log identifica las operaciones; no almacena una imagen completa antes/después.
+Esta versión utiliza **dos tablas de soporte**: `YMMT_DM_CFG_CTL` (revisión/concurrencia) y `YMMT_DM_CFG_USR` (administradores). Se quitó la dependencia de `YMMT_DM_CFG_LOG`: el mantenimiento ya no requiere ni escribe un log administrativo. Esto es independiente del historial fino de solicitudes, que sigue pendiente en la app de captura.
+
+Si ya importaste la tabla antigua `YMMT_DM_CFG_LOG`, conserva sus datos. Su archivo está ignorado en `.abapgit.xml` para evitar proponer su eliminación al actualizar; no se ejecutan borrados ni migraciones destructivas.
 
 Los cargadores antiguos y escrituras SQL manuales no participan del lock/ETag administrativo. No los ejecutes mientras se mantiene configuración con esta app. El saver compara la configuración con la leída al validar y aborta la transacción si detecta cambios externos; un conflicto detectado en esa fase tardía puede producir un error técnico en SAP, sin confirmar un cambio parcial.
 

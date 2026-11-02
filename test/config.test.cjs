@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const load = require("./load.cjs");
 const Schema = load("Schema");
 const Demo = load("DemoService", { "./Schema": Schema });
-const ConfigService = load("ConfigService", { "./Schema": Schema, "./Transport": class {} });
+const ConfigService = load("ConfigService", { "./Schema": Schema, "./Transport": class {}, "./Metadata": { read: () => ({ namespace: "com.sap.gateway.srvd.yui_dm_cfg_o4.v0001", action: "Aplicar" }) } });
 const seed = require("../webapp/model/demo.json");
 const params = require("../docs/action-parameters.json");
 
@@ -82,6 +82,7 @@ test("catalog protection and draft version choices match the effective configura
 test("load detects a changing revision while loading collections and retries a consistent snapshot", async () => {
   const service = new ConfigService("/service/"); let reads = 0, lists = 0;
   service.transport = {
+    metadata: async () => "metadata",
     request: async () => ({ "@odata.etag": reads++ === 0 ? 'W/"1"' : 'W/"2"', Revision: 2 }),
     list: async () => { lists++; return []; }
   };
@@ -89,7 +90,7 @@ test("load detects a changing revision while loading collections and retries a c
 });
 test("administrative writes target the new service action and use the original root ETag", async () => {
   const service = new ConfigService("/service/"); let args;
-  service.transport = { request: async (...input) => { args = input; } };
+  service.transport = { metadata: async () => "metadata", request: async (...input) => { args = input; } };
   await service.apply({ Operation: "CREAR" }, { "@odata.etag": 'W/"old"' });
   assert.equal(args[0], "Configuration('GLOBAL')/com.sap.gateway.srvd.yui_dm_cfg_o4.v0001.Aplicar");
   assert.equal(args[3], 'W/"old"');

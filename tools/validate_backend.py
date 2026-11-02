@@ -11,7 +11,8 @@ def validate():
     for path in SRC.glob('*.xml'):
         ET.parse(path)
     tables = {p.stem.split('.')[0].upper() for p in SRC.glob('*.tabl.xml')}
-    assert tables == {'YMMT_DM_CFG_CTL', 'YMMT_DM_CFG_USR', 'YMMT_DM_CFG_LOG'}, tables
+    assert tables == {'YMMT_DM_CFG_CTL', 'YMMT_DM_CFG_USR'}, tables
+    assert not any('ymmt_dm_cfg_log' in p.read_text().lower() for p in SRC.glob('*')), 'CFG_LOG must not be a dependency'
     for path in SRC.glob('*.tabl.xml'):
         tree = ET.parse(path)
         fields = tree.findall('.//DD03P')

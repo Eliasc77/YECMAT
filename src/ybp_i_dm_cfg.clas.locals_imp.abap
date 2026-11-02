@@ -38,7 +38,7 @@ CLASS lhc_Configuration IMPLEMENTATION.
       ENDIF.
       IF error IS INITIAL.
         DATA(revision) = rows[ 1 ]-Revision + 1.
-        ycl_dm_cfg_store=>stage( EXPORTING before = current after = next command = key-%param revision = revision
+        ycl_dm_cfg_store=>stage( EXPORTING before = current after = next
           IMPORTING error = error ).
       ENDIF.
       IF error IS NOT INITIAL.

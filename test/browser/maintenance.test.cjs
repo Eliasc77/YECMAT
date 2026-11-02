@@ -22,7 +22,14 @@ test("browser: maintain six catalogs, publish a new flow and edit rules on a cop
   page.on("pageerror", e => errors.push(e.message));
   page.on("console", m => { if (m.type() === "error") { errors.push(m.text()); } });
   page.on("request", r => { if (new URL(r.url()).pathname.startsWith("/sap/")) { sapCalls.push(r.url()); } });
-  const button = name => page.getByRole("button", { name, exact: true });
+  const button = name => {
+    const locator = page.getByRole("button", { name, exact: true }), click = locator.click.bind(locator);
+    locator.click = async (...args) => {
+      if (!await locator.isVisible()) { await page.locator(".sapMOTBOverflowButton:visible").last().click(); }
+      return click(...args);
+    };
+    return locator;
+  };
   const dialog = () => page.locator(".sapMDialog");
   const tab = name => page.getByRole("tab", { name: new RegExp(name) }).click();
   const input = (label, value) => dialog().getByLabel(label, { exact: true }).fill(value);

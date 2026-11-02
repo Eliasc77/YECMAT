@@ -1,9 +1,10 @@
 sap.ui.define([
   "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/m/Column", "sap/m/Text", "sap/m/ColumnListItem", "sap/m/ObjectStatus",
   "sap/m/MessageBox", "sap/m/MessageToast", "sap/m/Dialog", "sap/m/Button", "sap/m/VBox", "sap/m/Label", "sap/m/Input", "sap/m/Select",
-  "sap/ui/core/Item", "sap/m/DatePicker", "sap/m/CheckBox", "sap/ui/layout/form/SimpleForm", "sap/m/MessageStrip", "../model/Schema"
+  "sap/ui/core/Item", "sap/m/DatePicker", "sap/m/CheckBox", "sap/ui/layout/form/SimpleForm", "sap/m/MessageStrip", "../model/Schema",
+  "../model/Readiness", "../model/Csv", "sap/m/TextArea", "sap/ui/unified/FileUploader", "sap/m/Table"
 ], function (Controller, JSONModel, Column, Text, ColumnListItem, ObjectStatus, MessageBox, MessageToast, Dialog, Button, VBox, Label, Input, Select,
-  Item, DatePicker, CheckBox, SimpleForm, MessageStrip, Schema) {
+  Item, DatePicker, CheckBox, SimpleForm, MessageStrip, Schema, Readiness, Csv, TextArea, FileUploader, Table) {
   "use strict";
   var copy = function (data) { return JSON.parse(JSON.stringify(data)); };
   return Controller.extend("com.yecmat.dm.admin.controller.Main", {
@@ -18,13 +19,26 @@ sap.ui.define([
       finally { this.vm.setProperty("/busy", false); }
     },
     load: async function () {
-      var data = await this.api.load(), counts = {};
+      this.vm.setProperty("/ready", false); this.vm.setProperty("/connectionText", "Comprobando conexion...");
+      this.vm.setProperty("/errorHelp", "");
+      var data;
+      try { data = await this.api.load(); }
+      catch (error) {
+        this.vm.setProperty("/root", null); this.vm.setProperty("/selected", null); this.vm.setProperty("/rows", []);
+        this.vm.setProperty("/counts", {});
+        this.vm.setProperty("/connectionText", "Conexion pendiente");
+        this.vm.setProperty("/errorHelp", error.help || "Comprueba el servicio YUI_DM_CFG_O4, su binding publicado y el usuario administrador. La tabla vacia no confirma que falten datos en SAP.");
+        this.selectionState(); throw error;
+      }
+      var counts = {};
       this.vm.setProperty("/root", data.root); this.vm.setProperty("/state", data.state);
       Schema.sets.forEach(function (set) { counts[set] = data.state[set].length; }); this.vm.setProperty("/counts", counts);
       var filter = this.byId("flowFilter"), selected = this.vm.getProperty("/flow");
       filter.destroyItems(); filter.addItem(new Item({ key: "", text: "Todos los flujos" }));
       data.state.Flujos.forEach(function (flow) { filter.addItem(new Item({ key: flow.FlujoId, text: flow.FlujoId })); });
-      filter.setSelectedKey(selected); this.updateRows();
+      filter.setSelectedKey(selected);
+      this.vm.setProperty("/ready", true); this.vm.setProperty("/connectionText", this.vm.getProperty("/demo") ? "Demo local" : "Conectado a SAP");
+      this.updateRows();
     },
     onRefresh: function () { this.vm.setProperty("/status", ""); this.run(this.load.bind(this)); },
     onSectionSelect: function (event) {
@@ -52,7 +66,7 @@ sap.ui.define([
       var set = this.vm.getProperty("/set"), state = this.vm.getProperty("/state"), query = this.vm.getProperty("/search").toLowerCase();
       var flow = this.vm.getProperty("/flow"), version = this.vm.getProperty("/version");
       var previous = this.vm.getProperty("/selected"), oldKey = previous && Schema.key(set, previous);
-      var rows = state[set].filter(function (row) {
+      var rows = (this.vm.getProperty("/ready") ? state[set] : []).filter(function (row) {
         return (!flow || !["Versiones", "Pasos", "Reglas"].includes(set) || row.FlujoId === flow)
           && (!version || !["Pasos", "Reglas"].includes(set) || row.Version === Number(version))
           && (!query || Object.values(row).join(" ").toLowerCase().includes(query));
@@ -73,7 +87,8 @@ sap.ui.define([
     onVersionFilter: function () { this.updateRows(); },
     onSelect: function (event) { this.vm.setProperty("/selected", event.getParameter("listItem").getBindingContext("vm").getObject()); this.selectionState(); },
     selectionState: function () {
-      var set = this.vm.getProperty("/set"), row = this.vm.getProperty("/selected"), protectedRow = Schema.protectedRow(set, row, this.vm.getProperty("/state"));
+      var set = this.vm.getProperty("/set"), row = this.vm.getProperty("/ready") && this.vm.getProperty("/selected"), protectedRow = Schema.protectedRow(set, row, this.vm.getProperty("/state"));
+      this.vm.setProperty("/canReview", !!row && set === "Versiones");
       this.vm.setProperty("/canEdit", !!row && (!protectedRow || set === "Flujos"));
       this.vm.setProperty("/canCopy", !!row && set === "Versiones");
       this.vm.setProperty("/canPublish", !!row && set === "Versiones" && row.Estado === "BORRADOR");
@@ -85,7 +100,7 @@ sap.ui.define([
         beginButton: new Button({ text: "Guardar", type: "Emphasized", press: async function () {
           dialog.setBusy(true);
           try { await submit(); dialog.close(); }
-          catch (e) { if (e.committed) { dialog.close(); this.vm.setProperty("/error", e.message); } else { MessageBox.error(e.message); } }
+          catch (e) { if (e.committed || e.closeEditor) { dialog.close(); this.vm.setProperty("/error", e.message); } else { MessageBox.error(e.message); } }
           finally { dialog.setBusy(false); }
         }.bind(this) }),
         endButton: new Button({ text: "Cancelar", press: function () { dialog.close(); } }),
@@ -96,6 +111,7 @@ sap.ui.define([
     onCreate: function () { this.edit(false); },
     onEdit: function () { if (this.vm.getProperty("/canEdit")) { this.edit(true); } },
     edit: function (editing) {
+      if (!this.vm.getProperty("/ready")) { return; }
       var set = this.vm.getProperty("/set"), schema = Schema.schemas[set], state = this.vm.getProperty("/state");
       var row = editing ? copy(this.vm.getProperty("/selected")) : Schema.defaults(set);
       if (!editing && this.vm.getProperty("/flow")) { row.FlujoId = this.vm.getProperty("/flow"); }
@@ -163,6 +179,96 @@ sap.ui.define([
       if (answer) { this.run(this.perform.bind(this, Schema.command("Versiones", row, operation), copy(this.vm.getProperty("/root")))); }
     },
     onPublish: function () { this.confirmAction("PUBLICAR"); },
-    onRetire: function () { this.confirmAction("RETIRAR"); }
+    onRetire: function () { this.confirmAction("RETIRAR"); },
+    navigate: function (set, context) {
+      this.vm.setProperty("/set", set); this.vm.setProperty("/selected", null); this.vm.setProperty("/search", "");
+      if (context) { this.vm.setProperty("/flow", context.FlujoId); this.vm.setProperty("/version", String(context.Version)); }
+      this.byId("sections").setSelectedKey(set); this.configureTable(); this.updateRows();
+    },
+    onGuideStep: function (event) { this.navigate(event.getSource().data("set")); },
+    onRelated: function (event) { this.navigate(event.getSource().data("set"), this.vm.getProperty("/selected")); },
+    onReview: function () {
+      var row = this.vm.getProperty("/selected");
+      if (!row || this.vm.getProperty("/set") !== "Versiones" || !this.vm.getProperty("/ready")) { return; }
+      var report = Readiness.report(this.vm.getProperty("/state"), row);
+      var box = new VBox({ items: [new MessageStrip({ text: report.ready ? "Sin pendientes detectados en esta revision. SAP volvera a validar al publicar." : "Corrige los pendientes antes de publicar. Esta revision no modifica datos.", type: report.ready ? "Success" : "Warning", showIcon: true })] });
+      var review = new Dialog({ title: "Revision · " + Schema.key("Versiones", row), contentWidth: "42rem", stretchOnPhone: true, content: box,
+        endButton: new Button({ text: "Cerrar", press: function () { review.close(); } }), afterClose: function () { review.destroy(); } }).addStyleClass("dmEdit");
+      report.checks.forEach(function (check) {
+        box.addItem(new ObjectStatus({ text: check.label, state: check.ok ? "Success" : "Error", icon: check.ok ? "sap-icon://accept" : "sap-icon://alert" }).addStyleClass("sapUiSmallMarginTop"));
+        box.addItem(new Text({ text: check.detail }));
+        if (!check.ok) { box.addItem(new Button({ text: "Ir a " + check.target, press: function () { review.close(); this.navigate(check.target, row); }.bind(this) })); }
+      }, this);
+      this.getView().addDependent(review); review.open();
+    },
+    download: function (name, text, type) {
+      var url = URL.createObjectURL(new Blob([text], { type: type })), link = document.createElement("a");
+      link.href = url; link.download = name; document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    },
+    onTemplate: function () {
+      var set = this.vm.getProperty("/set"), row = Schema.defaults(set);
+      if (this.vm.getProperty("/flow")) { row.FlujoId = this.vm.getProperty("/flow"); }
+      if (this.vm.getProperty("/version")) { row.Version = this.vm.getProperty("/version"); }
+      this.download("Plantilla_" + set + ".csv", Csv.exportRows(set, [row]), "text/csv;charset=utf-8");
+    },
+    onExport: function () {
+      var set = this.vm.getProperty("/set");
+      this.download(set + ".csv", Csv.exportRows(set, this.vm.getProperty("/rows")), "text/csv;charset=utf-8");
+    },
+    onImport: function () {
+      if (!this.vm.getProperty("/ready")) { return; }
+      var set = this.vm.getProperty("/set"), snapshot = copy(this.vm.getProperty("/state")), originalRoot = copy(this.vm.getProperty("/root"));
+      var input = new TextArea({ rows: 7, width: "100%", placeholder: "CSV UTF-8 separado por punto y coma; usa la plantilla de este mantenimiento", valueLiveUpdate: true });
+      var updates = new CheckBox({ text: "Permitir actualizar registros existentes editables", selected: false });
+      var summary = new Text({ text: "Carga o pega un CSV y pulsa Validar archivo. Aun no se guardara nada." });
+      var model = new JSONModel({ rows: [] }), preview = [];
+      var table = new Table({ growing: true, growingThreshold: 20, columns: [new Column({ header: new Text({ text: "Registro" }) }), new Column({ header: new Text({ text: "Clave" }) }), new Column({ header: new Text({ text: "Revision" }) })] });
+      table.setModel(model, "csv"); table.bindItems({ path: "csv>/rows", template: new ColumnListItem({ cells: [new Text({ text: "{csv>line}" }), new Text({ text: "{csv>key}" }), new Text({ text: "{csv>message}" })] }) });
+      var dialog;
+      var invalidate = function () { preview = []; model.setProperty("/rows", []); if (dialog) { dialog.getBeginButton().setEnabled(false); } summary.setText("Pulsa Validar archivo para revisar el contenido actual."); };
+      input.attachLiveChange(invalidate); updates.attachSelect(invalidate);
+      var upload = new FileUploader({ buttonOnly: true, buttonText: "Elegir CSV", uploadOnChange: false, sameFilenameAllowed: true, fileType: ["csv"], change: async function (event) {
+        var file = event.getParameter("files")[0]; if (!file) { return; }
+        invalidate();
+        if (file.size > 2 * 1024 * 1024) { MessageBox.error("El archivo supera 2 MB"); return; }
+        try { var text = await file.text(); invalidate(); input.setValue(text); } catch (e) { MessageBox.error("No se pudo leer el archivo"); }
+      } });
+      var validate = new Button({ text: "Validar archivo", press: function () {
+        invalidate();
+        try {
+          preview = Csv.preview(set, input.getValue(), snapshot, updates.getSelected());
+          model.setProperty("/rows", preview);
+          var errors = preview.filter(function (row) { return row.errors.length; }).length;
+          summary.setText(preview.length + " registros; " + errors + " con errores. Usa Mas para ver los registros adicionales. " + (errors ? "Corrige el archivo antes de importar." : "Listo para importar. Cada registro se confirma por separado."));
+          dialog.getBeginButton().setEnabled(errors === 0);
+        } catch (error) { MessageBox.error(error.message); }
+      } });
+      dialog = this.dialog("Importar CSV · " + set, [new VBox({ items: [
+        new MessageStrip({ text: "La carga usa las mismas validaciones y permisos que el formulario. Si falla un registro, se detiene y conserva los anteriores confirmados. Las versiones se crean como borrador.", type: "Information", showIcon: true }),
+        upload, input, updates, validate, summary, table
+      ] })], async function () {
+        if (!preview.length || preview.some(function (row) { return row.errors.length; })) { throw new Error("Valida y corrige el archivo antes de importar"); }
+        var confirmed = 0, root = originalRoot;
+        this.vm.setProperty("/status", "");
+        try {
+          for (var entry of preview) {
+            await this.api.apply(Schema.command(set, entry.row, entry.operation), root); confirmed++;
+            await this.load();
+            var next = copy(this.vm.getProperty("/root"));
+            if (Number(next.Revision) !== Number(root.Revision) + 1) { throw new Error("Otro administrador cambio la configuracion durante la carga. Revisa los pendientes antes de continuar."); }
+            root = next;
+          }
+          this.vm.setProperty("/status", "Importacion completada: " + confirmed + " registros confirmados en " + set);
+        } catch (error) {
+          this.vm.setProperty("/ready", false); this.selectionState();
+          this.vm.setProperty("/connectionText", "Actualizar antes de continuar");
+          error.closeEditor = true;
+          error.message = "Carga detenida: " + confirmed + " registros confirmados. Actualiza y verifica los registros restantes antes de volver a importar. " + error.message;
+          throw error;
+        }
+      }.bind(this));
+      dialog.getBeginButton().setText("Importar registros"); dialog.getBeginButton().setEnabled(false);
+    }
   });
 });

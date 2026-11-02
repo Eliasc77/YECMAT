@@ -28,5 +28,5 @@ test("paging refuses links outside the service before transmitting cookies or to
 });
 test("an HTTP 200 login page is diagnosed as an authentication response rather than empty data", async () => {
   const transport = new Transport("http://localhost/service/", async () => new Response('<html><script>location="login"</script></html>'));
-  await assert.rejects(transport.list("Campos"), /inicio de sesion/);
+  await assert.rejects(transport.list("Campos"), error => error.code === "AUTH_REQUIRED");
 });

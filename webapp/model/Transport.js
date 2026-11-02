@@ -15,6 +15,22 @@ sap.ui.define([], function () {
   }
   Service.quote = quote;
   Service.guid = guid;
+  function loginError(status) {
+    var error = new Error("SAP solicita iniciar sesion. Deten y vuelve a ejecutar npm start; completa el acceso de SAP Fiori tools.");
+    error.code = "AUTH_REQUIRED"; error.status = status;
+    error.help = "El proxy debe usar el host API .abap. con authenticationType: reentranceTicket. La sesion de la pagina remota de SAP no sustituye la sesion del proxy.";
+    return error;
+  }
+  Service.prototype.metadata = async function () {
+    var response = await this.fetch(this.url("$metadata"), { credentials: "same-origin", cache: "no-store", headers: { "Accept": "application/xml" } });
+    var text = await response.text();
+    if (response.status === 401 || /<html[\s>]/i.test(text) && /oauth|login|authorize/i.test(text)) { throw loginError(response.status); }
+    if (!response.ok) {
+      var error = new Error(response.status === 403 ? "SAP denego el acceso al servicio administrativo. Revisa sus autorizaciones de acceso." : "No se pudo leer el servicio de mantenimiento. Revisa la URI del manifest y publica el binding YBD_DM_CFG_O4.");
+      error.code = response.status === 403 ? "SERVICE_ACCESS" : "SERVICE_UNAVAILABLE"; error.status = response.status; throw error;
+    }
+    return text;
+  };
   Service.prototype.url = function (path) {
     var url = new URL(path, this.root);
     if (url.origin !== this.root.origin || !url.pathname.startsWith(this.root.pathname)) {
@@ -27,7 +43,7 @@ sap.ui.define([], function () {
     var response = await this.fetch(this.url(""), { credentials: "same-origin", headers: { "X-CSRF-Token": "Fetch", "Accept": "application/json" } });
     this.token = response.headers.get("x-csrf-token");
     if (!response.ok || !this.token || this.token.toLowerCase() === "required") {
-      throw new Error("No se pudo obtener la sesion SAP. Conecta el sistema ABAP Cloud en SAP Fiori tools y vuelve a intentarlo.");
+      throw loginError(response.status);
     }
   };
   Service.prototype.request = async function (path, method, body, etag, retried) {
@@ -43,8 +59,10 @@ sap.ui.define([], function () {
       this.token = null; await this.csrf(); return this.request(path, method, body, etag, true);
     }
     var text = await response.text(), payload;
+    if (response.status === 401 || /<html[\s>]/i.test(text) && /oauth|login|authorize/i.test(text)) { throw loginError(response.status); }
     if (text) { try { payload = JSON.parse(text); } catch (e) {
-      throw new Error("SAP devolvio una pagina en lugar de JSON. Revisa el inicio de sesion de SAP Fiori tools y el proxy.");
+      var invalid = new Error("El servicio devolvio una pagina en lugar de datos OData. Revisa el inicio de sesion y la ruta del binding.");
+      invalid.code = "INVALID_RESPONSE"; invalid.status = response.status; throw invalid;
     } }
     if (!response.ok) {
       var error = payload && payload.error;

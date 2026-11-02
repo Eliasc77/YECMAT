@@ -17,7 +17,7 @@ No se modifican las definiciones de tablas existentes ni los behaviors de solici
 
 ## Orden de activación
 
-1. Tablas nuevas `YMMT_DM_CFG_CTL`, `YMMT_DM_CFG_USR` y `YMMT_DM_CFG_LOG`.
+1. Tablas de soporte `YMMT_DM_CFG_CTL` y `YMMT_DM_CFG_USR`.
 2. Abstract entity `YD_DM_CFG_CMD` y clase de validación `YCL_DM_CFG_MODEL`; después `YCL_DM_CFG_STORE`.
 3. CDS `YI_DM_CFG_USR`, los seis `YA_DM_*` y raíz `YI_DM_CFG`.
 4. Behavior `YI_DM_CFG` y pool `YBP_I_DM_CFG` juntos (el pool incluye handler y additional saver).
@@ -39,7 +39,7 @@ Si ADT requiere un stub para activar el behavior/pool, crea la clase de pool vac
 1. Crea un **Service Binding OData V4 – UI** llamado `YBD_DM_CFG_O4` para `YUI_DM_CFG_O4`.
 2. Actívalo y publica el endpoint local. Asigna el acceso IAM correspondiente si tu entorno lo requiere.
 3. Comprueba `$metadata`: debe exponer `Configuration`, `Campos`, `Secciones`, `Flujos`, `Versiones`, `Pasos`, `Reglas` y la acción bound `Aplicar`.
-4. Comprueba en el `$metadata` real el namespace de Aplicar y los tipos de los parámetros. `docs/action-parameters.json` enumera los parámetros fuente; `Schema.command()` prepara todos, con fechas como texto `YYYYMMDD` para el comando administrativo.
+4. La app comprueba el `$metadata` real y obtiene de allí el namespace de Aplicar. `docs/action-parameters.json` enumera los parámetros fuente; `Schema.command()` prepara todos, con fechas como texto `YYYYMMDD` para el comando administrativo. Si el contrato es incompatible, la app deshabilita cambios y explica el motivo.
 5. Copia la ruta exacta del servicio a `webapp/manifest.json` si difiere de la preparada.
 6. En VS Code usa el host API en `ui5.yaml`, cliente 100 y autenticación `reentranceTicket`. Ejecuta `npm ci` y `npm start`.
 
@@ -49,7 +49,7 @@ Para probar con dos usuarios, ambos deben tener acceso IAM y estar activos en la
 
 1. Ejecutar las **12 pruebas ABAP Unit de `YCL_DM_CFG_MODEL`** en ADT.
 2. Con un administrador, leer configuración y comprobar revisión/ETag del registro `GLOBAL`.
-3. Crear un campo y una sección **nuevos de prueba**; comprobar sus filas en las tablas existentes y la operación en `YMMT_DM_CFG_LOG`.
+3. Crear un campo y una sección **nuevos de prueba**; comprobar sus filas en las tablas existentes y el avance de revisión en `YMMT_DM_CFG_CTL`.
 4. Repetir una creación con la misma clave: debe fallar sin sobrescribirla.
 5. Copiar una versión publicada a un número nuevo. Comparar pasos/reglas y comprobar nuevos UUID de reglas.
 6. Editar una regla de la copia y verificar que la original no cambió.
@@ -57,7 +57,15 @@ Para probar con dos usuarios, ambos deben tener acceso IAM y estar activos en la
 8. Retirar/publicar con una configuración de prueba controlada y crear una solicitud nueva para comprobar la versión escogida por captura. No usar una versión real con solicitudes sin iniciar para esta prueba.
 9. Abrir dos sesiones administrativas con la misma revisión: guardar en una y comprobar que la otra recibe conflicto y necesita actualizar.
 10. Intentar la lectura/acción con un usuario no habilitado: la consulta debe quedar restringida y la acción debe denegarse. Una llamada HTTP directa no debe eludir el permiso.
-11. Provocar un error de validación y comprobar que no se incrementó revisión ni se escribió el log.
+11. Provocar un error de validación y comprobar que no se incrementó revisión ni se modificaron las tablas de configuración.
 12. Comprobar que una copia se guarda atómicamente (versión, pasos, reglas y revisión) y que una operación fallida no deja configuración parcial.
 
 Estas pruebas no han podido ejecutarse desde este entorno: requieren tu sistema SAP y su sesión. Conserva los errores completos de activación/ejecución para ajustar compatibilidad con la versión ABAP de tu Trial.
+
+## Actualización de una instalación anterior
+
+Actualiza `YCL_DM_CFG_STORE` y las implementaciones locales de `YBP_I_DM_CFG` juntos: cambió la firma interna de `stage` al retirar el log administrativo. Las seis tablas de configuración, el parámetro de Aplicar y la URI del servicio se conservan.
+
+No elimines `YMMT_DM_CFG_LOG` si ya existe. El archivo figura en IGNORE de `.abapgit.xml`, por lo que el código nuevo puede funcionar sin depender de esa tabla y sus datos antiguos se pueden conservar. Revisa la selección de objetos de abapGit antes de confirmar cualquier eliminación.
+
+En VS Code ejecuta `npm ci` y reinicia el servidor. Verifica en el nuevo frontend el estado de conexión, la revisión de versión y una importación CSV pequeña de prueba antes de usar cargas reales.

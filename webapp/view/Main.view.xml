@@ -1,6 +1,7 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="com.yecmat.dm.admin.controller.Main" displayBlock="true">
   <App><Page title="Mantenimientos DM" busy="{vm&gt;/busy}" busyIndicatorDelay="0">
     <headerContent>
+      <ObjectStatus text="{vm&gt;/connectionText}" state="{= ${vm&gt;/ready} ? 'Success' : 'Warning' }"/>
       <ObjectStatus text="Demo · cambios temporales" state="Warning" visible="{vm&gt;/demo}"/>
       <Button text="Actualizar" icon="sap-icon://refresh" press="onRefresh"/>
     </headerContent>
@@ -13,7 +14,28 @@
       </VBox>
       <VBox class="dmWork">
         <MessageStrip text="{vm&gt;/error}" type="Error" showIcon="true" visible="{= !!${vm&gt;/error} }"/>
+        <MessageStrip text="{vm&gt;/errorHelp}" type="Information" showIcon="true" visible="{= !!${vm&gt;/errorHelp} }"/>
         <MessageStrip text="{vm&gt;/status}" type="Success" showIcon="true" visible="{= !!${vm&gt;/status} }"/>
+        <Panel headerText="Preparar una configuracion" expandable="true" expanded="false" class="dmCard">
+          <Text text="Sigue este orden para un flujo nuevo. Para cambiar uno publicado, copia su version y trabaja sobre el borrador." class="sapUiSmallMarginBottom"/>
+          <FlexBox wrap="Wrap">
+            <Button text="1. Campos" press="onGuideStep"><customData><core:CustomData key="set" value="Campos"/></customData></Button>
+            <Button text="2. Secciones" press="onGuideStep"><customData><core:CustomData key="set" value="Secciones"/></customData></Button>
+            <Button text="3. Flujos" press="onGuideStep"><customData><core:CustomData key="set" value="Flujos"/></customData></Button>
+            <Button text="4. Versiones" press="onGuideStep"><customData><core:CustomData key="set" value="Versiones"/></customData></Button>
+            <Button text="5. Pasos" press="onGuideStep"><customData><core:CustomData key="set" value="Pasos"/></customData></Button>
+            <Button text="6. Reglas" press="onGuideStep"><customData><core:CustomData key="set" value="Reglas"/></customData></Button>
+          </FlexBox>
+          <Text text="Al terminar, selecciona la version y pulsa Revisar version. Publicar deja su configuracion disponible para solicitudes nuevas." class="sapUiSmallMarginTop"/>
+        </Panel>
+        <Panel headerText="Conexion e instalacion en SAP" expandable="true" expanded="true" visible="{= !${vm&gt;/ready} &amp;&amp; !${vm&gt;/demo} }" class="dmCard">
+          <VBox>
+            <Text text="1. Importa y activa el backend de mantenimiento en un paquete separado."/>
+            <Text text="2. Ejecuta YCL_DM_CFG_SETUP una sola vez con el administrador inicial."/>
+            <Text text="3. Publica YBD_DM_CFG_O4 para YUI_DM_CFG_O4 y comprueba su URI en el manifest."/>
+            <Text text="4. Inicia npm start, completa el acceso SAP de Fiori tools y pulsa Actualizar."/>
+          </VBox>
+        </Panel>
         <IconTabBar id="sections" expandable="false" selectedKey="Campos" select="onSectionSelect" class="dmCard">
           <items>
             <IconTabFilter key="Campos" text="Campos" icon="sap-icon://form" count="{vm&gt;/counts/Campos}"/>
@@ -33,13 +55,19 @@
                 <Select id="flowFilter" width="15rem" selectedKey="{vm&gt;/flow}" change="onFlowFilter" visible="{= ${vm&gt;/set} === 'Versiones' || ${vm&gt;/set} === 'Pasos' || ${vm&gt;/set} === 'Reglas' }"/>
                 <Input width="6rem" value="{vm&gt;/version}" placeholder="Version" type="Number" change="onVersionFilter" visible="{= ${vm&gt;/set} === 'Pasos' || ${vm&gt;/set} === 'Reglas' }"/>
                 <ToolbarSpacer/>
-                <Button text="Nuevo" icon="sap-icon://add" type="Emphasized" press="onCreate" enabled="{= !!${vm&gt;/root} }"/>
+                <Button text="Nuevo" icon="sap-icon://add" type="Emphasized" press="onCreate" enabled="{vm&gt;/ready}"/>
                 <Button text="Editar" icon="sap-icon://edit" press="onEdit" enabled="{vm&gt;/canEdit}"/>
                 <Button text="Copiar version" press="onCopy" visible="{= ${vm&gt;/set} === 'Versiones' }" enabled="{vm&gt;/canCopy}"/>
                 <Button text="Publicar" press="onPublish" visible="{= ${vm&gt;/set} === 'Versiones' }" enabled="{vm&gt;/canPublish}"/>
                 <Button text="Retirar" press="onRetire" visible="{= ${vm&gt;/set} === 'Versiones' }" enabled="{vm&gt;/canRetire}"/>
+                <Button text="Revisar version" press="onReview" visible="{= ${vm&gt;/set} === 'Versiones' }" enabled="{vm&gt;/canReview}"/>
+                <Button text="Ver pasos" press="onRelated" visible="{= ${vm&gt;/set} === 'Versiones' }" enabled="{vm&gt;/canReview}"><customData><core:CustomData key="set" value="Pasos"/></customData></Button>
+                <Button text="Ver reglas" press="onRelated" visible="{= ${vm&gt;/set} === 'Versiones' }" enabled="{vm&gt;/canReview}"><customData><core:CustomData key="set" value="Reglas"/></customData></Button>
+                <Button text="Plantilla CSV" press="onTemplate" enabled="{vm&gt;/ready}"/>
+                <Button text="Exportar CSV" press="onExport" enabled="{vm&gt;/ready}"/>
+                <Button text="Importar CSV" press="onImport" enabled="{vm&gt;/ready}"/>
               </OverflowToolbar>
-              <Table id="records" mode="SingleSelectMaster" selectionChange="onSelect" growing="true" growingThreshold="30" noDataText="No hay registros para estos filtros. Usa Nuevo para agregar configuracion."/>
+              <Table id="records" mode="SingleSelectMaster" selectionChange="onSelect" growing="true" growingThreshold="30" noDataText="{= ${vm&gt;/ready} ? 'No hay registros para estos filtros. Usa Nuevo para agregar configuracion.' : 'Conecta el servicio para consultar y mantener la configuracion.' }"/>
               <Text text="{vm&gt;/selectionHint}" class="dmHint sapUiSmallMarginTop"/>
             </VBox>
           </content>

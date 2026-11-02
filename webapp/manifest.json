@@ -3,7 +3,7 @@
   "sap.app": {
     "id": "com.yecmat.dm.admin", "type": "application",
     "title": "Mantenimientos DM", "description": "Configuracion de campos, flujos y reglas",
-    "applicationVersion": { "version": "0.1.0" },
+    "applicationVersion": { "version": "0.2.0" },
     "dataSources": {
       "mainService": {
         "uri": "/sap/opu/odata4/sap/ybd_dm_cfg_o4/srvd/sap/yui_dm_cfg_o4/0001/",
@@ -13,7 +13,7 @@
   },
   "sap.ui": { "technology": "UI5", "deviceTypes": { "desktop": true, "tablet": true, "phone": true } },
   "sap.ui5": {
-    "dependencies": { "minUI5Version": "1.120.0", "libs": { "sap.ui.core": {}, "sap.m": {}, "sap.ui.layout": {} } },
+    "dependencies": { "minUI5Version": "1.120.0", "libs": { "sap.ui.core": {}, "sap.m": {}, "sap.ui.layout": {}, "sap.ui.unified": {} } },
     "rootView": { "viewName": "com.yecmat.dm.admin.view.Main", "type": "XML", "id": "main", "async": true },
     "resources": { "css": [{ "uri": "css/style.css" }] },
     "contentDensities": { "compact": true, "cozy": true }
