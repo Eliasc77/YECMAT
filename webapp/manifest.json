@@ -3,7 +3,7 @@
   "sap.app": {
     "id": "com.yecmat.dm.admin", "type": "application",
     "title": "Mantenimientos DM", "description": "Configuracion de campos, flujos y reglas",
-    "applicationVersion": { "version": "0.2.0" },
+    "applicationVersion": { "version": "0.3.0" },
     "dataSources": {
       "mainService": {
         "uri": "/sap/opu/odata4/sap/ybd_dm_cfg_o4/srvd/sap/yui_dm_cfg_o4/0001/",

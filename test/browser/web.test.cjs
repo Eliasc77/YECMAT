@@ -79,10 +79,10 @@ test("web: CSV preview/import/export, version review and SAP connection diagnost
     if (tail === "$metadata") {
       return route.fulfill({ contentType: mode === "login" ? "text/html" : "application/xml", body: mode === "login" ? '<html><script>location="oauth/authorize"</script></html>' : contract("test.admin.v0002", mode === "wrong") });
     }
-    if (mode !== "ok") { return json({ error: { message: "Unexpected request" } }, 500); }
+    if (mode !== "ok" && mode !== "setup") { return json({ error: { message: "Unexpected request" } }, 500); }
     const snap = await backend.load();
     if (!tail) { return json({}, 200, { "x-csrf-token": "token" }); }
-    if (tail === "Configuration('GLOBAL')") { return json(snap.root); }
+    if (tail === "Configuration('GLOBAL')") { return mode === "setup" ? json({ error: { message: "Not initialized" } }, 404) : json(snap.root); }
     if (tail === "Configuration('GLOBAL')/test.admin.v0002.Aplicar") {
       const command = req.postDataJSON();
       if (command.SeccionId === failKey) { return json({ error: { message: "Fallo simulado sin confirmar el registro" } }, 500); }
@@ -104,8 +104,13 @@ test("web: CSV preview/import/export, version review and SAP connection diagnost
   mode = "wrong"; await ui.button("Actualizar").click();
   await live.getByText(/Este servicio no es el mantenimiento esperado/).waitFor();
   assert.equal(await ui.button("Nuevo").isEnabled(), false);
+  mode = "setup"; await ui.button("Actualizar").click();
+  await live.getByText(/GLOBAL no esta disponible/).waitFor();
+  await live.getByText(/Esta version de prueba no requiere una lista de administradores/).waitFor();
+  assert.equal(await ui.button("Nuevo").isEnabled(), false);
   mode = "ok"; await ui.button("Actualizar").click(); await live.getByText("MAKT_MAKTX", { exact: true }).waitFor();
   await live.getByText("Conectado a SAP", { exact: true }).waitFor();
+  await live.getByText(/el rol especifico de administrador DM aun no se aplica/).waitFor();
   await ui.tab("Secciones"); await ui.button("Importar CSV").click();
   await ui.dialog().getByPlaceholder(/CSV UTF-8/).fill('SeccionId;Descripcion;Orden;Activo\nOK_A;Confirmado;1;true\nFAIL_B;Pendiente;2;true');
   await ui.button("Validar archivo").click(); await live.getByText(/2 registros; 0 con errores/).waitFor();

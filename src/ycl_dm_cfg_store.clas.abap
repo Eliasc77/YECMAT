@@ -1,6 +1,6 @@
 CLASS ycl_dm_cfg_store DEFINITION PUBLIC FINAL CREATE PRIVATE.
   PUBLIC SECTION.
-    CLASS-METHODS is_admin RETURNING VALUE(allowed) TYPE abap_bool.
+    CLASS-METHODS can_maintain RETURNING VALUE(allowed) TYPE abap_bool.
     CLASS-METHODS read_state RETURNING VALUE(state) TYPE ycl_dm_cfg_model=>ty_state.
     CLASS-METHODS stage IMPORTING before TYPE ycl_dm_cfg_model=>ty_state after TYPE ycl_dm_cfg_model=>ty_state
       EXPORTING error TYPE string.
@@ -14,10 +14,16 @@ CLASS ycl_dm_cfg_store DEFINITION PUBLIC FINAL CREATE PRIVATE.
 ENDCLASS.
 
 CLASS ycl_dm_cfg_store IMPLEMENTATION.
-  METHOD is_admin.
-    DATA(user) = cl_abap_context_info=>get_user_technical_name( ).
-    SELECT SINGLE active FROM ymmt_dm_cfg_usr WHERE user_name = @user INTO @allowed.
-    IF sy-subrc <> 0. allowed = abap_false. ENDIF.
+  METHOD can_maintain.
+    "TEMPORAL DE PRUEBA: no se comprueba aun el rol de administrador DM.
+    "El consumidor debe tener una sesion y acceso al servicio SAP.
+    allowed = xsdbool( cl_abap_context_info=>get_user_technical_name( ) IS NOT INITIAL ).
+    "TODO IAM: crear Y_DM_MNT con ACTVT, autorizar ACTVT 02 en el rol
+    "y REEMPLAZAR la linea temporal anterior por estas instrucciones:
+    "AUTHORITY-CHECK OBJECT 'Y_DM_MNT' ID 'ACTVT' FIELD '02'.
+    "allowed = xsdbool( sy-subrc = 0 ).
+    "No basta con descomentar: activar tambien las DCL de lectura ACTVT 03.
+    "Ver docs/AUTORIZACION_IAM_PENDIENTE.md. El objeto aun no se entrega.
   ENDMETHOD.
   METHOD read_state.
     SELECT * FROM ymmt_dm_campo ORDER BY PRIMARY KEY INTO TABLE @state-campos.
@@ -34,7 +40,7 @@ CLASS ycl_dm_cfg_store IMPLEMENTATION.
   METHOD stage.
     CLEAR error.
     IF staged = abap_true. error = 'Una sola operacion de configuracion por peticion; guardar y recargar antes de continuar'. RETURN. ENDIF.
-    IF is_admin( ) = abap_false. error = 'Usuario no habilitado como administrador DM'. RETURN. ENDIF.
+    IF can_maintain( ) = abap_false. error = 'Sin acceso al mantenimiento DM'. RETURN. ENDIF.
     original = before. prepared = after. staged = abap_true.
   ENDMETHOD.
   METHOD persist.

@@ -27,7 +27,7 @@ sap.ui.define([
         this.vm.setProperty("/root", null); this.vm.setProperty("/selected", null); this.vm.setProperty("/rows", []);
         this.vm.setProperty("/counts", {});
         this.vm.setProperty("/connectionText", "Conexion pendiente");
-        this.vm.setProperty("/errorHelp", error.help || "Comprueba el servicio YUI_DM_CFG_O4, su binding publicado y el usuario administrador. La tabla vacia no confirma que falten datos en SAP.");
+        this.vm.setProperty("/errorHelp", error.help || "Comprueba el servicio YUI_DM_CFG_O4, su binding publicado y la inicializacion de GLOBAL. La tabla vacia no confirma que falten datos en SAP.");
         this.selectionState(); throw error;
       }
       var counts = {};

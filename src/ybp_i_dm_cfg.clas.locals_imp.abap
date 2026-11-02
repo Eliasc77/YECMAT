@@ -9,20 +9,20 @@ ENDCLASS.
 
 CLASS lhc_Configuration IMPLEMENTATION.
   METHOD get_global_authorizations.
-    DATA(allow) = COND #( WHEN ycl_dm_cfg_store=>is_admin( ) = abap_true
+    DATA(allow) = COND #( WHEN ycl_dm_cfg_store=>can_maintain( ) = abap_true
       THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
     result = VALUE #( %update = if_abap_behv=>auth-unauthorized %action-Aplicar = allow ).
   ENDMETHOD.
   METHOD get_instance_authorizations.
-    DATA(allow) = COND #( WHEN ycl_dm_cfg_store=>is_admin( ) = abap_true
+    DATA(allow) = COND #( WHEN ycl_dm_cfg_store=>can_maintain( ) = abap_true
       THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
     result = VALUE #( FOR key IN keys ( %tky = key-%tky %update = if_abap_behv=>auth-unauthorized %action-Aplicar = allow ) ).
   ENDMETHOD.
   METHOD Aplicar.
     LOOP AT keys INTO DATA(key).
       DATA(error) = CONV string( '' ).
-      IF key-ConfigId <> 'GLOBAL' OR ycl_dm_cfg_store=>is_admin( ) = abap_false.
-        error = 'Usuario no habilitado como administrador DM'.
+      IF key-ConfigId <> 'GLOBAL' OR ycl_dm_cfg_store=>can_maintain( ) = abap_false.
+        error = 'Sin acceso al mantenimiento DM'.
       ELSEIF lines( keys ) <> 1 OR ycl_dm_cfg_store=>pending( ) = abap_true.
         error = 'Una sola operacion de configuracion por peticion'.
       ENDIF.

@@ -11,6 +11,7 @@
         <Text text="Administra los campos y las reglas que utilizan las solicitudes de material." class="dmHint sapUiTinyMarginTop"/>
         <ObjectStatus text="Revision de configuracion: {vm&gt;/root/Revision}" class="sapUiSmallMarginTop" visible="{= !!${vm&gt;/root} }"/>
         <MessageStrip text="Modo demo: no se consulta ni modifica SAP. Los cambios se pierden al recargar la pagina." type="Warning" showIcon="true" visible="{vm&gt;/demo}" class="sapUiSmallMarginTop"/>
+        <MessageStrip text="Version de prueba: el rol especifico de administrador DM aun no se aplica. Se mantiene el acceso autenticado al servicio SAP." type="Information" showIcon="true" visible="{= !${vm&gt;/demo} }" class="sapUiSmallMarginTop"/>
       </VBox>
       <VBox class="dmWork">
         <MessageStrip text="{vm&gt;/error}" type="Error" showIcon="true" visible="{= !!${vm&gt;/error} }"/>
@@ -31,7 +32,7 @@
         <Panel headerText="Conexion e instalacion en SAP" expandable="true" expanded="true" visible="{= !${vm&gt;/ready} &amp;&amp; !${vm&gt;/demo} }" class="dmCard">
           <VBox>
             <Text text="1. Importa y activa el backend de mantenimiento en un paquete separado."/>
-            <Text text="2. Ejecuta YCL_DM_CFG_SETUP una sola vez con el administrador inicial."/>
+            <Text text="2. Ejecuta YCL_DM_CFG_SETUP desde ADT para inicializar GLOBAL si aun no existe."/>
             <Text text="3. Publica YBD_DM_CFG_O4 para YUI_DM_CFG_O4 y comprueba su URI en el manifest."/>
             <Text text="4. Inicia npm start, completa el acceso SAP de Fiori tools y pulsa Actualizar."/>
           </VBox>

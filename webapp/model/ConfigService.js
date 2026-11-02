@@ -8,12 +8,12 @@ sap.ui.define(["./Transport", "./Schema", "./Metadata"], function (Transport, Sc
     catch (error) {
       if (error.status === 404) {
         error.code = "SETUP_OR_ACCESS";
-        error.message = "GLOBAL no esta visible para tu usuario. Comprueba la inicializacion y el permiso de administrador.";
-        error.help = "Ejecuta YCL_DM_CFG_SETUP una sola vez con el administrador inicial. Si ya se inicializo, revisa el usuario tecnico activo en YMMT_DM_CFG_USR; no borres las tablas para repetir el alta.";
+        error.message = "GLOBAL no esta disponible. Comprueba la inicializacion y que hayas activado esta version del backend.";
+        error.help = "Ejecuta YCL_DM_CFG_SETUP desde ADT. Solo inicializa GLOBAL si falta y conserva una revision existente. Esta version de prueba no requiere una lista de administradores; no borres tablas para repetir el inicio.";
       }
       throw error;
     }
-    if (!first || !first["@odata.etag"] || !Number.isInteger(first.Revision) || first.Revision < 0) { throw new Error("Administracion sin revision disponible. Activa el servicio y ejecuta YCL_DM_CFG_SETUP con tu usuario administrador."); }
+    if (!first || !first["@odata.etag"] || !Number.isInteger(first.Revision) || first.Revision < 0) { throw new Error("Administracion sin revision disponible. Activa el servicio y ejecuta YCL_DM_CFG_SETUP desde ADT."); }
     var rows = await Promise.all(Schema.sets.map(function (set) { return this.transport.list(set); }, this));
     var last = await this.transport.request("Configuration('GLOBAL')");
     if (first["@odata.etag"] !== last["@odata.etag"]) {

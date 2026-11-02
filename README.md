@@ -106,9 +106,9 @@ La exportación protege los textos que podrían interpretarse como fórmulas al 
 
 ## Permisos, concurrencia y persistencia
 
-Solo los usuarios activos en **`YMMT_DM_CFG_USR`** pueden usar el servicio administrativo. La inicialización habilita una sola vez al usuario técnico que la ejecuta. Las consultas administrativas filtran por esa autorización, y la acción vuelve a comprobarla. No se conceden automáticamente permisos al creador de una solicitud ni a los responsables de PCP/LOG/CONT.
+**Modo temporal de prueba autorizado:** el rol especifico de administrador DM esta pendiente. Un usuario con sesion y acceso al servicio SAP puede consultar y mantener configuracion. No hay una lista de administradores en tabla ni se conceden roles al ejecutar la inicializacion.
 
-Además de esta lista, asigna el acceso IAM del nuevo servicio a los usuarios correspondientes en tu sistema. La app no administra roles IAM ni agrega administradores desde la UI. Los administradores adicionales deben habilitarse mediante una intervención ABAP autorizada sobre la tabla de permisos; no hay autoalta después de la inicialización.
+El metodo `YCL_DM_CFG_STORE=>can_maintain` conserva el punto de control que llaman RAP y el guardado. Incluye comentado el ejemplo `AUTHORITY-CHECK` que reemplazara el permiso temporal cuando se cree y asigne la autorizacion. Las DCL de lectura tambien deben restringirse en esa etapa. Consulta [como habilitar el rol](docs/AUTORIZACION_IAM_PENDIENTE.md): el ejemplo usa el objeto propuesto `Y_DM_MNT`, actividades `03`/`02` y un rol de negocio como `Z_BR_DM_ADMIN`. Esos objetos IAM no se crean en esta entrega.
 
 Cada guardado invoca la acción **Aplicar** sobre un registro de control `GLOBAL`. RAP usa su lock y ETag para serializar cambios y rechazar una pantalla desactualizada con HTTP 412. La app también comprueba que las seis colecciones leídas correspondan a una misma revisión. La revisión es global: incluso cambios en distintos mantenimientos pueden requerir que otro administrador actualice su pantalla.
 
@@ -123,9 +123,9 @@ El handler valida y prepara el cambio; el **additional saver** escribe las tabla
 | Pasos | `YMMT_DM_PASO` |
 | Reglas | `YMMT_DM_REGLA` |
 
-Esta versión utiliza **dos tablas de soporte**: `YMMT_DM_CFG_CTL` (revisión/concurrencia) y `YMMT_DM_CFG_USR` (administradores). Se quitó la dependencia de `YMMT_DM_CFG_LOG`: el mantenimiento ya no requiere ni escribe un log administrativo. Esto es independiente del historial fino de solicitudes, que sigue pendiente en la app de captura.
+Esta version utiliza **una unica tabla de soporte adicional: `YMMT_DM_CFG_CTL`**, para la revision y concurrencia. No requiere `YMMT_DM_CFG_USR`, `YI_DM_CFG_USR` ni `YMMT_DM_CFG_LOG`. La inicializacion crea solo `GLOBAL` si falta y conserva su revision si ya existe. Las seis tablas de configuracion del backend se reutilizan.
 
-Si ya importaste la tabla antigua `YMMT_DM_CFG_LOG`, conserva sus datos. Su archivo está ignorado en `.abapgit.xml` para evitar proponer su eliminación al actualizar; no se ejecutan borrados ni migraciones destructivas.
+Si ya importaste objetos antiguos de lista de usuarios o log, conserva sus datos. Los archivos legacy estan ignorados en `.abapgit.xml` para evitar proponer su eliminacion al actualizar; no se ejecutan borrados ni migraciones destructivas. El historial fino de captura de solicitudes sigue fuera de este mantenimiento.
 
 Los cargadores antiguos y escrituras SQL manuales no participan del lock/ETag administrativo. No los ejecutes mientras se mantiene configuración con esta app. El saver compara la configuración con la leída al validar y aborta la transacción si detecta cambios externos; un conflicto detectado en esa fase tardía puede producir un error técnico en SAP, sin confirmar un cambio parcial.
 

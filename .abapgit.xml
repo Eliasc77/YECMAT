@@ -7,6 +7,9 @@
    <FOLDER_LOGIC>FULL</FOLDER_LOGIC>
    <IGNORE>
     <item>/src/ymmt_dm_cfg_log.tabl.xml</item>
+    <item>/src/ymmt_dm_cfg_usr.tabl.xml</item>
+    <item>/src/yi_dm_cfg_usr.ddls.asddls</item>
+    <item>/src/yi_dm_cfg_usr.ddls.xml</item>
    </IGNORE>
   </DATA>
  </asx:values>
