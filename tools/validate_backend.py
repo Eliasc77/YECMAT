@@ -8,6 +8,11 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / 'src'
 
 def validate():
+    for path in SRC.glob('*.abap'):
+        for number, line in enumerate(path.read_text().splitlines(), 1):
+            assert len(line) <= 255, f'{path.name}:{number}: exceeds the ABAP source line limit'
+    tests = SRC / 'ycl_dm_cfg_model.clas.testclasses.abap'
+    assert all(len(line) <= 120 for line in tests.read_text().splitlines()), 'Keep test code readable in ADT'
     for path in SRC.glob('*.xml'):
         ET.parse(path)
     tables = {p.stem.split('.')[0].upper() for p in SRC.glob('*.tabl.xml')}
