@@ -25,16 +25,16 @@ CLASS ltc_model IMPLEMENTATION.
         flujo_id = 'TEST'
         descripcion = 'Prueba'
         tipo_material = 'ZFER'
-        tipo_operacion = 'C'
+        tipo_operacion = yif_dm_constants=>c_op-create
         activo = abap_true ) ).
     state-versiones = VALUE #(
       (
         mandt = sy-mandt
         flujo_id = 'TEST'
         version = 1
-        estado = 'PUBLICADA'
+        estado = yif_dm_constants=>c_ver-published
         vigente_desde = '20200101'
-        vigente_hasta = '99991231' ) ).
+        vigente_hasta = yif_dm_constants=>c_valid-date_max ) ).
     state-campos = VALUE #(
       (
         mandt = sy-mandt
@@ -42,10 +42,10 @@ CLASS ltc_model IMPLEMENTATION.
         descripcion = 'Descripcion'
         tabla_sap = 'MAKT'
         campo_sap = 'MAKTX'
-        tipo_segmento = 'GENERAL'
-        tipo_dato = 'CHAR'
+        tipo_segmento = yif_dm_constants=>c_seg-general
+        tipo_dato = yif_dm_constants=>c_type-char
         longitud = 40
-        tipo_control = 'Input'
+        tipo_control = yif_dm_constants=>c_ui-input
         activo = abap_true ) ).
     state-secciones = VALUE #(
       (
@@ -61,7 +61,7 @@ CLASS ltc_model IMPLEMENTATION.
         version = 1
         paso_id = 'PCP'
         area = 'PCP'
-        fase = 'CAPTURA'
+        fase = yif_dm_constants=>c_phase-capture
         orden = 10
         obligatorio = abap_true
         activo = abap_true ) ).
@@ -74,7 +74,7 @@ CLASS ltc_model IMPLEMENTATION.
         area = 'PCP'
         campo_id = 'MAKT_MAKTX'
         seccion_id = 'BASICOS'
-        estado_campo = 'M'
+        estado_campo = yif_dm_constants=>c_rule-required
         orden = 10
         activo = abap_true ) ).
   ENDMETHOD.
@@ -84,14 +84,14 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = fixture( )
         command = VALUE #(
-          EntitySet = 'Reglas'
-          Operation = 'GUARDAR'
+          EntitySet = yif_dm_constants=>c_set-rules
+          Operation = yif_dm_constants=>c_cmd-save
           FlujoId = 'TEST'
           Version = 1
           Area = 'PCP'
           CampoId = 'MAKT_MAKTX'
           SeccionId = 'BASICOS'
-          EstadoCampo = 'O'
+          EstadoCampo = yif_dm_constants=>c_rule-optional
           Activo = abap_true )
       IMPORTING
         error = DATA(error) ).
@@ -104,8 +104,8 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = before
         command = VALUE #(
-          EntitySet = 'Versiones'
-          Operation = 'COPIAR'
+          EntitySet = yif_dm_constants=>c_set-versions
+          Operation = yif_dm_constants=>c_cmd-copy
           FlujoId = 'TEST'
           Version = 1
           VersionDestino = 2 )
@@ -132,8 +132,8 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = fixture( )
         command = VALUE #(
-          EntitySet = 'Campos'
-          Operation = 'CREAR'
+          EntitySet = yif_dm_constants=>c_set-fields
+          Operation = yif_dm_constants=>c_cmd-create
           CampoId = 'MAKT_MAKTX' )
       IMPORTING
         error = DATA(error) ).
@@ -145,16 +145,16 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = fixture( )
         command = VALUE #(
-          EntitySet = 'Campos'
-          Operation = 'GUARDAR'
+          EntitySet = yif_dm_constants=>c_set-fields
+          Operation = yif_dm_constants=>c_cmd-save
           CampoId = 'MAKT_MAKTX'
           Descripcion = 'Descripcion'
           TablaSap = 'MAKT'
           CampoSap = 'MAKTX'
-          TipoSegmento = 'GENERAL'
-          TipoDato = 'CHAR'
+          TipoSegmento = yif_dm_constants=>c_seg-general
+          TipoDato = yif_dm_constants=>c_type-char
           Longitud = 80
-          TipoControl = 'Input'
+          TipoControl = yif_dm_constants=>c_ui-input
           Activo = abap_true )
       IMPORTING
         error = DATA(error) ).
@@ -163,19 +163,19 @@ CLASS ltc_model IMPLEMENTATION.
 
   METHOD draft_rule_update.
     DATA(state) = fixture( ).
-    state-versiones[ 1 ]-estado = 'BORRADOR'.
+    state-versiones[ 1 ]-estado = yif_dm_constants=>c_ver-draft.
     ycl_dm_cfg_model=>plan(
       EXPORTING
         current = state
         command = VALUE #(
-          EntitySet = 'Reglas'
-          Operation = 'GUARDAR'
+          EntitySet = yif_dm_constants=>c_set-rules
+          Operation = yif_dm_constants=>c_cmd-save
           FlujoId = 'TEST'
           Version = 1
           Area = 'PCP'
           CampoId = 'MAKT_MAKTX'
           SeccionId = 'BASICOS'
-          EstadoCampo = 'O'
+          EstadoCampo = yif_dm_constants=>c_rule-optional
           Activo = abap_true )
       IMPORTING
         next = DATA(after)
@@ -191,7 +191,7 @@ CLASS ltc_model IMPLEMENTATION.
 
   METHOD used_draft_frozen.
     DATA(state) = fixture( ).
-    state-versiones[ 1 ]-estado = 'BORRADOR'.
+    state-versiones[ 1 ]-estado = yif_dm_constants=>c_ver-draft.
     state-used_versions = VALUE #(
       (
         flujo_id = 'TEST'
@@ -200,14 +200,14 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = state
         command = VALUE #(
-          EntitySet = 'Reglas'
-          Operation = 'GUARDAR'
+          EntitySet = yif_dm_constants=>c_set-rules
+          Operation = yif_dm_constants=>c_cmd-save
           FlujoId = 'TEST'
           Version = 1
           Area = 'PCP'
           CampoId = 'MAKT_MAKTX'
           SeccionId = 'BASICOS'
-          EstadoCampo = 'O'
+          EstadoCampo = yif_dm_constants=>c_rule-optional
           Activo = abap_true )
       IMPORTING
         error = DATA(error) ).
@@ -220,8 +220,8 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = state
         command = VALUE #(
-          EntitySet = 'Versiones'
-          Operation = 'COPIAR'
+          EntitySet = yif_dm_constants=>c_set-versions
+          Operation = yif_dm_constants=>c_cmd-copy
           FlujoId = 'TEST'
           Version = 1
           VersionDestino = 2 )
@@ -231,8 +231,8 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = cloned
         command = VALUE #(
-          EntitySet = 'Versiones'
-          Operation = 'PUBLICAR'
+          EntitySet = yif_dm_constants=>c_set-versions
+          Operation = yif_dm_constants=>c_cmd-publish
           FlujoId = 'TEST'
           Version = 2 )
       IMPORTING
@@ -246,20 +246,20 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = state
         command = VALUE #(
-          EntitySet = 'Versiones'
-          Operation = 'COPIAR'
+          EntitySet = yif_dm_constants=>c_set-versions
+          Operation = yif_dm_constants=>c_cmd-copy
           FlujoId = 'TEST'
           Version = 1
           VersionDestino = 2 )
       IMPORTING
         next = DATA(cloned) ).
-    cloned-versiones[ version = 1 ]-estado = 'RETIRADA'.
+    cloned-versiones[ version = 1 ]-estado = yif_dm_constants=>c_ver-retired.
     ycl_dm_cfg_model=>plan(
       EXPORTING
         current = cloned
         command = VALUE #(
-          EntitySet = 'Versiones'
-          Operation = 'PUBLICAR'
+          EntitySet = yif_dm_constants=>c_set-versions
+          Operation = yif_dm_constants=>c_cmd-publish
           FlujoId = 'TEST'
           Version = 2 )
       IMPORTING
@@ -273,18 +273,18 @@ CLASS ltc_model IMPLEMENTATION.
 
   METHOD orphan_area.
     DATA(state) = fixture( ).
-    state-versiones[ 1 ]-estado = 'BORRADOR'.
+    state-versiones[ 1 ]-estado = yif_dm_constants=>c_ver-draft.
     ycl_dm_cfg_model=>plan(
       EXPORTING
         current = state
         command = VALUE #(
-          EntitySet = 'Pasos'
-          Operation = 'GUARDAR'
+          EntitySet = yif_dm_constants=>c_set-steps
+          Operation = yif_dm_constants=>c_cmd-save
           FlujoId = 'TEST'
           Version = 1
           PasoId = 'PCP'
           Area = 'PCP'
-          Fase = 'CAPTURA'
+          Fase = yif_dm_constants=>c_phase-capture
           Activo = abap_false )
       IMPORTING
         error = DATA(error) ).
@@ -296,8 +296,8 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = fixture( )
         command = VALUE #(
-          EntitySet = 'Versiones'
-          Operation = 'CREAR'
+          EntitySet = yif_dm_constants=>c_set-versions
+          Operation = yif_dm_constants=>c_cmd-create
           FlujoId = 'TEST'
           Version = 2
           VigenteDesde = '20260230' )
@@ -311,16 +311,16 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = fixture( )
         command = VALUE #(
-          EntitySet = 'Campos'
-          Operation = 'CREAR'
+          EntitySet = yif_dm_constants=>c_set-fields
+          Operation = yif_dm_constants=>c_cmd-create
           CampoId = 'MARA_MATKL'
           Descripcion = 'Grupo'
           TablaSap = 'MARA'
           CampoSap = 'MATKL'
-          TipoSegmento = 'GENERAL'
-          TipoDato = 'CHAR'
+          TipoSegmento = yif_dm_constants=>c_seg-general
+          TipoDato = yif_dm_constants=>c_type-char
           Longitud = 9
-          TipoControl = 'Input'
+          TipoControl = yif_dm_constants=>c_ui-input
           Activo = abap_true )
       IMPORTING
         next = DATA(after)
@@ -336,12 +336,12 @@ CLASS ltc_model IMPLEMENTATION.
       EXPORTING
         current = fixture( )
         command = VALUE #(
-          EntitySet = 'Flujos'
-          Operation = 'GUARDAR'
+          EntitySet = yif_dm_constants=>c_set-flows
+          Operation = yif_dm_constants=>c_cmd-save
           FlujoId = 'TEST'
           Descripcion = 'Prueba'
           TipoMaterial = 'ZHAW'
-          TipoOperacion = 'C'
+          TipoOperacion = yif_dm_constants=>c_op-create
           Activo = abap_true )
       IMPORTING
         error = DATA(error) ).

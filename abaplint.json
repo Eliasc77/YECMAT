@@ -1,0 +1,16 @@
+{
+  "global": {
+    "files": "/src/y*.*"
+  },
+  "syntax": {
+    "version": {
+      "release": "Newest",
+      "language": "Cloud"
+    }
+  },
+  "rules": {
+    "parser_error": true,
+    "cds_parser_error": true,
+    "bdef_parser_error": true
+  }
+}

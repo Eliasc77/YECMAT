@@ -29,17 +29,18 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
     GET TIME STAMP FIELD now.
     result-flujos = VALUE #( ( mandt = sy-mandt flujo_id = flujo_id
       descripcion = 'DEMO Trial - Creacion ZFER' tipo_material = 'ZFER'
-      tipo_operacion = 'C' activo = abap_true ) ).
+      tipo_operacion = yif_dm_constants=>c_op-create activo = abap_true ) ).
     result-versiones = VALUE #( ( mandt = sy-mandt flujo_id = flujo_id version = version_id
-      estado = 'PUBLICADA' vigente_desde = '20200101' vigente_hasta = '99991231'
+      estado = yif_dm_constants=>c_ver-published vigente_desde = '20200101' vigente_hasta =
+        yif_dm_constants=>c_valid-date_max
       creado_por = cl_abap_context_info=>get_user_technical_name( ) creado_el = now ) ).
     result-pasos = VALUE #(
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id paso_id = 'PCP_CAPTURA'
-        area = 'PCP' fase = 'CAPTURA' orden = 10 obligatorio = abap_true activo = abap_true )
+        area = 'PCP' fase = yif_dm_constants=>c_phase-capture orden = 10 obligatorio = abap_true activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id paso_id = 'LOG_CAPTURA'
-        area = 'LOG' fase = 'CAPTURA' orden = 20 obligatorio = abap_true activo = abap_true )
+        area = 'LOG' fase = yif_dm_constants=>c_phase-capture orden = 20 obligatorio = abap_true activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id paso_id = 'CONT_CAPTURA'
-        area = 'CONT' fase = 'CAPTURA' orden = 30 obligatorio = abap_true activo = abap_true )
+        area = 'CONT' fase = yif_dm_constants=>c_phase-capture orden = 30 obligatorio = abap_true activo = abap_true )
     ).
     result-campos = VALUE #(
       ( mandt = sy-mandt
@@ -47,108 +48,108 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
         descripcion = 'Descripcion breve'
         tabla_sap = 'MAKT'
         campo_sap = 'MAKTX'
-        tipo_segmento = 'GENERAL'
-        tipo_dato = 'CHAR'
+        tipo_segmento = yif_dm_constants=>c_seg-general
+        tipo_dato = yif_dm_constants=>c_type-char
         longitud = 40
         decimales = 0
         ayuda_valores = ''
-        tipo_control = 'Input'
+        tipo_control = yif_dm_constants=>c_ui-input
         activo = abap_true )
       ( mandt = sy-mandt
         campo_id = 'MARA_MEINS'
         descripcion = 'Unidad de medida base'
         tabla_sap = 'MARA'
         campo_sap = 'MEINS'
-        tipo_segmento = 'GENERAL'
-        tipo_dato = 'UNIT'
+        tipo_segmento = yif_dm_constants=>c_seg-general
+        tipo_dato = yif_dm_constants=>c_type-unit
         longitud = 3
         decimales = 0
         ayuda_valores = ''
-        tipo_control = 'Input'
+        tipo_control = yif_dm_constants=>c_ui-input
         activo = abap_true )
       ( mandt = sy-mandt
         campo_id = 'MARA_MATKL'
         descripcion = 'Grupo de articulos'
         tabla_sap = 'MARA'
         campo_sap = 'MATKL'
-        tipo_segmento = 'GENERAL'
-        tipo_dato = 'CHAR'
+        tipo_segmento = yif_dm_constants=>c_seg-general
+        tipo_dato = yif_dm_constants=>c_type-char
         longitud = 9
         decimales = 0
         ayuda_valores = ''
-        tipo_control = 'Input'
+        tipo_control = yif_dm_constants=>c_ui-input
         activo = abap_true )
       ( mandt = sy-mandt
         campo_id = 'MARC_EKGRP'
         descripcion = 'Grupo de compras'
         tabla_sap = 'MARC'
         campo_sap = 'EKGRP'
-        tipo_segmento = 'CENTRO'
-        tipo_dato = 'CHAR'
+        tipo_segmento = yif_dm_constants=>c_seg-plant
+        tipo_dato = yif_dm_constants=>c_type-char
         longitud = 3
         decimales = 0
         ayuda_valores = ''
-        tipo_control = 'Input'
+        tipo_control = yif_dm_constants=>c_ui-input
         activo = abap_true )
       ( mandt = sy-mandt
         campo_id = 'MARD_LGPBE'
         descripcion = 'Ubicacion en almacen'
         tabla_sap = 'MARD'
         campo_sap = 'LGPBE'
-        tipo_segmento = 'ALMACEN'
-        tipo_dato = 'CHAR'
+        tipo_segmento = yif_dm_constants=>c_seg-storage
+        tipo_dato = yif_dm_constants=>c_type-char
         longitud = 10
         decimales = 0
         ayuda_valores = ''
-        tipo_control = 'Input'
+        tipo_control = yif_dm_constants=>c_ui-input
         activo = abap_true )
       ( mandt = sy-mandt
         campo_id = 'MVKE_MTPOS'
         descripcion = 'Grupo de tipos de posicion'
         tabla_sap = 'MVKE'
         campo_sap = 'MTPOS'
-        tipo_segmento = 'VENTAS'
-        tipo_dato = 'CHAR'
+        tipo_segmento = yif_dm_constants=>c_seg-sales
+        tipo_dato = yif_dm_constants=>c_type-char
         longitud = 4
         decimales = 0
         ayuda_valores = ''
-        tipo_control = 'Input'
+        tipo_control = yif_dm_constants=>c_ui-input
         activo = abap_true )
       ( mandt = sy-mandt
         campo_id = 'MBEW_STPRS'
         descripcion = 'Precio estandar'
         tabla_sap = 'MBEW'
         campo_sap = 'STPRS'
-        tipo_segmento = 'VALORACION'
-        tipo_dato = 'CURR'
+        tipo_segmento = yif_dm_constants=>c_seg-valuation
+        tipo_dato = yif_dm_constants=>c_type-curr
         longitud = 11
         decimales = 2
         ayuda_valores = ''
-        tipo_control = 'Decimal'
+        tipo_control = yif_dm_constants=>c_ui-decimal
         activo = abap_true )
       ( mandt = sy-mandt
         campo_id = 'MARM_UMREZ'
         descripcion = 'Numerador de conversion'
         tabla_sap = 'MARM'
         campo_sap = 'UMREZ'
-        tipo_segmento = 'UNIDAD'
-        tipo_dato = 'DEC'
+        tipo_segmento = yif_dm_constants=>c_seg-unit
+        tipo_dato = yif_dm_constants=>c_type-dec
         longitud = 5
         decimales = 0
         ayuda_valores = ''
-        tipo_control = 'Integer'
+        tipo_control = yif_dm_constants=>c_ui-integer
         activo = abap_true )
       ( mandt = sy-mandt
         campo_id = 'MARM_UMREN'
         descripcion = 'Denominador de conversion'
         tabla_sap = 'MARM'
         campo_sap = 'UMREN'
-        tipo_segmento = 'UNIDAD'
-        tipo_dato = 'DEC'
+        tipo_segmento = yif_dm_constants=>c_seg-unit
+        tipo_dato = yif_dm_constants=>c_type-dec
         longitud = 5
         decimales = 0
         ayuda_valores = ''
-        tipo_control = 'Integer'
+        tipo_control = yif_dm_constants=>c_ui-integer
         activo = abap_true )
     ).
     result-secciones = VALUE #(
@@ -163,17 +164,17 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
         orden = 20
         activo = abap_true )
       ( mandt = sy-mandt
-        seccion_id = 'ALMACEN'
+        seccion_id = yif_dm_constants=>c_seg-storage
         descripcion = 'Datos de almacen'
         orden = 30
         activo = abap_true )
       ( mandt = sy-mandt
-        seccion_id = 'VENTAS'
+        seccion_id = yif_dm_constants=>c_seg-sales
         descripcion = 'Datos de ventas'
         orden = 40
         activo = abap_true )
       ( mandt = sy-mandt
-        seccion_id = 'VALORACION'
+        seccion_id = yif_dm_constants=>c_seg-valuation
         descripcion = 'Datos de valoracion'
         orden = 50
         activo = abap_true )
@@ -188,63 +189,63 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
         area = 'PCP'
         campo_id = 'MAKT_MAKTX'
         seccion_id = 'BASICOS'
-        estado_campo = 'M'
+        estado_campo = yif_dm_constants=>c_rule-required
         orden = 10
         activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id
         area = 'PCP'
         campo_id = 'MARA_MEINS'
         seccion_id = 'BASICOS'
-        estado_campo = 'M'
+        estado_campo = yif_dm_constants=>c_rule-required
         orden = 20
         activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id
         area = 'PCP'
         campo_id = 'MARA_MATKL'
         seccion_id = 'BASICOS'
-        estado_campo = 'M'
+        estado_campo = yif_dm_constants=>c_rule-required
         orden = 30
         activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id
         area = 'LOG'
         campo_id = 'MARC_EKGRP'
         seccion_id = 'COMPRAS'
-        estado_campo = 'M'
+        estado_campo = yif_dm_constants=>c_rule-required
         orden = 10
         activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id
         area = 'LOG'
         campo_id = 'MARD_LGPBE'
-        seccion_id = 'ALMACEN'
-        estado_campo = 'O'
+        seccion_id = yif_dm_constants=>c_seg-storage
+        estado_campo = yif_dm_constants=>c_rule-optional
         orden = 10
         activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id
         area = 'PCP'
         campo_id = 'MVKE_MTPOS'
-        seccion_id = 'VENTAS'
-        estado_campo = 'O'
+        seccion_id = yif_dm_constants=>c_seg-sales
+        estado_campo = yif_dm_constants=>c_rule-optional
         orden = 10
         activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id
         area = 'CONT'
         campo_id = 'MBEW_STPRS'
-        seccion_id = 'VALORACION'
-        estado_campo = 'M'
+        seccion_id = yif_dm_constants=>c_seg-valuation
+        estado_campo = yif_dm_constants=>c_rule-required
         orden = 10
         activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id
         area = 'PCP'
         campo_id = 'MARM_UMREZ'
         seccion_id = 'UNIDADES'
-        estado_campo = 'M'
+        estado_campo = yif_dm_constants=>c_rule-required
         orden = 10
         activo = abap_true )
       ( mandt = sy-mandt flujo_id = flujo_id version = version_id
         area = 'PCP'
         campo_id = 'MARM_UMREN'
         seccion_id = 'UNIDADES'
-        estado_campo = 'M'
+        estado_campo = yif_dm_constants=>c_rule-required
         orden = 20
         activo = abap_true )
     ).
@@ -256,7 +257,7 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
     DATA(flow) = config-flujos[ 1 ].
     DATA(ver) = config-versiones[ 1 ].
     IF flow-flujo_id <> flujo_id OR ver-flujo_id <> flow-flujo_id OR ver-version <> version_id
-      OR flow-activo <> abap_true OR ver-estado <> 'PUBLICADA'
+      OR flow-activo <> abap_true OR ver-estado <> yif_dm_constants=>c_ver-published
       OR ver-vigente_desde IS INITIAL OR ver-vigente_hasta < ver-vigente_desde.
       error = 'Cabecera del perfil DEMO invalida'. RETURN.
     ENDIF.
@@ -291,7 +292,7 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
     LOOP AT config-reglas INTO DATA(rule).
       INSERT VALUE #( area = rule-area campo_id = rule-campo_id ) INTO TABLE rule_keys.
       IF sy-subrc <> 0 OR rule-flujo_id <> flow-flujo_id OR rule-version <> ver-version
-        OR rule-estado_campo NA 'IOMR' OR rule-activo <> abap_true
+        OR rule-estado_campo NA yif_dm_constants=>c_rule-allowed OR rule-activo <> abap_true
         OR NOT line_exists( field_ids[ table_line = rule-campo_id ] )
         OR NOT line_exists( section_ids[ table_line = rule-seccion_id ] )
         OR NOT line_exists( config-pasos[ area = rule-area ] ).
@@ -320,7 +321,8 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
     LOOP AT desired-versiones INTO DATA(row_versiones).
-      READ TABLE existing-versiones WITH KEY flujo_id = row_versiones-flujo_id version = row_versiones-version INTO DATA(found_versiones).
+      READ TABLE existing-versiones WITH KEY flujo_id = row_versiones-flujo_id version = row_versiones-version INTO
+        DATA(found_versiones).
       IF sy-subrc = 0.
         row_versiones-creado_por = found_versiones-creado_por.
         row_versiones-creado_el = found_versiones-creado_el.
@@ -332,7 +334,8 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
     LOOP AT desired-pasos INTO DATA(row_pasos).
-      READ TABLE existing-pasos WITH KEY flujo_id = row_pasos-flujo_id version = row_pasos-version paso_id = row_pasos-paso_id INTO DATA(found_pasos).
+      READ TABLE existing-pasos WITH KEY flujo_id = row_pasos-flujo_id version = row_pasos-version paso_id =
+        row_pasos-paso_id INTO DATA(found_pasos).
       IF sy-subrc = 0.
         IF found_pasos <> row_pasos.
           error = 'Conflicto: YMMT_DM_PASO ya tiene otros valores; no se sobrescribe'. RETURN.
@@ -362,7 +365,8 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
     LOOP AT desired-reglas INTO DATA(row_reglas).
-      READ TABLE existing-reglas WITH KEY flujo_id = row_reglas-flujo_id version = row_reglas-version area = row_reglas-area campo_id = row_reglas-campo_id INTO DATA(found_reglas).
+      READ TABLE existing-reglas WITH KEY flujo_id = row_reglas-flujo_id version = row_reglas-version area =
+        row_reglas-area campo_id = row_reglas-campo_id INTO DATA(found_reglas).
       IF sy-subrc = 0.
         row_reglas-regla_uuid = found_reglas-regla_uuid.
         IF found_reglas <> row_reglas.
@@ -373,12 +377,14 @@ CLASS ycl_dm_demo_config IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
     LOOP AT existing-pasos INTO DATA(extra_pasos).
-      IF NOT line_exists( desired-pasos[ flujo_id = extra_pasos-flujo_id version = extra_pasos-version paso_id = extra_pasos-paso_id ] ).
+      IF NOT line_exists( desired-pasos[ flujo_id = extra_pasos-flujo_id version = extra_pasos-version paso_id =
+        extra_pasos-paso_id ] ).
         error = 'La version existente tiene pasos adicionales; no se altera'. RETURN.
       ENDIF.
     ENDLOOP.
     LOOP AT existing-reglas INTO DATA(extra_reglas).
-      IF NOT line_exists( desired-reglas[ flujo_id = extra_reglas-flujo_id version = extra_reglas-version area = extra_reglas-area campo_id = extra_reglas-campo_id ] ).
+      IF NOT line_exists( desired-reglas[ flujo_id = extra_reglas-flujo_id version = extra_reglas-version area =
+        extra_reglas-area campo_id = extra_reglas-campo_id ] ).
         error = 'La version existente tiene reglas adicionales; no se altera'. RETURN.
       ENDIF.
     ENDLOOP.

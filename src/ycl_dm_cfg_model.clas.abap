@@ -62,7 +62,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
       value IS NOT INITIAL
       AND matches(
         val   = CONV string( value )
-        regex = '^[A-Z0-9\_]+$'
+        regex = yif_dm_constants=>c_valid-identifier_regex
       )
     ).
 
@@ -76,8 +76,8 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
     text = value.
 
     IF strlen( text ) <> 8
-       OR text CN '0123456789'
-       OR text(4) = '0000'.
+       OR text CN yif_dm_constants=>c_valid-digits
+       OR text(4) = yif_dm_constants=>c_valid-date_zero_year.
       RETURN.
     ENDIF.
 
@@ -115,7 +115,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
     allowed = xsdbool(
       sy-subrc = 0
-      AND row-estado = 'BORRADOR'
+      AND row-estado = yif_dm_constants=>c_ver-draft
       AND NOT line_exists(
         state-used_versions[
           flujo_id = flow
@@ -132,20 +132,20 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
     next = current.
     CLEAR error.
 
-    IF command-Operation <> 'CREAR'
-       AND command-Operation <> 'GUARDAR'
-       AND command-Operation <> 'PUBLICAR'
-       AND command-Operation <> 'RETIRAR'
-       AND command-Operation <> 'COPIAR'.
+    IF command-Operation <> yif_dm_constants=>c_cmd-create
+       AND command-Operation <> yif_dm_constants=>c_cmd-save
+       AND command-Operation <> yif_dm_constants=>c_cmd-publish
+       AND command-Operation <> yif_dm_constants=>c_cmd-retire
+       AND command-Operation <> yif_dm_constants=>c_cmd-copy.
 
       error = 'Operacion administrativa desconocida'.
       RETURN.
 
     ENDIF.
 
-    IF command-EntitySet <> 'Versiones' AND
-       command-Operation <> 'GUARDAR'   AND
-       command-Operation <> 'CREAR'.
+    IF command-EntitySet <> yif_dm_constants=>c_set-versions AND
+       command-Operation <> yif_dm_constants=>c_cmd-save   AND
+       command-Operation <> yif_dm_constants=>c_cmd-create.
 
       error = 'La operacion solo se admite sobre versiones'.
       RETURN.
@@ -164,28 +164,28 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
     CASE command-EntitySet.
 
-      WHEN 'Campos'.
+      WHEN yif_dm_constants=>c_set-fields.
         exists = xsdbool(
           line_exists(
             current-campos[ campo_id = command-CampoId ]
           )
         ).
 
-      WHEN 'Secciones'.
+      WHEN yif_dm_constants=>c_set-sections.
         exists = xsdbool(
           line_exists(
             current-secciones[ seccion_id = command-SeccionId ]
           )
         ).
 
-      WHEN 'Flujos'.
+      WHEN yif_dm_constants=>c_set-flows.
         exists = xsdbool(
           line_exists(
             current-flujos[ flujo_id = command-FlujoId ]
           )
         ).
 
-      WHEN 'Versiones'.
+      WHEN yif_dm_constants=>c_set-versions.
         exists = xsdbool(
           line_exists(
             current-versiones[
@@ -195,7 +195,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
           )
         ).
 
-      WHEN 'Pasos'.
+      WHEN yif_dm_constants=>c_set-steps.
         exists = xsdbool(
           line_exists(
             current-pasos[
@@ -206,7 +206,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
           )
         ).
 
-      WHEN 'Reglas'.
+      WHEN yif_dm_constants=>c_set-rules.
         exists = xsdbool(
           line_exists(
             current-reglas[
@@ -224,12 +224,12 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
     ENDCASE.
 
-    IF command-Operation = 'CREAR' AND exists = abap_true.
+    IF command-Operation = yif_dm_constants=>c_cmd-create AND exists = abap_true.
       error = 'Ya existe un registro con esa clave. Seleccionarlo y usar Editar'.
       RETURN.
     ENDIF.
 
-    IF command-Operation <> 'CREAR' AND exists = abap_false.
+    IF command-Operation <> yif_dm_constants=>c_cmd-create AND exists = abap_false.
       error = 'El registro no existe. Actualizar o usar Nuevo'.
       RETURN.
     ENDIF.
@@ -238,7 +238,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
         CASE command-EntitySet.
 
-          WHEN 'Campos'.
+          WHEN yif_dm_constants=>c_set-fields.
 
             IF valid_id( command-CampoId ) = abap_false
                OR command-Descripcion IS INITIAL
@@ -250,32 +250,32 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
             ENDIF.
 
-            IF command-TipoSegmento <> 'GENERAL'
-               AND command-TipoSegmento <> 'CENTRO'
-               AND command-TipoSegmento <> 'ALMACEN'
-               AND command-TipoSegmento <> 'VENTAS'
-               AND command-TipoSegmento <> 'VALORACION'
-               AND command-TipoSegmento <> 'UNIDAD'.
+            IF command-TipoSegmento <> yif_dm_constants=>c_seg-general
+               AND command-TipoSegmento <> yif_dm_constants=>c_seg-plant
+               AND command-TipoSegmento <> yif_dm_constants=>c_seg-storage
+               AND command-TipoSegmento <> yif_dm_constants=>c_seg-sales
+               AND command-TipoSegmento <> yif_dm_constants=>c_seg-valuation
+               AND command-TipoSegmento <> yif_dm_constants=>c_seg-unit.
 
               error = 'Tipo de segmento desconocido'.
               RETURN.
 
             ENDIF.
 
-            IF command-TipoDato <> 'CHAR'
-               AND command-TipoDato <> 'STRING'
-               AND command-TipoDato <> 'NUMC'
-               AND command-TipoDato <> 'DEC'
-               AND command-TipoDato <> 'CURR'
-               AND command-TipoDato <> 'QUAN'
-               AND command-TipoDato <> 'INT1'
-               AND command-TipoDato <> 'INT2'
-               AND command-TipoDato <> 'INT4'
-               AND command-TipoDato <> 'DATS'
-               AND command-TipoDato <> 'BOOL'
-               AND command-TipoDato <> 'UNIT'
-               AND command-TipoDato <> 'CUKY'
-               AND command-TipoDato <> 'LANG'.
+            IF command-TipoDato <> yif_dm_constants=>c_type-char
+               AND command-TipoDato <> yif_dm_constants=>c_type-string
+               AND command-TipoDato <> yif_dm_constants=>c_type-numc
+               AND command-TipoDato <> yif_dm_constants=>c_type-dec
+               AND command-TipoDato <> yif_dm_constants=>c_type-curr
+               AND command-TipoDato <> yif_dm_constants=>c_type-quan
+               AND command-TipoDato <> yif_dm_constants=>c_type-int1
+               AND command-TipoDato <> yif_dm_constants=>c_type-int2
+               AND command-TipoDato <> yif_dm_constants=>c_type-int4
+               AND command-TipoDato <> yif_dm_constants=>c_type-dats
+               AND command-TipoDato <> yif_dm_constants=>c_type-bool
+               AND command-TipoDato <> yif_dm_constants=>c_type-unit
+               AND command-TipoDato <> yif_dm_constants=>c_type-cuky
+               AND command-TipoDato <> yif_dm_constants=>c_type-lang.
 
               error = 'Tipo de dato no soportado por la captura'.
               RETURN.
@@ -286,13 +286,13 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
                OR command-Longitud > 1333
                OR command-Decimales < 0
                OR command-Decimales > command-Longitud
-               OR ( command-TipoDato <> 'DEC'
-                    AND command-TipoDato <> 'CURR'
-                    AND command-TipoDato <> 'QUAN'
+               OR ( command-TipoDato <> yif_dm_constants=>c_type-dec
+                    AND command-TipoDato <> yif_dm_constants=>c_type-curr
+                    AND command-TipoDato <> yif_dm_constants=>c_type-quan
                     AND command-Decimales <> 0 )
-               OR ( command-TipoDato = 'DATS'
+               OR ( command-TipoDato = yif_dm_constants=>c_type-dats
                     AND command-Longitud <> 8 )
-               OR ( command-TipoDato = 'BOOL'
+               OR ( command-TipoDato = yif_dm_constants=>c_type-bool
                     AND command-Longitud <> 1 ).
 
               error = 'Longitud o decimales incompatibles con el tipo de dato'.
@@ -300,12 +300,12 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
             ENDIF.
 
-            IF command-TipoControl <> 'Input'
-               AND command-TipoControl <> 'TextArea'
-               AND command-TipoControl <> 'DatePicker'
-               AND command-TipoControl <> 'CheckBox'
-               AND command-TipoControl <> 'Decimal'
-               AND command-TipoControl <> 'Integer'.
+            IF command-TipoControl <> yif_dm_constants=>c_ui-input
+               AND command-TipoControl <> yif_dm_constants=>c_ui-multiline
+               AND command-TipoControl <> yif_dm_constants=>c_ui-date
+               AND command-TipoControl <> yif_dm_constants=>c_ui-checkbox
+               AND command-TipoControl <> yif_dm_constants=>c_ui-decimal
+               AND command-TipoControl <> yif_dm_constants=>c_ui-integer.
 
               error = 'Control de pantalla desconocido'.
               RETURN.
@@ -382,7 +382,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
             ENDIF.
 
 
-          WHEN 'Secciones'.
+          WHEN yif_dm_constants=>c_set-sections.
 
             IF valid_id( command-SeccionId ) = abap_false
                OR command-Descripcion IS INITIAL
@@ -436,14 +436,14 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
             ENDIF.
 
 
-          WHEN 'Flujos'.
+          WHEN yif_dm_constants=>c_set-flows.
 
             IF valid_id( command-FlujoId ) = abap_false
                OR command-Descripcion IS INITIAL
                OR valid_id( command-TipoMaterial ) = abap_false
-               OR ( command-TipoOperacion <> 'C'
-                    AND command-TipoOperacion <> 'M'
-                    AND command-TipoOperacion <> 'I' )
+               OR ( command-TipoOperacion <> yif_dm_constants=>c_op-create
+                    AND command-TipoOperacion <> yif_dm_constants=>c_op-change
+                    AND command-TipoOperacion <> yif_dm_constants=>c_op-inactivate )
                OR ( command-CentroCriterio IS NOT INITIAL
                     AND valid_id( command-CentroCriterio ) = abap_false ).
 
@@ -498,7 +498,9 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
               IF frozen = abap_true AND previous_flow <> flow.
 
-                error = 'Flujo publicado o usado: solo se permite activar/desactivar; crear otro flujo para cambiar criterios'.
+                error =
+                  'Flujo publicado o usado: solo se permite activar/desactivar; crear otro flujo para cambiar criterios'
+                  .
                 RETURN.
 
               ENDIF.
@@ -516,7 +518,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
               LOOP AT next-versiones INTO version_row
                 WHERE flujo_id = flow-flujo_id
-                  AND estado   = 'PUBLICADA'.
+                  AND estado   = yif_dm_constants=>c_ver-published.
 
                 error = validate_version(
                   state   = next
@@ -533,7 +535,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
             ENDIF.
 
 
-          WHEN 'Versiones'.
+          WHEN yif_dm_constants=>c_set-versions.
 
             IF valid_id( command-FlujoId ) = abap_false
                OR command-Version < 1
@@ -555,7 +557,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
             CASE command-Operation.
 
-              WHEN 'CREAR' OR 'GUARDAR'.
+              WHEN yif_dm_constants=>c_cmd-create OR yif_dm_constants=>c_cmd-save.
 
                 IF valid_date( command-VigenteDesde ) = abap_false
                    OR ( command-VigenteHasta IS NOT INITIAL
@@ -591,7 +593,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
                     mandt         = sy-mandt
                     flujo_id      = command-FlujoId
                     version       = command-Version
-                    estado        = 'BORRADOR'
+                    estado        = yif_dm_constants=>c_ver-draft
                     vigente_desde = command-VigenteDesde
                     vigente_hasta = command-VigenteHasta
                     creado_por    = cl_abap_context_info=>get_user_technical_name( )
@@ -601,7 +603,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
                 ENDIF.
 
 
-              WHEN 'PUBLICAR'.
+              WHEN yif_dm_constants=>c_cmd-publish.
 
                 IF <version> IS NOT ASSIGNED
                    OR editable(
@@ -625,25 +627,25 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
                   RETURN.
                 ENDIF.
 
-                <version>-estado = 'PUBLICADA'.
+                <version>-estado = yif_dm_constants=>c_ver-published.
 
 
-              WHEN 'RETIRAR'.
+              WHEN yif_dm_constants=>c_cmd-retire.
 
                 IF <version> IS NOT ASSIGNED.
                   error = 'La version no existe'.
                   RETURN.
                 ENDIF.
 
-                IF <version>-estado <> 'PUBLICADA'.
+                IF <version>-estado <> yif_dm_constants=>c_ver-published.
                   error = 'Solo se retira una version publicada'.
                   RETURN.
                 ENDIF.
 
-                <version>-estado = 'RETIRADA'.
+                <version>-estado = yif_dm_constants=>c_ver-retired.
 
 
-              WHEN 'COPIAR'.
+              WHEN yif_dm_constants=>c_cmd-copy.
 
                 IF <version> IS NOT ASSIGNED
                    OR command-VersionDestino < 1
@@ -662,7 +664,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
                 DATA(cloned_version) = <version>.
 
                 cloned_version-version = command-VersionDestino.
-                cloned_version-estado = 'BORRADOR'.
+                cloned_version-estado = yif_dm_constants=>c_ver-draft.
                 cloned_version-creado_por = cl_abap_context_info=>get_user_technical_name( ).
 
                 GET TIME STAMP FIELD cloned_version-creado_el.
@@ -692,7 +694,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
             ENDCASE.
 
 
-          WHEN 'Pasos'.
+          WHEN yif_dm_constants=>c_set-steps.
 
             IF editable(
               state   = current
@@ -710,8 +712,8 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
                OR command-Fase IS INITIAL
                OR command-Orden < 0
                OR ( command-CondicionBpm IS NOT INITIAL
-                    AND command-CondicionBpm <> 'A'
-                    AND command-CondicionBpm <> 'B' )
+                    AND command-CondicionBpm <> yif_dm_constants=>c_bpm-review
+                    AND command-CondicionBpm <> yif_dm_constants=>c_bpm-direct )
                OR ( command-Obligatorio <> abap_true
                     AND command-Obligatorio <> abap_false ).
 
@@ -767,7 +769,7 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
             ENDLOOP.
 
 
-          WHEN 'Reglas'.
+          WHEN yif_dm_constants=>c_set-rules.
 
             IF editable(
               state   = current
@@ -792,10 +794,10 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
                    seccion_id = command-SeccionId
                  ]
                )
-               OR ( command-EstadoCampo <> 'M'
-                    AND command-EstadoCampo <> 'O'
-                    AND command-EstadoCampo <> 'I'
-                    AND command-EstadoCampo <> 'R' ).
+               OR ( command-EstadoCampo <> yif_dm_constants=>c_rule-required
+                    AND command-EstadoCampo <> yif_dm_constants=>c_rule-optional
+                    AND command-EstadoCampo <> yif_dm_constants=>c_rule-hidden
+                    AND command-EstadoCampo <> yif_dm_constants=>c_rule-readonly ).
 
               error = 'Regla: area, campo y seccion existentes, estado M/O/I/R y orden no negativo requeridos'.
               RETURN.
@@ -832,8 +834,8 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
 
             " Un campo editable solo puede tener un area responsable.
             IF command-Activo = abap_true
-               AND ( command-EstadoCampo = 'M'
-                  OR command-EstadoCampo = 'O' ).
+               AND ( command-EstadoCampo = yif_dm_constants=>c_rule-required
+                  OR command-EstadoCampo = yif_dm_constants=>c_rule-optional ).
 
               LOOP AT current-reglas INTO DATA(existing_rule)
                 WHERE flujo_id = command-FlujoId
@@ -842,8 +844,8 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
                   AND area    <> command-Area
                   AND activo   = abap_true.
 
-                IF existing_rule-estado_campo = 'M'
-                   OR existing_rule-estado_campo = 'O'.
+                IF existing_rule-estado_campo = yif_dm_constants=>c_rule-required
+                   OR existing_rule-estado_campo = yif_dm_constants=>c_rule-optional.
 
                   error =
                     |El campo { command-CampoId } ya es editable |
@@ -934,19 +936,19 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
     ENDIF.
 
     DATA(until) = COND d(
-      WHEN row-vigente_hasta IS INITIAL THEN '99991231'
+      WHEN row-vigente_hasta IS INITIAL THEN yif_dm_constants=>c_valid-date_max
       ELSE row-vigente_hasta
     ).
 
     LOOP AT state-versiones INTO DATA(other)
-      WHERE estado = 'PUBLICADA'.
+      WHERE estado = yif_dm_constants=>c_ver-published.
 
       IF other-flujo_id = flow AND other-version = version.
         CONTINUE.
       ENDIF.
 
       DATA(other_until) = COND d(
-        WHEN other-vigente_hasta IS INITIAL THEN '99991231'
+        WHEN other-vigente_hasta IS INITIAL THEN yif_dm_constants=>c_valid-date_max
         ELSE other-vigente_hasta
       ).
 
@@ -971,7 +973,8 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
                     OR other_header-centro_criterio IS INITIAL
                     OR header-centro_criterio IS INITIAL ) ).
 
-        error = 'Vigencia solapada con otra version publicada del flujo o con otro flujo activo de los mismos criterios'.
+        error = 'Vigencia solapada con otra version publicada del flujo o con otro flujo activo de los mismos criterios'
+          .
         RETURN.
 
       ENDIF.
@@ -987,12 +990,12 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
         AND activo   = abap_true.
 
       IF step-condicion_bpm IS INITIAL
-         OR step-condicion_bpm = 'A'.
+         OR step-condicion_bpm = yif_dm_constants=>c_bpm-review.
         count_a += 1.
       ENDIF.
 
       IF step-condicion_bpm IS INITIAL
-         OR step-condicion_bpm = 'B'.
+         OR step-condicion_bpm = yif_dm_constants=>c_bpm-direct.
         count_b += 1.
       ENDIF.
 
@@ -1032,10 +1035,10 @@ CLASS ycl_dm_cfg_model IMPLEMENTATION.
              activo   = abap_true
            ]
          )
-         OR ( rule-estado_campo <> 'M' AND
-              rule-estado_campo <> 'O' AND
-              rule-estado_campo <> 'I' AND
-              rule-estado_campo <> 'R' ).
+         OR ( rule-estado_campo <> yif_dm_constants=>c_rule-required AND
+              rule-estado_campo <> yif_dm_constants=>c_rule-optional AND
+              rule-estado_campo <> yif_dm_constants=>c_rule-hidden AND
+              rule-estado_campo <> yif_dm_constants=>c_rule-readonly ).
 
         error = 'Reglas activas con campo, seccion, area o estado invalidos'.
         RETURN.

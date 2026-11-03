@@ -63,7 +63,7 @@ CLASS lhc_Configuration IMPLEMENTATION.
 
       DATA(error) = CONV string( '' ).
 
-      IF key-ConfigId <> 'GLOBAL'
+      IF key-ConfigId <> yif_dm_constants=>c_cfg-global_id
          OR ycl_dm_cfg_store=>can_maintain( ) = abap_false.
 
         error = 'Sin acceso al mantenimiento DM'.

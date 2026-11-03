@@ -107,8 +107,8 @@ CLASS ycl_dm_rules IMPLEMENTATION.
     IF sy-subrc <> 0
        OR context-activo <> abap_true
        OR context-tipo_segmento <> context-campo_segmento
-       OR ( context-estado <> 'BORRADOR'
-            AND context-estado <> 'EN_CURSO' ).
+       OR ( context-estado <> yif_dm_constants=>c_req-draft
+            AND context-estado <> yif_dm_constants=>c_req-in_progress ).
       RETURN.
     ENDIF.
 
@@ -118,8 +118,8 @@ CLASS ycl_dm_rules IMPLEMENTATION.
         AND version  = @context-version
         AND campo_id = @field_id
         AND activo   = @abap_true
-        AND ( estado_campo = 'O'
-              OR estado_campo = 'M' )
+        AND ( estado_campo = @yif_dm_constants=>c_rule-optional
+              OR estado_campo = @yif_dm_constants=>c_rule-required )
       INTO TABLE @DATA(rules).
 
     SELECT SINGLE t~tarea_uuid
@@ -129,12 +129,12 @@ CLASS ycl_dm_rules IMPLEMENTATION.
        AND r~version  = t~version
        AND r~area     = t~area
       WHERE t~solicitud_uuid = @context-solicitud_uuid
-        AND t~estado         = 'FINALIZADA'
+        AND t~estado         = @yif_dm_constants=>c_task-finished
         AND r~campo_id       = @field_id
         AND r~activo         = @abap_true
 *        AND r~estado_campo  <> 'I'
-AND ( r~estado_campo = 'M'
-   OR r~estado_campo = 'O' )
+AND ( r~estado_campo = @yif_dm_constants=>c_rule-required
+   OR r~estado_campo = @yif_dm_constants=>c_rule-optional )
       INTO @DATA(closed_task).
 
     IF sy-subrc = 0.
@@ -143,7 +143,7 @@ AND ( r~estado_campo = 'M'
 
     LOOP AT rules INTO DATA(rule).
 
-      IF context-estado = 'BORRADOR'
+      IF context-estado = yif_dm_constants=>c_req-draft
          AND context-creado_por = user.
 
         allowed = abap_true.
@@ -155,8 +155,8 @@ AND ( r~estado_campo = 'M'
         FROM ymmt_dm_tarea
         WHERE solicitud_uuid = @context-solicitud_uuid
           AND area           = @rule-area
-          AND ( estado = 'PENDIENTE'
-                OR estado = 'EN_CURSO' )
+          AND ( estado = @yif_dm_constants=>c_task-pending
+                OR estado = @yif_dm_constants=>c_task-in_progress )
         INTO TABLE @DATA(tasks).
 
       LOOP AT tasks INTO DATA(task).
@@ -199,7 +199,7 @@ AND ( r~estado_campo = 'M'
       RETURN.
     ENDIF.
 
-    IF context-estado = 'BORRADOR'.
+    IF context-estado = yif_dm_constants=>c_req-draft.
 
       SET LOCKS OF yi_dm_sol
         ENTITY Solicitud
@@ -225,7 +225,7 @@ AND ( r~estado_campo = 'M'
         WHERE t~solicitud_uuid = @context-solicitud_uuid
           AND r~campo_id       = @field_id
           AND r~activo         = @abap_true
-          AND r~estado_campo  <> 'I'
+          AND r~estado_campo  <> @yif_dm_constants=>c_rule-hidden
         ORDER BY t~tarea_uuid
         INTO TABLE @DATA(task_keys).
 
@@ -277,12 +277,12 @@ AND ( r~estado_campo = 'M'
     DATA(value_type) = to_upper( metadata-tipo_dato ).
 
     DATA(numeric) = xsdbool(
-      value_type = 'DEC'
-      OR value_type = 'CURR'
-      OR value_type = 'QUAN'
-      OR value_type = 'INT1'
-      OR value_type = 'INT2'
-      OR value_type = 'INT4'
+      value_type = yif_dm_constants=>c_type-dec
+      OR value_type = yif_dm_constants=>c_type-curr
+      OR value_type = yif_dm_constants=>c_type-quan
+      OR value_type = yif_dm_constants=>c_type-int1
+      OR value_type = yif_dm_constants=>c_type-int2
+      OR value_type = yif_dm_constants=>c_type-int4
     ).
 
     IF strlen( val ) > 1333
@@ -302,19 +302,19 @@ AND ( r~estado_campo = 'M'
 
     CASE value_type.
 
-      WHEN 'CHAR' OR 'STRING'.
+      WHEN yif_dm_constants=>c_type-char OR yif_dm_constants=>c_type-string.
 
-      WHEN 'NUMC'.
+      WHEN yif_dm_constants=>c_type-numc.
 
-        IF val CN '0123456789'.
+        IF val CN yif_dm_constants=>c_valid-digits.
           error = 'Solo se admiten digitos'.
         ENDIF.
 
-      WHEN 'INT1' OR 'INT2' OR 'INT4'.
+      WHEN yif_dm_constants=>c_type-int1 OR yif_dm_constants=>c_type-int2 OR yif_dm_constants=>c_type-int4.
 
         IF NOT matches(
           val   = val
-          regex = '^-?[0-9]+$'
+          regex = yif_dm_constants=>c_valid-integer_regex
         ).
 
           error = 'Entero invalido'.
@@ -324,7 +324,7 @@ AND ( r~estado_campo = 'M'
 
         DATA(digits) = val.
 
-        REPLACE ALL OCCURRENCES OF '-' IN digits WITH ''.
+        REPLACE ALL OCCURRENCES OF yif_dm_constants=>c_valid-minus IN digits WITH ''.
 
         IF strlen( digits ) > metadata-longitud.
 
@@ -337,9 +337,9 @@ AND ( r~estado_campo = 'M'
 
             DATA(integer) = CONV int4( val ).
 
-            IF ( value_type = 'INT1'
+            IF ( value_type = yif_dm_constants=>c_type-int1
                  AND ( integer < 0 OR integer > 255 ) )
-               OR ( value_type = 'INT2'
+               OR ( value_type = yif_dm_constants=>c_type-int2
                     AND ( integer < -32768 OR integer > 32767 ) ).
 
               error = 'Entero fuera del rango del tipo'.
@@ -352,11 +352,11 @@ AND ( r~estado_campo = 'M'
 
         ENDTRY.
 
-      WHEN 'DEC' OR 'CURR' OR 'QUAN'.
+      WHEN yif_dm_constants=>c_type-dec OR yif_dm_constants=>c_type-curr OR yif_dm_constants=>c_type-quan.
 
         IF NOT matches(
           val   = val
-          regex = '^-?[0-9]+(\.[0-9]+)?$'
+          regex = yif_dm_constants=>c_valid-decimal_regex
         ).
 
           error = 'Decimal invalido; utilizar punto decimal'.
@@ -364,11 +364,11 @@ AND ( r~estado_campo = 'M'
 
         ENDIF.
 
-        SPLIT val AT '.'
+        SPLIT val AT yif_dm_constants=>c_valid-decimal_point
           INTO DATA(whole)
                DATA(fraction).
 
-        REPLACE ALL OCCURRENCES OF '-' IN whole WITH ''.
+        REPLACE ALL OCCURRENCES OF yif_dm_constants=>c_valid-minus IN whole WITH ''.
 
         IF strlen( fraction ) > metadata-decimales
            OR strlen( whole ) + strlen( fraction ) > metadata-longitud.
@@ -377,10 +377,10 @@ AND ( r~estado_campo = 'M'
 
         ENDIF.
 
-      WHEN 'DATS'.
+      WHEN yif_dm_constants=>c_type-dats.
 
         IF strlen( val ) <> 8
-           OR val CN '0123456789'.
+           OR val CN yif_dm_constants=>c_valid-digits.
 
           error = 'Fecha invalida; utilizar YYYYMMDD'.
           RETURN.
@@ -425,13 +425,13 @@ AND ( r~estado_campo = 'M'
           error = 'Fecha invalida'.
         ENDIF.
 
-      WHEN 'BOOL'.
+      WHEN yif_dm_constants=>c_type-bool.
 
-        IF val <> 'X'.
+        IF val <> abap_true.
           error = 'Booleano permitido: X o vacio'.
         ENDIF.
 
-      WHEN 'UNIT' OR 'CUKY' OR 'LANG'.
+      WHEN yif_dm_constants=>c_type-unit OR yif_dm_constants=>c_type-cuky OR yif_dm_constants=>c_type-lang.
 
         IF val <> to_upper( val ).
           error = 'Usar clave interna SAP en mayusculas'.
@@ -456,7 +456,7 @@ AND ( r~estado_campo = 'M'
         AND r~version      = @task-version
         AND r~area         = @task-area
         AND r~activo       = @abap_true
-        AND r~estado_campo = 'M'
+        AND r~estado_campo = @yif_dm_constants=>c_rule-required
         AND c~activo       = @abap_true
       INTO TABLE @DATA(fields).
 

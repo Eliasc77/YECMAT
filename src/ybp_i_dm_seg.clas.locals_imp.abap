@@ -34,11 +34,12 @@ CLASS lhc_Segmento IMPLEMENTATION.
         INSERT row-SegmentoUUID INTO TABLE blocked. CONTINUE.
       ENDIF.
       SET LOCKS OF yi_dm_sol ENTITY Solicitud
-        FROM VALUE #( ( SolicitudUUID = row-SolicitudUUID ) ) FAILED DATA(header_failed) REPORTED DATA(header_failed_messages).
+        FROM VALUE #( ( SolicitudUUID = row-SolicitudUUID ) ) FAILED DATA(header_failed) REPORTED
+          DATA(header_failed_messages).
       IF header_failed-solicitud IS NOT INITIAL. INSERT row-SegmentoUUID INTO TABLE blocked. ENDIF.
     ENDLOOP.
     MODIFY ENTITIES OF yi_dm_seg IN LOCAL MODE ENTITY Segmento UPDATE FIELDS ( Estado )
-      WITH VALUE #( FOR key IN keys ( %tky = key-%tky Estado = 'ACTIVO' ) ).
+      WITH VALUE #( FOR key IN keys ( %tky = key-%tky Estado = yif_dm_constants=>c_context-active ) ).
   ENDMETHOD.
   METHOD build.
     CLEAR: error, context_value.
@@ -56,32 +57,32 @@ CLASS lhc_Segmento IMPLEMENTATION.
       + lines( valoraciones ) + lines( unidades ).
     DATA a TYPE string. DATA b TYPE string.
     CASE kind.
-      WHEN 'GENERAL'.
+      WHEN yif_dm_constants=>c_seg-general.
         IF count <> 0. error = 'GENERAL no admite subtipo'. ENDIF.
-      WHEN 'CENTRO'.
+      WHEN yif_dm_constants=>c_seg-plant.
         IF count <> 1 OR centros IS INITIAL.
           error = 'CENTRO requiere exclusivamente su subtipo'.
         ELSE. a = centros[ 1 ]-Centro. ENDIF.
-      WHEN 'ALMACEN'.
+      WHEN yif_dm_constants=>c_seg-storage.
         IF count <> 1 OR almacenes IS INITIAL.
           error = 'ALMACEN requiere exclusivamente su subtipo'.
         ELSE. a = almacenes[ 1 ]-Centro. b = almacenes[ 1 ]-Almacen. ENDIF.
-      WHEN 'VENTAS'.
+      WHEN yif_dm_constants=>c_seg-sales.
         IF count <> 1 OR ventas IS INITIAL.
           error = 'VENTAS requiere exclusivamente su subtipo'.
         ELSE. a = ventas[ 1 ]-OrgVentas. b = ventas[ 1 ]-Canal. ENDIF.
-      WHEN 'VALORACION'.
+      WHEN yif_dm_constants=>c_seg-valuation.
         IF count <> 1 OR valoraciones IS INITIAL.
           error = 'VALORACION requiere exclusivamente su subtipo'.
         ELSE. a = valoraciones[ 1 ]-AreaValoracion. b = valoraciones[ 1 ]-TipoValoracion. ENDIF.
-      WHEN 'UNIDAD'.
+      WHEN yif_dm_constants=>c_seg-unit.
         IF count <> 1 OR unidades IS INITIAL.
           error = 'UNIDAD requiere exclusivamente su subtipo'.
         ELSE. a = unidades[ 1 ]-UnidadAlternativa. ENDIF.
       WHEN OTHERS. error = 'Tipo de segmento desconocido'.
     ENDCASE.
-    IF kind <> 'GENERAL' AND a IS INITIAL. error = 'Contexto organizativo vacio'. ENDIF.
-    IF ( kind = 'ALMACEN' OR kind = 'VENTAS' ) AND b IS INITIAL.
+    IF kind <> yif_dm_constants=>c_seg-general AND a IS INITIAL. error = 'Contexto organizativo vacio'. ENDIF.
+    IF ( kind = yif_dm_constants=>c_seg-storage OR kind = yif_dm_constants=>c_seg-sales ) AND b IS INITIAL.
       error = 'La segunda dimension organizativa es obligatoria'.
     ENDIF.
     IF a <> to_upper( a ) OR b <> to_upper( b ).
@@ -112,11 +113,12 @@ CLASS lhc_Segmento IMPLEMENTATION.
       READ ENTITIES OF yi_dm_sol ENTITY Solicitud FIELDS ( Estado )
         WITH VALUE #( ( SolicitudUUID = row-SolicitudUUID ) ) RESULT DATA(headers).
       DATA(state) = COND ymmt_dm_sol-estado( WHEN headers IS NOT INITIAL THEN headers[ 1 ]-Estado ELSE '' ).
-      IF headers IS INITIAL OR ( state <> 'BORRADOR' AND state <> 'EN_CURSO' )
+      IF headers IS INITIAL OR ( state <> yif_dm_constants=>c_req-draft AND state <> yif_dm_constants=>c_req-in_progress
+        )
         OR ycl_dm_rules=>can_request( request_id = row-SolicitudUUID change = abap_true ) = abap_false.
         error = 'Crear contexto requiere una solicitud guardada y propia en captura'.
       ENDIF.
-      IF row-TipoSegmento = 'CENTRO' OR row-TipoSegmento = 'ALMACEN'.
+      IF row-TipoSegmento = yif_dm_constants=>c_seg-plant OR row-TipoSegmento = yif_dm_constants=>c_seg-storage.
         SELECT SINGLE f~centro_criterio FROM ymmt_dm_sol AS h
           INNER JOIN ymmt_dm_flujo AS f ON f~flujo_id = h~flujo_id
           WHERE h~solicitud_uuid = @row-SolicitudUUID INTO @DATA(criterion).
