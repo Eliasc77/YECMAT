@@ -48,7 +48,7 @@ CLASS lhc_Tarea IMPLEMENTATION.
       MODIFY ENTITIES OF yi_dm_tarea IN LOCAL MODE ENTITY Tarea
         UPDATE FIELDS ( FlujoId Version Area Estado CreadoEl )
         WITH VALUE #( ( %tky = row-%tky FlujoId = header-FlujoId Version = header-Version
-          Area = area Estado = yif_dm_constants=>c_task-pending CreadoEl = now ) ).
+          Area = area Estado = yif_dm_constants=>c_estado_tarea-pendiente CreadoEl = now ) ).
     ENDLOOP.
   ENDMETHOD.
 
@@ -69,7 +69,7 @@ CLASS lhc_Tarea IMPLEMENTATION.
           OR row-Version <> header-Version OR step-activo <> abap_true
           OR ( step-condicion_bpm IS NOT INITIAL AND step-condicion_bpm <> header-ClasificacionBpm ).
           error = 'Paso/area/version no corresponden a la solicitud'.
-        ELSEIF header-Estado <> yif_dm_constants=>c_task-in_progress OR row-Responsable IS INITIAL.
+        ELSEIF header-Estado <> yif_dm_constants=>c_estado_tarea-en_curso OR row-Responsable IS INITIAL.
           error = 'Solicitud fuera de captura o responsable vacio'.
         ENDIF.
         SELECT SINGLE tarea_uuid FROM ymmt_dm_tarea WHERE tarea_uuid = @row-TareaUUID INTO @DATA(existing).
@@ -77,7 +77,7 @@ CLASS lhc_Tarea IMPLEMENTATION.
           error = 'Solo el creador genera tareas'.
         ENDIF.
       ENDIF.
-      IF error IS INITIAL AND row-Estado = yif_dm_constants=>c_task-finished.
+      IF error IS INITIAL AND row-Estado = yif_dm_constants=>c_estado_tarea-finalizada.
         DATA task TYPE ymmt_dm_tarea.
         task = VALUE #( solicitud_uuid = row-SolicitudUUID flujo_id = row-FlujoId
           version = row-Version area = row-Area paso_id = row-PasoId ).
@@ -95,11 +95,11 @@ CLASS lhc_Tarea IMPLEMENTATION.
     READ ENTITIES OF yi_dm_tarea IN LOCAL MODE ENTITY Tarea ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(rows).
     LOOP AT rows INTO DATA(row).
-      IF row-Estado <> yif_dm_constants=>c_task-pending.
+      IF row-Estado <> yif_dm_constants=>c_estado_tarea-pendiente.
         APPEND VALUE #( %tky = row-%tky ) TO failed-tarea. CONTINUE.
       ENDIF.
       MODIFY ENTITIES OF yi_dm_tarea IN LOCAL MODE ENTITY Tarea UPDATE FIELDS ( Estado )
-        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_task-in_progress ) ).
+        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_estado_tarea-en_curso ) ).
     ENDLOOP.
     READ ENTITIES OF yi_dm_tarea IN LOCAL MODE ENTITY Tarea ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(done).
@@ -114,7 +114,8 @@ CLASS lhc_Tarea IMPLEMENTATION.
       task = VALUE #( solicitud_uuid = row-SolicitudUUID flujo_id = row-FlujoId
         version = row-Version area = row-Area paso_id = row-PasoId ).
       DATA(error) = ycl_dm_rules=>required( task ).
-      IF row-Estado <> yif_dm_constants=>c_task-pending AND row-Estado <> yif_dm_constants=>c_task-in_progress. error =
+      IF row-Estado <> yif_dm_constants=>c_estado_tarea-pendiente AND row-Estado <>
+        yif_dm_constants=>c_estado_tarea-en_curso. error =
         'La tarea no esta abierta' . ENDIF.
       IF error IS NOT INITIAL.
         APPEND VALUE #( %tky = row-%tky ) TO failed-tarea.
@@ -123,7 +124,7 @@ CLASS lhc_Tarea IMPLEMENTATION.
         CONTINUE.
       ENDIF.
       MODIFY ENTITIES OF yi_dm_tarea IN LOCAL MODE ENTITY Tarea UPDATE FIELDS ( Estado )
-        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_task-finished ) ).
+        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_estado_tarea-finalizada ) ).
     ENDLOOP.
     READ ENTITIES OF yi_dm_tarea IN LOCAL MODE ENTITY Tarea ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(done).
@@ -134,11 +135,11 @@ CLASS lhc_Tarea IMPLEMENTATION.
     READ ENTITIES OF yi_dm_tarea IN LOCAL MODE ENTITY Tarea ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(rows).
     LOOP AT rows INTO DATA(row).
-      IF row-Estado <> yif_dm_constants=>c_task-finished.
+      IF row-Estado <> yif_dm_constants=>c_estado_tarea-finalizada.
         APPEND VALUE #( %tky = row-%tky ) TO failed-tarea. CONTINUE.
       ENDIF.
       MODIFY ENTITIES OF yi_dm_tarea IN LOCAL MODE ENTITY Tarea UPDATE FIELDS ( Estado )
-        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_task-pending ) ).
+        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_estado_tarea-pendiente ) ).
     ENDLOOP.
     READ ENTITIES OF yi_dm_tarea IN LOCAL MODE ENTITY Tarea ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(done).

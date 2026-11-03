@@ -34,7 +34,7 @@ CLASS lhc_Solicitud IMPLEMENTATION.
     GET TIME STAMP FIELD now.
     MODIFY ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud
       UPDATE FIELDS ( Estado CreadoPor CreadoEl )
-      WITH VALUE #( FOR key IN keys ( %tky = key-%tky Estado = yif_dm_constants=>c_req-draft
+      WITH VALUE #( FOR key IN keys ( %tky = key-%tky Estado = yif_dm_constants=>c_estado_solicitud-borrador
         CreadoPor = cl_abap_context_info=>get_user_technical_name( ) CreadoEl = now ) ).
   ENDMETHOD.
 
@@ -56,13 +56,13 @@ CLASS lhc_Solicitud IMPLEMENTATION.
       ENDIF.
       SELECT SINGLE solicitud_uuid FROM ymmt_dm_sol
         WHERE solicitud_uuid = @row-SolicitudUUID INTO @DATA(existing).
-      IF sy-subrc <> 0 AND ( config-estado <> yif_dm_constants=>c_ver-published OR config-activo <> abap_true
+      IF sy-subrc <> 0 AND ( config-estado <> yif_dm_constants=>c_estado_version-publicada OR config-activo <> abap_true
         OR config-vigente_desde IS INITIAL OR config-vigente_desde > today
         OR ( config-vigente_hasta IS NOT INITIAL AND config-vigente_hasta < today ) ).
         error = 'La version elegida no esta publicada y vigente'.
       ENDIF.
-      IF row-TipoOperacion NA yif_dm_constants=>c_op-allowed OR ( row-TipoOperacion CA
-        yif_dm_constants=>c_op-needs_material AND row-Material IS INITIAL ).
+      IF row-TipoOperacion NA yif_dm_constants=>c_operacion_material-permitidas OR ( row-TipoOperacion CA
+        yif_dm_constants=>c_operacion_material-requieren_material AND row-Material IS INITIAL ).
         error = 'Operacion C/M/I; material obligatorio para M/I'.
       ENDIF.
       IF error IS NOT INITIAL.
@@ -79,8 +79,9 @@ CLASS lhc_Solicitud IMPLEMENTATION.
     LOOP AT rows INTO DATA(row).
       DATA(input) = keys[ KEY entity %tky = row-%tky ]-%param.
       DATA(error) = CONV string( '' ).
-      IF row-Estado <> yif_dm_constants=>c_req-draft OR ( input-ClasificacionBpm <> yif_dm_constants=>c_bpm-review AND
-        input-ClasificacionBpm <> yif_dm_constants=>c_bpm-direct ).
+      IF row-Estado <> yif_dm_constants=>c_estado_solicitud-borrador OR ( input-ClasificacionBpm <>
+        yif_dm_constants=>c_clasificacion_bpm-con_revision AND
+        input-ClasificacionBpm <> yif_dm_constants=>c_clasificacion_bpm-sin_revision ).
         error = 'Iniciar requiere BORRADOR y clasificacion A/B'.
       ENDIF.
       SELECT * FROM ymmt_dm_paso WHERE flujo_id = @row-FlujoId AND version = @row-Version
@@ -116,7 +117,7 @@ CLASS lhc_Solicitud IMPLEMENTATION.
       MODIFY ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud
         UPDATE FIELDS ( ClasificacionBpm Estado )
         WITH VALUE #( ( %tky = row-%tky ClasificacionBpm = input-ClasificacionBpm Estado =
-          yif_dm_constants=>c_req-in_progress ) ).
+          yif_dm_constants=>c_estado_solicitud-en_curso ) ).
     ENDLOOP.
     READ ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(done).
@@ -140,12 +141,13 @@ CLASS lhc_Solicitud IMPLEMENTATION.
       ENDIF.
       READ ENTITIES OF yi_dm_tarea ENTITY Tarea ALL FIELDS
         WITH CORRESPONDING #( task_keys ) RESULT DATA(tasks).
-      DATA(pending) = xsdbool( row-Estado <> yif_dm_constants=>c_req-in_progress OR tasks IS INITIAL OR lines( tasks )
+      DATA(pending) = xsdbool( row-Estado <> yif_dm_constants=>c_estado_solicitud-en_curso OR tasks IS INITIAL OR lines(
+        tasks )
         <> lines( task_keys ) ).
       LOOP AT tasks INTO DATA(task).
         SELECT SINGLE obligatorio FROM ymmt_dm_paso WHERE flujo_id = @task-FlujoId
           AND version = @task-Version AND paso_id = @task-PasoId INTO @DATA(required).
-        IF sy-subrc <> 0 OR ( required = abap_true AND task-Estado <> yif_dm_constants=>c_task-finished ).
+        IF sy-subrc <> 0 OR ( required = abap_true AND task-Estado <> yif_dm_constants=>c_estado_tarea-finalizada ).
           pending = abap_true.
         ENDIF.
       ENDLOOP.
@@ -157,8 +159,10 @@ CLASS lhc_Solicitud IMPLEMENTATION.
         CONTINUE.
       ENDIF.
       MODIFY ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud UPDATE FIELDS ( Estado )
-        WITH VALUE #( ( %tky = row-%tky Estado = COND #( WHEN row-ClasificacionBpm = yif_dm_constants=>c_bpm-review
-          THEN yif_dm_constants=>c_req-review ELSE yif_dm_constants=>c_req-ready ) ) ).
+        WITH VALUE #( ( %tky = row-%tky Estado = COND #( WHEN row-ClasificacionBpm =
+          yif_dm_constants=>c_clasificacion_bpm-con_revision
+          THEN yif_dm_constants=>c_estado_solicitud-revision ELSE yif_dm_constants=>c_estado_solicitud-lista_integracion
+            ) ) ).
     ENDLOOP.
     READ ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(done).
@@ -169,7 +173,8 @@ CLASS lhc_Solicitud IMPLEMENTATION.
     READ ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(rows).
     LOOP AT rows INTO DATA(row).
-      IF row-Estado <> yif_dm_constants=>c_req-review OR row-ClasificacionBpm <> yif_dm_constants=>c_bpm-review.
+      IF row-Estado <> yif_dm_constants=>c_estado_solicitud-revision OR row-ClasificacionBpm <>
+        yif_dm_constants=>c_clasificacion_bpm-con_revision.
         APPEND VALUE #( %tky = row-%tky ) TO failed-solicitud.
         APPEND VALUE #( %tky = row-%tky %msg = new_message_with_text(
           severity = if_abap_behv_message=>severity-error text = 'Solo se aprueba una solicitud BPM en REVISION' ) ) TO
@@ -177,7 +182,7 @@ CLASS lhc_Solicitud IMPLEMENTATION.
         CONTINUE.
       ENDIF.
       MODIFY ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud UPDATE FIELDS ( Estado )
-        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_req-ready ) ).
+        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_estado_solicitud-lista_integracion ) ).
     ENDLOOP.
     READ ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(done).
@@ -192,7 +197,8 @@ CLASS lhc_Solicitud IMPLEMENTATION.
       SELECT SINGLE solicitud_uuid FROM ymmt_dm_tarea
         WHERE tarea_uuid = @task_id INTO @DATA(parent_id).
       IF sy-subrc <> 0 OR parent_id <> row-SolicitudUUID
-        OR ( row-Estado <> yif_dm_constants=>c_req-review AND row-Estado <> yif_dm_constants=>c_req-in_progress ).
+        OR ( row-Estado <> yif_dm_constants=>c_estado_solicitud-revision AND row-Estado <>
+          yif_dm_constants=>c_estado_solicitud-en_curso ).
         APPEND VALUE #( %tky = row-%tky ) TO failed-solicitud.
         APPEND VALUE #( %tky = row-%tky %msg = new_message_with_text(
           severity = if_abap_behv_message=>severity-error text = 'Tarea ajena o solicitud fuera de revision/captura' ) )
@@ -205,7 +211,7 @@ CLASS lhc_Solicitud IMPLEMENTATION.
         APPEND VALUE #( %tky = row-%tky ) TO failed-solicitud. CONTINUE.
       ENDIF.
       MODIFY ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud UPDATE FIELDS ( Estado )
-        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_req-in_progress ) ).
+        WITH VALUE #( ( %tky = row-%tky Estado = yif_dm_constants=>c_estado_solicitud-en_curso ) ).
     ENDLOOP.
     READ ENTITIES OF yi_dm_sol IN LOCAL MODE ENTITY Solicitud ALL FIELDS
       WITH CORRESPONDING #( keys ) RESULT DATA(done).

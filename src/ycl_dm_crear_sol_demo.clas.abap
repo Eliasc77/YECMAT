@@ -10,7 +10,7 @@ CLASS ycl_dm_crear_sol_demo IMPLEMENTATION.
     IF sy-subrc = 0.
       IF existing-creado_por <> user OR existing-flujo_id <> ycl_dm_demo_config=>flujo_id
         OR existing-version <> ycl_dm_demo_config=>version_id OR existing-tipo_material <> 'ZFER'
-        OR existing-tipo_operacion <> yif_dm_constants=>c_op-create.
+        OR existing-tipo_operacion <> yif_dm_constants=>c_operacion_material-crear.
         out->write( 'El numero de prueba ya corresponde a otra solicitud. No se modifica.' ). RETURN.
       ENDIF.
       out->write( 'La solicitud de prueba de este usuario ya existe. No se duplico ni reinicio.' ).
@@ -18,7 +18,7 @@ CLASS ycl_dm_crear_sol_demo IMPLEMENTATION.
       out->write( |UUID: { existing-solicitud_uuid }| ). RETURN.
     ENDIF.
     SELECT SINGLE flujo_id FROM ymmt_dm_flujo_vr WHERE flujo_id = @ycl_dm_demo_config=>flujo_id
-      AND version = @ycl_dm_demo_config=>version_id AND estado = @yif_dm_constants=>c_ver-published INTO
+      AND version = @ycl_dm_demo_config=>version_id AND estado = @yif_dm_constants=>c_estado_version-publicada INTO
         @DATA(configured).
     IF sy-subrc <> 0.
       out->write( 'Primero ejecutar YCL_DM_CARGA_DEMO. La version DEMO no esta publicada.' ). RETURN.
@@ -27,7 +27,8 @@ CLASS ycl_dm_crear_sol_demo IMPLEMENTATION.
     MODIFY ENTITIES OF yi_dm_sol ENTITY Solicitud
       CREATE FIELDS ( NumeroSolicitud TipoMaterial TipoOperacion FlujoId Version )
       WITH VALUE #( ( %cid = 'PRIMERA_SOLICITUD_DEMO' NumeroSolicitud = number
-        TipoMaterial = 'ZFER' TipoOperacion = yif_dm_constants=>c_op-create FlujoId = ycl_dm_demo_config=>flujo_id
+        TipoMaterial = 'ZFER' TipoOperacion = yif_dm_constants=>c_operacion_material-crear FlujoId =
+          ycl_dm_demo_config=>flujo_id
         Version = ycl_dm_demo_config=>version_id ) )
       MAPPED DATA(mapped) FAILED DATA(failed) REPORTED DATA(reported).
     IF failed IS NOT INITIAL.

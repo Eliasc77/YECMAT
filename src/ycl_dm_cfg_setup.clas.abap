@@ -7,14 +7,15 @@ CLASS ycl_dm_cfg_setup IMPLEMENTATION.
     "Idempotent developer bootstrap: only initializes GLOBAL, never grants access.
     DATA(user) = cl_abap_context_info=>get_user_technical_name( ).
     IF user IS INITIAL. out->write( 'No se pudo identificar el usuario tecnico' ). RETURN. ENDIF.
-    SELECT SINGLE config_id FROM ymmt_dm_cfg_ctl WHERE config_id = @yif_dm_constants=>c_cfg-global_id INTO
+    SELECT SINGLE config_id FROM ymmt_dm_cfg_ctl WHERE config_id = @yif_dm_constants=>c_configuracion-id_global INTO
       @DATA(existing_root).
     IF sy-subrc = 0.
       out->write( 'GLOBAL ya existe. Se conserva la revision y la configuracion; no se cambian permisos.' ). RETURN.
     ENDIF.
     DATA roots TYPE STANDARD TABLE OF ymmt_dm_cfg_ctl WITH EMPTY KEY.
     DATA now TYPE timestampl. GET TIME STAMP FIELD now.
-    APPEND VALUE #( mandt = sy-mandt config_id = yif_dm_constants=>c_cfg-global_id revision = 0 last_changed_by = user
+    APPEND VALUE #( mandt = sy-mandt config_id = yif_dm_constants=>c_configuracion-id_global revision = 0
+      last_changed_by = user
       last_changed_at = now ) TO roots.
     TRY.
         INSERT ymmt_dm_cfg_ctl FROM TABLE @roots.

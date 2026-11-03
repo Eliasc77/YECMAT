@@ -52,8 +52,9 @@ WITH VALUE #( FOR audit_key IN keys
       SELECT SINGLE solicitud_uuid FROM ymmt_dm_seg WHERE segmento_uuid = @row-SegmentoUUID INTO @DATA(parent_id).
       READ ENTITIES OF yi_dm_sol ENTITY Solicitud FIELDS ( Estado )
         WITH VALUE #( ( SolicitudUUID = parent_id ) ) RESULT DATA(headers).
-      IF headers IS INITIAL OR ( headers[ 1 ]-Estado <> yif_dm_constants=>c_req-draft AND headers[ 1 ]-Estado <>
-        yif_dm_constants=>c_req-in_progress ).
+      IF headers IS INITIAL OR ( headers[ 1 ]-Estado <> yif_dm_constants=>c_estado_solicitud-borrador AND headers[ 1
+        ]-Estado <>
+        yif_dm_constants=>c_estado_solicitud-en_curso ).
         error = 'Guardar valores antes de cerrar la solicitud'.
       ENDIF.
       IF line_exists( blocked[ SegmentoUUID = row-SegmentoUUID CampoId = row-CampoId ] ).

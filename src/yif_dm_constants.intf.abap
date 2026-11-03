@@ -1,72 +1,72 @@
 " Valores del contrato DM; no son configuracion de negocio ni textos de usuario.
 INTERFACE yif_dm_constants PUBLIC.
-  CONSTANTS: BEGIN OF c_req,
-               draft TYPE c LENGTH 8 VALUE 'BORRADOR',
-               in_progress TYPE c LENGTH 8 VALUE 'EN_CURSO',
-               review TYPE c LENGTH 8 VALUE 'REVISION',
-               ready TYPE c LENGTH 11 VALUE 'LISTA_INTEG',
-             END OF c_req.
+  CONSTANTS: BEGIN OF c_estado_solicitud,
+               borrador TYPE c LENGTH 8 VALUE 'BORRADOR',
+               en_curso TYPE c LENGTH 8 VALUE 'EN_CURSO',
+               revision TYPE c LENGTH 8 VALUE 'REVISION',
+               lista_integracion TYPE c LENGTH 11 VALUE 'LISTA_INTEG',
+             END OF c_estado_solicitud.
 
-  CONSTANTS: BEGIN OF c_task,
-               pending TYPE c LENGTH 9 VALUE 'PENDIENTE',
-               in_progress TYPE c LENGTH 8 VALUE 'EN_CURSO',
-               finished TYPE c LENGTH 10 VALUE 'FINALIZADA',
-             END OF c_task.
+  CONSTANTS: BEGIN OF c_estado_tarea,
+               pendiente TYPE c LENGTH 9 VALUE 'PENDIENTE',
+               en_curso TYPE c LENGTH 8 VALUE 'EN_CURSO',
+               finalizada TYPE c LENGTH 10 VALUE 'FINALIZADA',
+             END OF c_estado_tarea.
 
-  CONSTANTS: BEGIN OF c_ver,
-               draft TYPE c LENGTH 8 VALUE 'BORRADOR',
-               published TYPE c LENGTH 9 VALUE 'PUBLICADA',
-               retired TYPE c LENGTH 8 VALUE 'RETIRADA',
-             END OF c_ver.
+  CONSTANTS: BEGIN OF c_estado_version,
+               borrador TYPE c LENGTH 8 VALUE 'BORRADOR',
+               publicada TYPE c LENGTH 9 VALUE 'PUBLICADA',
+               retirada TYPE c LENGTH 8 VALUE 'RETIRADA',
+             END OF c_estado_version.
 
-  CONSTANTS: BEGIN OF c_bpm,
-               review TYPE c LENGTH 1 VALUE 'A',
-               direct TYPE c LENGTH 1 VALUE 'B',
-             END OF c_bpm.
+  CONSTANTS: BEGIN OF c_clasificacion_bpm,
+               con_revision TYPE c LENGTH 1 VALUE 'A',
+               sin_revision TYPE c LENGTH 1 VALUE 'B',
+             END OF c_clasificacion_bpm.
 
-  CONSTANTS: BEGIN OF c_op,
-               create TYPE c LENGTH 1 VALUE 'C',
-               change TYPE c LENGTH 1 VALUE 'M',
-               inactivate TYPE c LENGTH 1 VALUE 'I',
-               allowed TYPE c LENGTH 3 VALUE 'CMI',
-               needs_material TYPE c LENGTH 2 VALUE 'MI',
-             END OF c_op.
+  CONSTANTS: BEGIN OF c_operacion_material,
+               crear TYPE c LENGTH 1 VALUE 'C',
+               modificar TYPE c LENGTH 1 VALUE 'M',
+               inactivar TYPE c LENGTH 1 VALUE 'I',
+               permitidas TYPE c LENGTH 3 VALUE 'CMI',
+               requieren_material TYPE c LENGTH 2 VALUE 'MI',
+             END OF c_operacion_material.
 
-  CONSTANTS: BEGIN OF c_rule,
-               required TYPE c LENGTH 1 VALUE 'M',
-               optional TYPE c LENGTH 1 VALUE 'O',
-               hidden TYPE c LENGTH 1 VALUE 'I',
-               readonly TYPE c LENGTH 1 VALUE 'R',
-               allowed TYPE c LENGTH 4 VALUE 'IOMR',
-             END OF c_rule.
+  CONSTANTS: BEGIN OF c_estado_campo,
+               obligatorio TYPE c LENGTH 1 VALUE 'M',
+               opcional TYPE c LENGTH 1 VALUE 'O',
+               oculto TYPE c LENGTH 1 VALUE 'I',
+               solo_lectura TYPE c LENGTH 1 VALUE 'R',
+               permitidos TYPE c LENGTH 4 VALUE 'IOMR',
+             END OF c_estado_campo.
 
-  CONSTANTS: BEGIN OF c_seg,
+  CONSTANTS: BEGIN OF c_tipo_segmento,
                general TYPE c LENGTH 7 VALUE 'GENERAL',
-               plant TYPE c LENGTH 6 VALUE 'CENTRO',
-               storage TYPE c LENGTH 7 VALUE 'ALMACEN',
-               sales TYPE c LENGTH 6 VALUE 'VENTAS',
-               valuation TYPE c LENGTH 10 VALUE 'VALORACION',
-               unit TYPE c LENGTH 6 VALUE 'UNIDAD',
-             END OF c_seg.
+               centro TYPE c LENGTH 6 VALUE 'CENTRO',
+               almacen TYPE c LENGTH 7 VALUE 'ALMACEN',
+               ventas TYPE c LENGTH 6 VALUE 'VENTAS',
+               valoracion TYPE c LENGTH 10 VALUE 'VALORACION',
+               unidad_medida TYPE c LENGTH 6 VALUE 'UNIDAD',
+             END OF c_tipo_segmento.
 
-  CONSTANTS: BEGIN OF c_cmd,
-               create TYPE c LENGTH 5 VALUE 'CREAR',
-               save TYPE c LENGTH 7 VALUE 'GUARDAR',
-               copy TYPE c LENGTH 6 VALUE 'COPIAR',
-               publish TYPE c LENGTH 8 VALUE 'PUBLICAR',
-               retire TYPE c LENGTH 7 VALUE 'RETIRAR',
-             END OF c_cmd.
+  CONSTANTS: BEGIN OF c_operacion_config,
+               crear TYPE c LENGTH 5 VALUE 'CREAR',
+               guardar TYPE c LENGTH 7 VALUE 'GUARDAR',
+               copiar TYPE c LENGTH 6 VALUE 'COPIAR',
+               publicar TYPE c LENGTH 8 VALUE 'PUBLICAR',
+               retirar TYPE c LENGTH 7 VALUE 'RETIRAR',
+             END OF c_operacion_config.
 
-  CONSTANTS: BEGIN OF c_set,
-               fields TYPE c LENGTH 6 VALUE 'Campos',
-               sections TYPE c LENGTH 9 VALUE 'Secciones',
-               flows TYPE c LENGTH 6 VALUE 'Flujos',
-               versions TYPE c LENGTH 9 VALUE 'Versiones',
-               steps TYPE c LENGTH 5 VALUE 'Pasos',
-               rules TYPE c LENGTH 6 VALUE 'Reglas',
-             END OF c_set.
+  CONSTANTS: BEGIN OF c_entidad_config,
+               campos TYPE c LENGTH 6 VALUE 'Campos',
+               secciones TYPE c LENGTH 9 VALUE 'Secciones',
+               flujos TYPE c LENGTH 6 VALUE 'Flujos',
+               versiones TYPE c LENGTH 9 VALUE 'Versiones',
+               pasos TYPE c LENGTH 5 VALUE 'Pasos',
+               reglas TYPE c LENGTH 6 VALUE 'Reglas',
+             END OF c_entidad_config.
 
-  CONSTANTS: BEGIN OF c_type,
+  CONSTANTS: BEGIN OF c_tipo_dato,
                char TYPE c LENGTH 4 VALUE 'CHAR',
                string TYPE c LENGTH 6 VALUE 'STRING',
                numc TYPE c LENGTH 4 VALUE 'NUMC',
@@ -81,38 +81,38 @@ INTERFACE yif_dm_constants PUBLIC.
                unit TYPE c LENGTH 4 VALUE 'UNIT',
                cuky TYPE c LENGTH 4 VALUE 'CUKY',
                lang TYPE c LENGTH 4 VALUE 'LANG',
-             END OF c_type.
+             END OF c_tipo_dato.
 
-  CONSTANTS: BEGIN OF c_ui,
-               input TYPE c LENGTH 5 VALUE 'Input',
-               multiline TYPE c LENGTH 8 VALUE 'TextArea',
-               date TYPE c LENGTH 10 VALUE 'DatePicker',
-               checkbox TYPE c LENGTH 8 VALUE 'CheckBox',
+  CONSTANTS: BEGIN OF c_control_pantalla,
+               entrada TYPE c LENGTH 5 VALUE 'Input',
+               texto_multilinea TYPE c LENGTH 8 VALUE 'TextArea',
+               selector_fecha TYPE c LENGTH 10 VALUE 'DatePicker',
+               casilla TYPE c LENGTH 8 VALUE 'CheckBox',
                decimal TYPE c LENGTH 7 VALUE 'Decimal',
-               integer TYPE c LENGTH 7 VALUE 'Integer',
-             END OF c_ui.
+               entero TYPE c LENGTH 7 VALUE 'Integer',
+             END OF c_control_pantalla.
 
-  CONSTANTS: BEGIN OF c_cfg,
-               global_id TYPE c LENGTH 6 VALUE 'GLOBAL',
-             END OF c_cfg.
+  CONSTANTS: BEGIN OF c_configuracion,
+               id_global TYPE c LENGTH 6 VALUE 'GLOBAL',
+             END OF c_configuracion.
 
-  CONSTANTS: BEGIN OF c_context,
-               active TYPE c LENGTH 6 VALUE 'ACTIVO',
-             END OF c_context.
+  CONSTANTS: BEGIN OF c_estado_contexto,
+               activo TYPE c LENGTH 6 VALUE 'ACTIVO',
+             END OF c_estado_contexto.
 
-  CONSTANTS: BEGIN OF c_phase,
-               capture TYPE c LENGTH 7 VALUE 'CAPTURA',
-             END OF c_phase.
+  CONSTANTS: BEGIN OF c_fase,
+               captura TYPE c LENGTH 7 VALUE 'CAPTURA',
+             END OF c_fase.
 
-  CONSTANTS: BEGIN OF c_valid,
-               digits TYPE c LENGTH 10 VALUE '0123456789',
-               identifier_regex TYPE c LENGTH 13 VALUE '^[A-Z0-9\_]+$',
-               integer_regex TYPE c LENGTH 10 VALUE '^-?[0-9]+$',
-               decimal_regex TYPE c LENGTH 21 VALUE '^-?[0-9]+(\.[0-9]+)?$',
-               date_max TYPE c LENGTH 8 VALUE '99991231',
-               date_zero_year TYPE c LENGTH 4 VALUE '0000',
-               minus TYPE c LENGTH 1 VALUE '-',
-               decimal_point TYPE c LENGTH 1 VALUE '.',
-             END OF c_valid.
+  CONSTANTS: BEGIN OF c_validacion,
+               digitos TYPE c LENGTH 10 VALUE '0123456789',
+               patron_identificador TYPE c LENGTH 13 VALUE '^[A-Z0-9\_]+$',
+               patron_entero TYPE c LENGTH 10 VALUE '^-?[0-9]+$',
+               patron_decimal TYPE c LENGTH 21 VALUE '^-?[0-9]+(\.[0-9]+)?$',
+               fecha_maxima TYPE c LENGTH 8 VALUE '99991231',
+               anio_cero TYPE c LENGTH 4 VALUE '0000',
+               signo_menos TYPE c LENGTH 1 VALUE '-',
+               punto_decimal TYPE c LENGTH 1 VALUE '.',
+             END OF c_validacion.
 
 ENDINTERFACE.

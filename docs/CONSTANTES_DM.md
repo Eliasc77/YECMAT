@@ -8,13 +8,13 @@ Base revisada: `main`, commit `fc30682ddf3609fbb02fcb107236b0332d01321d`.
 Se consume directamente; no es necesario declarar INTERFACES en cada clase:
 
 ```abap
-IF row-Estado = yif_dm_constants=>c_req-draft.
+IF row-Estado = yif_dm_constants=>c_estado_solicitud-borrador.
   " ...
 ENDIF.
 
 SELECT SINGLE flujo_id
   FROM ymmt_dm_flujo_vr
-  WHERE estado = @yif_dm_constants=>c_ver-published
+  WHERE estado = @yif_dm_constants=>c_estado_version-publicada
   INTO @DATA(flow_id).
 ```
 
@@ -24,21 +24,21 @@ por significado, aunque dos dominios compartan un literal:
 
 | Grupo | Contenido |
 |---|---|
-| c_req | BORRADOR, EN_CURSO, REVISION, LISTA_INTEG de solicitudes |
-| c_task | PENDIENTE, EN_CURSO, FINALIZADA de tareas |
-| c_ver | BORRADOR, PUBLICADA, RETIRADA de versiones |
-| c_bpm | A con revision y B directo |
-| c_op | C/M/I y conjuntos de operaciones admitidas |
-| c_rule | M/O/I/R y conjunto de estados de campo |
-| c_seg | GENERAL, CENTRO, ALMACEN, VENTAS, VALORACION, UNIDAD |
-| c_cmd | CREAR, GUARDAR, COPIAR, PUBLICAR, RETIRAR |
-| c_set | Nombres publicos de los seis mantenimientos OData |
-| c_type | Tipos de datos admitidos por captura |
-| c_ui | Input, TextArea, DatePicker, CheckBox, Decimal, Integer |
-| c_cfg | Identificador GLOBAL del control de configuracion |
-| c_context | Estado ACTIVO de un segmento |
-| c_phase | Fase CAPTURA usada por los datos demo |
-| c_valid | Digitos, patrones de formato, separadores y fecha maxima |
+| c_estado_solicitud | BORRADOR, EN_CURSO, REVISION, LISTA_INTEG de solicitudes |
+| c_estado_tarea | PENDIENTE, EN_CURSO, FINALIZADA de tareas |
+| c_estado_version | BORRADOR, PUBLICADA, RETIRADA de versiones |
+| c_clasificacion_bpm | A con revision y B directo |
+| c_operacion_material | C/M/I y conjuntos de operaciones admitidas |
+| c_estado_campo | M/O/I/R y conjunto de estados de campo |
+| c_tipo_segmento | GENERAL, CENTRO, ALMACEN, VENTAS, VALORACION, UNIDAD |
+| c_operacion_config | CREAR, GUARDAR, COPIAR, PUBLICAR, RETIRAR |
+| c_entidad_config | Nombres publicos de los seis mantenimientos OData |
+| c_tipo_dato | Tipos de datos admitidos por captura |
+| c_control_pantalla | Input, TextArea, DatePicker, CheckBox, Decimal, Integer |
+| c_configuracion | Identificador GLOBAL del control de configuracion |
+| c_estado_contexto | Estado ACTIVO de un segmento |
+| c_fase | Fase CAPTURA usada por los datos demo |
+| c_validacion | Digitos, patrones de formato, separadores y fecha maxima |
 
 Se mantienen `abap_true` y `abap_false` como constantes estandar. El refactor no
 cambia estados, reglas, transiciones, validaciones ni valores persistidos.
@@ -100,3 +100,11 @@ desde este entorno.
 contar Test Classes). Los objetos Z* existentes en main se conservan intactos:
 no se eliminan, renombran ni migran. La interfaz no incluye estados, semaforos
 o eventos exclusivos de ese modelo anterior. No requiere importar objetos Z*.
+
+## Nombres legibles
+
+Los grupos y componentes del negocio usan nombres en espanol sin tildes.
+Por ejemplo, `c_estado_solicitud-borrador` y
+`c_control_pantalla-texto_multilinea`. Los tipos tecnicos CHAR/UNIT/QUAN,
+los valores persistidos y los nombres de controles SAPUI5 permanecen intactos.
+La interfaz conserva su nombre YIF_DM_CONSTANTS para evitar renombrar el objeto.
