@@ -1,0 +1,11 @@
+@EndUserText.label: 'DM mantenimiento de configuracion'
+define service YUI_DM_CFG_O4 {
+  expose YC_DM_CFG       as Configuration;
+  expose YA_DM_CAMPO     as Campos;
+  expose YA_DM_SECCION   as Secciones;
+  expose YA_DM_FLUJO     as Flujos;
+  expose YA_DM_FLUJO_VR  as Versiones;
+  expose YA_DM_PASO      as Pasos;
+  expose YA_DM_REGLA     as Reglas;
+  expose I_UnitOfMeasure as UnidadesMedida;
+}

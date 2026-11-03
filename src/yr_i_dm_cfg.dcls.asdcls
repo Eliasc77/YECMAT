@@ -1,0 +1,9 @@
+@EndUserText.label: 'DM lectura temporal de mantenimiento'
+@MappingRole: true
+define role YR_I_DM_CFG {
+  // TEMPORAL: lectura sin filtro especifico de administrador DM.
+  // Se conserva el acceso autenticado al servicio SAP.
+  // TODO IAM: sustituir este grant por la condicion de autorizacion
+  // de lectura ACTVT 03 descrita en docs/AUTORIZACION_IAM_PENDIENTE.md.
+  grant select on YI_DM_CFG;
+}

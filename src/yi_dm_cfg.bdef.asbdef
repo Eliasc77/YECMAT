@@ -1,0 +1,19 @@
+managed with additional save and cleanup implementation in class YBP_I_DM_CFG unique;
+strict ( 2 );
+
+define behavior for YI_DM_CFG alias Configuration
+persistent table ymmt_dm_cfg_ctl
+lock master
+authorization master ( global, instance )
+etag master LastChangedAt
+{
+  update;
+  field ( readonly ) ConfigId, Revision, LastChangedBy, LastChangedAt;
+  action Aplicar parameter YD_DM_CFG_CMD result [1] $self;
+  mapping for ymmt_dm_cfg_ctl {
+    ConfigId = config_id;
+    Revision = revision;
+    LastChangedBy = last_changed_by;
+    LastChangedAt = last_changed_at;
+  }
+}
