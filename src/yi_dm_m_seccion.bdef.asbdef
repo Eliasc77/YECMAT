@@ -1,0 +1,36 @@
+managed with additional save and cleanup implementation in class YBP_I_DM_M_SECCION unique;
+strict ( 2 );
+with draft;
+
+define behavior for YI_DM_M_SECCION alias Seccion
+persistent table ymmt_dm_seccion
+draft table ymmt_dm_d_seccion
+lock master unmanaged
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( precheck );
+  update ( features : instance );
+  field ( readonly ) LastChangedAt, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) SeccionId;
+  field ( mandatory ) Descripcion;
+  validation validar on save { create; update; }
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validar;
+  }
+  mapping for ymmt_dm_seccion
+  {
+    SeccionId = seccion_id;
+    Descripcion = descripcion;
+    Orden = orden;
+    Activo = activo;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

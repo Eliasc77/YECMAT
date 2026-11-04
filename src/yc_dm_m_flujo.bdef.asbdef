@@ -1,0 +1,44 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for YC_DM_M_FLUJO alias Flujo
+use etag
+{
+  use create;
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+  use update;
+  use association _Versiones { create; with draft; }
+}
+
+define behavior for YC_DM_M_FLUJO_VR alias Version
+use etag
+{
+  use update;
+  use association _Flujo { with draft; }
+  use association _Pasos { create; with draft; }
+  use association _Reglas { create; with draft; }
+  use action Publicar;
+  use action Retirar;
+  use action Copiar;
+}
+
+define behavior for YC_DM_M_PASO alias Paso
+use etag
+{
+  use update;
+  use association _Version { with draft; }
+  use association _Flujo { with draft; }
+}
+
+define behavior for YC_DM_M_REGLA alias Regla
+use etag
+{
+  use update;
+  use association _Version { with draft; }
+  use association _Flujo { with draft; }
+}

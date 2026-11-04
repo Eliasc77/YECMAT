@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<abapGit version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
- <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
-  <asx:values>
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit xmlns:ns0="http://www.sap.com/abapxml" version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
+ <ns0:abap version="1.0">
+  <ns0:values>
    <DD02V>
     <TABNAME>YMMT_DM_SECCION</TABNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
@@ -65,6 +65,20 @@
      <SHLPORIGIN>F</SHLPORIGIN>
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
+    <DD03P>
+     <FIELDNAME>LAST_CHANGED_AT</FIELDNAME>
+     <ROLLNAME>ABP_LASTCHANGE_TSTMPL</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <NOTNULL>X</NOTNULL>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
+    <DD03P>
+     <FIELDNAME>LOCAL_LAST_CHANGED_AT</FIELDNAME>
+     <ROLLNAME>ABP_LOCINST_LASTCHANGE_TSTMPL</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <NOTNULL>X</NOTNULL>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
    </DD03P_TABLE>
    <TABL_EXTRAS>
     <TDDAT>
@@ -72,6 +86,6 @@
      <CCLASS>CUS_DEV_SUP_RO</CCLASS>
     </TDDAT>
    </TABL_EXTRAS>
-  </asx:values>
- </asx:abap>
+  </ns0:values>
+ </ns0:abap>
 </abapGit>

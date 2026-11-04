@@ -1,0 +1,51 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Paso', typeNamePlural: 'Pasos',
+  title: { value: 'PasoId' }, description: { value: 'Area' } }
+annotate view YC_DM_M_PASO with
+{
+  @UI.facet: [ { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'Datos generales', position: 10 } ]
+  @UI.lineItem: [ { position: 10, label: 'Flujo' } ]
+  @UI.identification: [ { position: 10, label: 'Flujo' } ]
+  @UI.selectionField: [{ position: 10 }]
+  FlujoId;
+
+  @UI.lineItem: [ { position: 20, label: 'Version' } ]
+  @UI.identification: [ { position: 20, label: 'Version' } ]
+  @UI.selectionField: [{ position: 20 }]
+  Version;
+
+  @UI.lineItem: [ { position: 30, label: 'Paso' } ]
+  @UI.identification: [ { position: 30, label: 'Paso' } ]
+  @UI.selectionField: [{ position: 30 }]
+  PasoId;
+
+  @UI.lineItem: [ { position: 40, label: 'Area' } ]
+  @UI.identification: [ { position: 40, label: 'Area' } ]
+  @UI.selectionField: [{ position: 40 }]
+  Area;
+
+  @UI.lineItem: [ { position: 50, label: 'Fase' } ]
+  @UI.identification: [ { position: 50, label: 'Fase' } ]
+  Fase;
+
+  @UI.lineItem: [ { position: 60, label: 'Clasificacion A / B' } ]
+  @UI.identification: [ { position: 60, label: 'Clasificacion A / B' } ]
+  CondicionBpm;
+
+  @UI.lineItem: [ { position: 70, label: 'Orden' } ]
+  @UI.identification: [ { position: 70, label: 'Orden' } ]
+  Orden;
+
+  @UI.lineItem: [ { position: 80, label: 'Obligatorio' } ]
+  @UI.identification: [ { position: 80, label: 'Obligatorio' } ]
+  Obligatorio;
+
+  @UI.lineItem: [ { position: 90, label: 'Activo' } ]
+  @UI.identification: [ { position: 90, label: 'Activo' } ]
+  Activo;
+
+  @UI.hidden: true
+  LastChangedAt;
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

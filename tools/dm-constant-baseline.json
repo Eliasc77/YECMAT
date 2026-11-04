@@ -2,7 +2,7 @@
   "commit": "fc30682ddf3609fbb02fcb107236b0332d01321d",
   "files": {
     "ybp_i_dm_cfg.clas.abap": "35ffa302181e6edd33873081b323f0b868f5e0f18cc3dc041c88444300343537",
-    "ybp_i_dm_cfg.clas.locals_imp.abap": "e8e06f914069ce23bfea8611f057f1265c405d9418754d344f4dd90f10ceda0b",
+    "ybp_i_dm_cfg.clas.locals_imp.abap": "2c9f6e5242a57f1cb3c19ff969ab2a89614e1553ddb19355fc9d9204a34a6a05",
     "ybp_i_dm_dato.clas.abap": "7c0e580edf3ac4510385590e0f920940aba658323448edd962f516b59aadd98c",
     "ybp_i_dm_dato.clas.locals_imp.abap": "09d978ef933e1fa1d1d3c155caabc4789e5b114bfc7b94d9246cde845c89c09e",
     "ybp_i_dm_seg.clas.abap": "084eb506d3d0295982757beb27245130a26d7c2b90320e58c00a812bd6b78d49",
@@ -28,5 +28,8 @@
     "zbp_i_dm_request.clas.abap": "778c489d70e51d008a3eaa69e10e2721c476674d7a75d4b7e8ce8340f17c4c28",
     "zbp_i_dm_request.clas.locals_imp.abap": "d0a6eece9c5a990e586064b523b0a3386f3c4a16355d0a8361d294aae066a077",
     "zcl_dm_trial_activation.clas.abap": "97b7ff7e1ae006dd84c36bd996556246cc06e90879207b536d3f60d258e3fff3"
+  },
+  "approved_changes": {
+    "ybp_i_dm_cfg.clas.locals_imp.abap": "Guardia de corte: rechazar Aplicar cuando RAP_ACTIVO este habilitado."
   }
 }

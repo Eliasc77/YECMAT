@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit xmlns:ns0="http://www.sap.com/abapxml" version="v1.0.0" serializer="LCL_OBJECT_SRVD" serializer_version="v1.0.0">
+ <ns0:abap version="1.0">
+  <ns0:values>
+   <SRVD>
+    <NAME>YUI_DM_MNT_O4</NAME>
+    <TYPE>SRVD/SRV</TYPE>
+    <DESCRIPTION>DM mantenimiento RAP</DESCRIPTION>
+    <LANGUAGE>EN</LANGUAGE>
+    <MASTER_LANGUAGE>EN</MASTER_LANGUAGE>
+    <SOURCE_URI>./yui_dm_mnt_o4/source/main</SOURCE_URI>
+    <SOURCE_TYPE>ABAP_SOURCE</SOURCE_TYPE>
+    <SOURCE_ORIGIN_DESCRIPTION>ABAP Development Tools</SOURCE_ORIGIN_DESCRIPTION>
+    <SRVD_SOURCE_TYPE>S</SRVD_SOURCE_TYPE>
+    <SRVD_SOURCE_TYPE_DESC>Definition</SRVD_SOURCE_TYPE_DESC>
+   </SRVD>
+  </ns0:values>
+ </ns0:abap>
+</abapGit>

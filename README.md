@@ -45,3 +45,11 @@ Este repositorio contiene el núcleo backend, el contrato OData y una activació
 simulada para probar el flujo íntegro en el trial. No se debe transportar a
 productivo sin conectar la API pública de Product Master y reemplazar la
 autorización provisional de los behavior pools.
+
+## Mantenimiento RAP con Preview (migracion)
+
+La rama incorpora `YUI_DM_MNT_O4` con draft, ETags y anotaciones Fiori elements.
+Consulte [la guia de activacion y cambio de escritor](docs/MIGRACION_MANTENIMIENTO_RAP.md)
+y [el inventario de objetos](docs/OBJETOS_MANTENIMIENTO_RAP.md).
+La escritura nueva se habilita explicitamente con `YCL_DM_MNT_SETUP`; importar
+los objetos no ejecuta ese cambio. La activacion y las pruebas reales requieren ADT.

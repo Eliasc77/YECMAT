@@ -76,6 +76,14 @@ CLASS lhc_Configuration IMPLEMENTATION.
       ENDIF.
 
       IF error IS INITIAL.
+        SELECT SINGLE rap_activo FROM ymmt_dm_cfg_ctl
+          WHERE config_id = @yif_dm_constants=>c_configuracion-id_global INTO @DATA(rap_activo).
+        IF rap_activo = abap_true.
+          error = 'El mantenimiento fue migrado a RAP Preview; Aplicar ya no admite cambios'.
+        ENDIF.
+      ENDIF.
+
+      IF error IS INITIAL.
 
         READ ENTITIES OF yi_dm_cfg IN LOCAL MODE
           ENTITY Configuration

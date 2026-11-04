@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit xmlns:ns0="http://www.sap.com/abapxml" version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <ns0:abap version="1.0">
+  <ns0:values>
+   <VSEOCLASS>
+    <CLSNAME>YBP_I_DM_M_CAMPO</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>DM mantenimiento RAP</DESCRIPT>
+    <CATEGORY>06</CATEGORY>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+    <CLSDEFINT>YI_DM_M_CAMPO</CLSDEFINT>
+   </VSEOCLASS>
+  </ns0:values>
+ </ns0:abap>
+</abapGit>

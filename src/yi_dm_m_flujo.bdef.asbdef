@@ -1,0 +1,143 @@
+managed with additional save and cleanup implementation in class YBP_I_DM_M_FLUJO unique;
+strict ( 2 );
+with draft;
+
+define behavior for YI_DM_M_FLUJO alias Flujo
+persistent table ymmt_dm_flujo
+draft table ymmt_dm_d_flujo
+lock master unmanaged
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( precheck );
+  update;
+  field ( readonly ) LastChangedAt, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) FlujoId;
+  field ( mandatory, features : instance ) Descripcion, TipoMaterial, TipoOperacion;
+  field ( features : instance ) CentroCriterio;
+  validation validar on save { create; update; }
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validar;
+    validation Version~validar;
+    validation Paso~validar;
+    validation Regla~validar;
+  }
+  association _Versiones { create; with draft; }
+  mapping for ymmt_dm_flujo
+  {
+    FlujoId = flujo_id;
+    Descripcion = descripcion;
+    TipoMaterial = tipo_material;
+    TipoOperacion = tipo_operacion;
+    CentroCriterio = centro_criterio;
+    Activo = activo;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for YI_DM_M_FLUJO_VR alias Version
+persistent table ymmt_dm_flujo_vr
+draft table ymmt_dm_d_flujo_vr
+lock dependent by _Flujo
+authorization dependent by _Flujo
+etag master LocalLastChangedAt
+{
+  update;
+  field ( readonly ) LastChangedAt, LocalLastChangedAt;
+  field ( readonly ) FlujoId;
+  field ( mandatory : create, readonly : update ) Version;
+  field ( readonly ) Estado, CreadoPor, CreadoEl;
+  determination iniciar on modify { create; }
+  action ( features : instance ) Publicar result [1] $self;
+  action ( features : instance ) Retirar result [1] $self;
+  action ( features : instance ) Copiar parameter YD_DM_M_COPIAR result [1] $self;
+  field ( mandatory, features : instance ) VigenteDesde;
+  field ( features : instance ) VigenteHasta;
+  validation validar on save { create; update; }
+  association _Flujo { with draft; }
+  association _Pasos { create ( features : instance ); with draft; }
+  association _Reglas { create ( features : instance ); with draft; }
+  mapping for ymmt_dm_flujo_vr
+  {
+    FlujoId = flujo_id;
+    Version = version;
+    Estado = estado;
+    VigenteDesde = vigente_desde;
+    VigenteHasta = vigente_hasta;
+    CreadoPor = creado_por;
+    CreadoEl = creado_el;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for YI_DM_M_PASO alias Paso
+persistent table ymmt_dm_paso
+draft table ymmt_dm_d_paso
+lock dependent by _Flujo
+authorization dependent by _Flujo
+etag master LocalLastChangedAt
+{
+  update ( features : instance );
+  field ( readonly ) LastChangedAt, LocalLastChangedAt;
+  field ( readonly ) FlujoId;
+  field ( readonly ) Version;
+  field ( mandatory : create, readonly : update ) PasoId;
+  field ( mandatory ) Area, Fase;
+  validation validar on save { create; update; }
+  association _Version { with draft; }
+  association _Flujo { with draft; }
+  mapping for ymmt_dm_paso
+  {
+    FlujoId = flujo_id;
+    Version = version;
+    PasoId = paso_id;
+    Area = area;
+    Fase = fase;
+    CondicionBpm = condicion_bpm;
+    Orden = orden;
+    Obligatorio = obligatorio;
+    Activo = activo;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for YI_DM_M_REGLA alias Regla
+persistent table ymmt_dm_regla
+draft table ymmt_dm_d_regla
+lock dependent by _Flujo
+authorization dependent by _Flujo
+etag master LocalLastChangedAt
+{
+  update ( features : instance );
+  field ( readonly ) LastChangedAt, LocalLastChangedAt;
+  field ( numbering : managed, readonly ) ReglaUUID;
+  field ( readonly ) FlujoId, Version;
+  field ( mandatory : create, readonly : update ) Area, CampoId;
+  field ( mandatory ) SeccionId, EstadoCampo;
+  validation validar on save { create; update; }
+  association _Version { with draft; }
+  association _Flujo { with draft; }
+  mapping for ymmt_dm_regla
+  {
+    ReglaUUID = regla_uuid;
+    FlujoId = flujo_id;
+    Version = version;
+    Area = area;
+    CampoId = campo_id;
+    SeccionId = seccion_id;
+    EstadoCampo = estado_campo;
+    Orden = orden;
+    Activo = activo;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

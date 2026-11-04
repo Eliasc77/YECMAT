@@ -1,0 +1,4 @@
+CLASS ybp_i_dm_m_seccion DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF yi_dm_m_seccion.
+ENDCLASS.
+CLASS ybp_i_dm_m_seccion IMPLEMENTATION.
+ENDCLASS.

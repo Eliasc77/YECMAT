@@ -1,0 +1,44 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Version', typeNamePlural: 'Versiones',
+  title: { value: 'Version' }, description: { value: 'Estado' } }
+annotate view YC_DM_M_FLUJO_VR with
+{
+  @UI.facet: [ { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'Datos generales', position: 10 },
+    { id: 'Pasos', type: #LINEITEM_REFERENCE, label: 'Pasos por area', position: 20, targetElement: '_Pasos' },
+    { id: 'Reglas', type: #LINEITEM_REFERENCE, label: 'Reglas de captura', position: 30, targetElement: '_Reglas' } ]
+  @UI.lineItem: [ { position: 10, label: 'Flujo' } ]
+  @UI.identification: [ { position: 10, label: 'Flujo' } ]
+  @UI.selectionField: [{ position: 10 }]
+  FlujoId;
+
+  @UI.lineItem: [ { position: 20, label: 'Version' }, { type: #FOR_ACTION, dataAction: 'Copiar', label: 'Copiar version' }, { type: #FOR_ACTION, dataAction: 'Publicar', label: 'Publicar' }, { type: #FOR_ACTION, dataAction: 'Retirar', label: 'Retirar' } ]
+  @UI.identification: [ { position: 20, label: 'Version' }, { type: #FOR_ACTION, dataAction: 'Copiar', label: 'Copiar version' }, { type: #FOR_ACTION, dataAction: 'Publicar', label: 'Publicar' }, { type: #FOR_ACTION, dataAction: 'Retirar', label: 'Retirar' } ]
+  @UI.selectionField: [{ position: 20 }]
+  Version;
+
+  @UI.lineItem: [ { position: 30, label: 'Estado' } ]
+  @UI.identification: [ { position: 30, label: 'Estado' } ]
+  @UI.selectionField: [{ position: 30 }]
+  Estado;
+
+  @UI.lineItem: [ { position: 40, label: 'Vigente desde' } ]
+  @UI.identification: [ { position: 40, label: 'Vigente desde' } ]
+  VigenteDesde;
+
+  @UI.lineItem: [ { position: 50, label: 'Vigente hasta' } ]
+  @UI.identification: [ { position: 50, label: 'Vigente hasta' } ]
+  VigenteHasta;
+
+  @UI.lineItem: [ { position: 60, label: 'Creado por' } ]
+  @UI.identification: [ { position: 60, label: 'Creado por' } ]
+  CreadoPor;
+
+  @UI.lineItem: [ { position: 70, label: 'Creado el' } ]
+  @UI.identification: [ { position: 70, label: 'Creado el' } ]
+  CreadoEl;
+
+  @UI.hidden: true
+  LastChangedAt;
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

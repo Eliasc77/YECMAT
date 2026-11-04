@@ -1,0 +1,9 @@
+@EndUserText.label: 'DM mantenimiento RAP'
+define service YUI_DM_MNT_O4 {
+  expose YC_DM_M_CAMPO as Campos;
+  expose YC_DM_M_SECCION as Secciones;
+  expose YC_DM_M_FLUJO as Flujos;
+  expose YC_DM_M_FLUJO_VR as Versiones;
+  expose YC_DM_M_PASO as Pasos;
+  expose YC_DM_M_REGLA as Reglas;
+}

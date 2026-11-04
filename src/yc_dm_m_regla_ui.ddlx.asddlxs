@@ -1,0 +1,49 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Regla', typeNamePlural: 'Reglas',
+  title: { value: 'CampoId' }, description: { value: 'Area' } }
+annotate view YC_DM_M_REGLA with
+{
+  @UI.facet: [ { id: 'General', type: #IDENTIFICATION_REFERENCE, label: 'Datos generales', position: 10 } ]
+  @UI.hidden: true
+  ReglaUUID;
+
+  @UI.lineItem: [ { position: 20, label: 'Flujo' } ]
+  @UI.identification: [ { position: 20, label: 'Flujo' } ]
+  FlujoId;
+
+  @UI.lineItem: [ { position: 30, label: 'Version' } ]
+  @UI.identification: [ { position: 30, label: 'Version' } ]
+  Version;
+
+  @UI.lineItem: [ { position: 40, label: 'Area' } ]
+  @UI.identification: [ { position: 40, label: 'Area' } ]
+  @UI.selectionField: [{ position: 40 }]
+  Area;
+
+  @UI.lineItem: [ { position: 50, label: 'Campo' } ]
+  @UI.identification: [ { position: 50, label: 'Campo' } ]
+  @Consumption.valueHelpDefinition: [{ entity: { name: 'YC_DM_M_CAMPO', element: 'CampoId' } }]
+  CampoId;
+
+  @UI.lineItem: [ { position: 60, label: 'Seccion' } ]
+  @UI.identification: [ { position: 60, label: 'Seccion' } ]
+  @Consumption.valueHelpDefinition: [{ entity: { name: 'YC_DM_M_SECCION', element: 'SeccionId' } }]
+  SeccionId;
+
+  @UI.lineItem: [ { position: 70, label: 'Estado M / O / I / R' } ]
+  @UI.identification: [ { position: 70, label: 'Estado M / O / I / R' } ]
+  EstadoCampo;
+
+  @UI.lineItem: [ { position: 80, label: 'Orden' } ]
+  @UI.identification: [ { position: 80, label: 'Orden' } ]
+  Orden;
+
+  @UI.lineItem: [ { position: 90, label: 'Activo' } ]
+  @UI.identification: [ { position: 90, label: 'Activo' } ]
+  Activo;
+
+  @UI.hidden: true
+  LastChangedAt;
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

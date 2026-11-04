@@ -1,0 +1,44 @@
+managed with additional save and cleanup implementation in class YBP_I_DM_M_CAMPO unique;
+strict ( 2 );
+with draft;
+
+define behavior for YI_DM_M_CAMPO alias Campo
+persistent table ymmt_dm_campo
+draft table ymmt_dm_d_campo
+lock master unmanaged
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( precheck );
+  update;
+  field ( readonly ) LastChangedAt, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) CampoId;
+  field ( mandatory, features : instance ) Descripcion, TablaSap, CampoSap, TipoSegmento, TipoDato, TipoControl;
+  field ( features : instance ) Longitud, Decimales, Activo;
+  validation validar on save { create; update; }
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validar;
+  }
+  mapping for ymmt_dm_campo
+  {
+    CampoId = campo_id;
+    Descripcion = descripcion;
+    TablaSap = tabla_sap;
+    CampoSap = campo_sap;
+    TipoSegmento = tipo_segmento;
+    TipoDato = tipo_dato;
+    Longitud = longitud;
+    Decimales = decimales;
+    AyudaValores = ayuda_valores;
+    TipoControl = tipo_control;
+    Activo = activo;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

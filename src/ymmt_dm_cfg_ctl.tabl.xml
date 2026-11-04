@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<abapGit version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
- <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
-  <asx:values>
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit xmlns:ns0="http://www.sap.com/abapxml" version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
+ <ns0:abap version="1.0">
+  <ns0:values>
    <DD02V>
     <TABNAME>YMMT_DM_CFG_CTL</TABNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
@@ -63,6 +63,13 @@
      <NOTNULL>X</NOTNULL>
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
+    <DD03P>
+     <FIELDNAME>RAP_ACTIVO</FIELDNAME>
+     <ROLLNAME>BOOLE_D</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <NOTNULL>X</NOTNULL>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
    </DD03P_TABLE>
    <TABL_EXTRAS>
     <TDDAT>
@@ -70,6 +77,6 @@
      <CCLASS>CUS_DEV_SUP_DA</CCLASS>
     </TDDAT>
    </TABL_EXTRAS>
-  </asx:values>
- </asx:abap>
+  </ns0:values>
+ </ns0:abap>
 </abapGit>

@@ -1,7 +1,8 @@
 """Check constant references and preserve the original ABAP token stream.
 
 This is a refactoring regression check, not an ABAP compiler. Expected token
-hashes come from main fc30682 before replacing domain literals with constants.
+hashes come from main fc30682 with explicitly approved later changes recorded
+in dm-constant-baseline.json.
 """
 from pathlib import Path
 import hashlib
